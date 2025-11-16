@@ -15,7 +15,7 @@
 - **Fonctionnalité**: Affiche le tableau de bord admin
 
 ### 3️⃣ Template Admin Créé
-- **Fichier**: `templates/layout/admin.html.twig`
+- **Fichier**: `templates/admin/admin.html.twig`
 - **Fonctionnalités**:
   - Navbar avec email de l'utilisateur
   - Bouton déconnexion
@@ -157,7 +157,7 @@ php bin/console cache:clear
 - `src/Controller/Admin/AdminController.php`
 - `src/DataFixtures/AppFixtures.php`
 - `src/Command/CreateAdminUserCommand.php` (optionnel)
-- `templates/layout/admin.html.twig`
+- `templates/admin/admin.html.twig`
 - `src/Repository/CompetenceRepository.php`
 - `src/Repository/IndisponibiliteRepository.php`
 

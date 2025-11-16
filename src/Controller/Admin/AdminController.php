@@ -14,7 +14,7 @@ class AdminController extends AbstractController
     #[Route('', name: '')]
     public function index(): Response
     {
-        return $this->render('layout/admin.html.twig', [
+        return $this->render('admin/admin.html.twig', [
             'user' => $this->getUser(),
         ]);
     }
