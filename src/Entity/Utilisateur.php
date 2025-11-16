@@ -345,9 +345,12 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function getRoles(): array
     {
-        // Vous pouvez mapper Role::nomRole vers un rôle Symfony si besoin
-        // Ex: 'ROLE_CHEF_PROJET', 'ROLE_MEMBRE', etc.
-        return ['ROLE_USER'];
+        $roles = ['ROLE_USER'];
+        if ($this->role) {
+            $roleName = strtoupper(str_replace(' ', '_', $this->role->getNomRole()));
+            $roles[] = 'ROLE_' . $roleName;
+        }
+        return array_unique($roles);
     }
 
     public function eraseCredentials(): void
