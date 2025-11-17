@@ -26,7 +26,7 @@ class RegistrationController extends AbstractController
             return $this->redirectToRoute('app_signin');
         }
 
-        return $this->render('security/RequestAccount.twig', [
+        return $this->render('security/RequestAccount.html.twig', [
             'requestAccountForm' => $form,
         ]);
     }

@@ -1,0 +1,88 @@
+{# templates/security/RequestAccount.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Demander un compte{% endblock %}
+
+{% block body %}
+    <div class="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-6xl w-full flex flex-col md:flex-row shadow-2xl rounded-2xl overflow-hidden">
+            
+            {# =============================================== #}
+            {# COLONNE DE GAUCHE : BRANDING & ACCUEIL        #}
+            {# =============================================== #}
+            <div class="hidden md:flex md:w-1/2 bg-gradient-to-br from-blue-600 to-indigo-700 p-12 flex flex-col justify-center items-center text-white">
+                <div class="text-center">
+                    <i class="fas fa-folder-open text-6xl mb-4"></i>
+                    <h1 class="text-4xl font-bold mb-4">Admin Dashboard</h1>
+                    <p class="text-lg opacity-90">
+                        Bienvenue sur notre plateforme de gestion de projet. 
+                        Simplifiez votre travail, collaborez efficacement et atteignez vos objectifs plus rapidement.
+                    </p>
+                </div>
+            </div>
+
+            {# =============================================== #}
+            {# COLONNE DE DROITE : FORMULAIRE                #}
+            {# =============================================== #}
+            <div class="w-full md:w-1/2 p-8 lg:p-12 bg-white">
+                <div class="max-w-sm mx-auto">
+                    <h2 class="text-3xl font-extrabold text-gray-900 text-center">Demande de création de compte</h2>
+                    <p class="mt-2 text-sm text-gray-600 text-center">
+                        Remplissez ce formulaire pour soumettre votre demande. <br>
+                        Votre demande sera examinée par un administrateur.
+                    </p>
+
+                    {{ form_start(requestAccountForm, {
+    attr: {class: 'mt-8 space-y-6'}
+}) }}
+
+    {# Champ Email stylisé manuellement #}
+    <div class="mb-4">
+        {{ form_label(requestAccountForm.email, null, {'label_attr': {'class': 'block text-sm font-medium text-gray-700 mb-1'}}) }}
+        <div class="relative">
+            <i class="fas fa-envelope absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+            {{ form_widget(requestAccountForm.email, {'attr': {
+                'class': 'pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 w-full text-sm'
+            }}) }}
+        </div>
+        {{ form_errors(requestAccountForm.email) }}
+    </div>
+
+    {# Champ Rôle stylisé manuellement #}
+    <div class="mb-4">
+        {{ form_label(requestAccountForm.role, null, {'label_attr': {'class': 'block text-sm font-medium text-gray-700 mb-1'}}) }}
+        <div class="relative">
+            <i class="fas fa-user-tag absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+            {{ form_widget(requestAccountForm.role, {'attr': {
+                'class': 'pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 w-full text-sm'
+            }}) }}
+        </div>
+        {{ form_errors(requestAccountForm.role) }}
+    </div>
+
+    {# Champ Description stylisé manuellement #}
+    <div class="mb-4">
+        {{ form_label(requestAccountForm.description, null, {'label_attr': {'class': 'block text-sm font-medium text-gray-700 mb-1'}}) }}
+        {{ form_widget(requestAccountForm.description, {'attr': {
+            'rows': '4',
+            'class': 'pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 w-full text-sm resize-none'
+        }}) }}
+        {{ form_errors(requestAccountForm.description) }}
+    </div>
+
+    <div class="mt-6">
+        <button type="submit" class="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
+            <i class="fas fa-paper-plane mr-2"></i>
+            Envoyer la demande
+        </button>
+    </div>
+{{ form_end(requestAccountForm) }}
+
+                    <p class="mt-6 text-center text-sm text-gray-600">
+                        Ou <a href="{{ path('app_signin') }}" class="font-medium text-blue-600 hover:text-blue-500 transition-colors">se connecter</a> si vous avez déjà un compte.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
