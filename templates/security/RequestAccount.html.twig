@@ -1,9 +1,17 @@
 {# templates/security/RequestAccount.twig #}
-{% extends 'base.html.twig' %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demander un compte</title>
 
-{% block title %}Demander un compte{% endblock %}
-
-{% block body %}
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
     <div class="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
         <div class="max-w-6xl w-full flex flex-col md:flex-row shadow-2xl rounded-2xl overflow-hidden">
             
@@ -85,4 +93,5 @@
             </div>
         </div>
     </div>
-{% endblock %}
+</body>
+</html>

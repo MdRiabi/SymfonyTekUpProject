@@ -1,9 +1,25 @@
 {# templates/default/index.html.twig #}
-{% extends 'base.html.twig' %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Symfony 360 — Gestion Intelligente de Projets</title>
 
-{% block title %}Symfony 360 — Gestion Intelligente de Projets{% endblock %}
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
 
-{% block body %}
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <!-- Custom styles -->
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+    </style>
+</head>
+<body>
 <div class="min-h-screen flex flex-col bg-gray-50">
     <!-- Header -->
     <header class="bg-white shadow-sm">
@@ -106,4 +122,12 @@
         </div>
     </footer>
 </div>
-{% endblock %}
+
+<!-- Custom JavaScript if needed -->
+<script>
+    // Add any custom JavaScript here
+    console.log('Symfony 360 - Page loaded successfully');
+</script>
+
+</body>
+</html>

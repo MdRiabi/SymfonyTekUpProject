@@ -2,8 +2,10 @@
 
 namespace App\Form;
 
+use App\Entity\AccountRequest;
+use App\Entity\Role;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -19,13 +21,10 @@ class RequestAccountFormType extends AbstractType
                 'label' => 'Adresse e-mail professionnelle',
                 'attr' => ['placeholder' => 'votre.nom@entreprise.com'],
             ])
-            ->add('role', ChoiceType::class, [
+            ->add('role', EntityType::class, [
+                'class' => Role::class,
+                'choice_label' => 'nomRole',
                 'label' => 'Rôle souhaité',
-                'choices' => [
-                    'Chef de projet' => 'Chef de projet',
-                    'Membre d’équipe' => 'Membre',
-                    'Simple utilisateur (consultation)' => 'Simple utilisateur',
-                ],
                 'placeholder' => 'Sélectionnez un rôle',
             ])
             ->add('description', TextareaType::class, [
@@ -44,6 +43,7 @@ class RequestAccountFormType extends AbstractType
     {
         $resolver->setDefaults([
             // Pas de data_class : ce n’est pas lié à une entité (pour l’instant)
+            'data_class' => AccountRequest::class,
         ]);
     }
 }

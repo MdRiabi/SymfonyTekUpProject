@@ -1,0 +1,54 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Gérer les demandes de compte{% endblock %}
+
+{% block body %}
+<div class="p-4 md:p-6 lg:p-8">
+    <h1 class="text-2xl font-semibold text-gray-800 mb-6">Gérer les demandes de compte</h1>
+
+    {% for message in app.flashes('success') %}
+        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
+            {{ message }}
+        </div>
+    {% endfor %}
+
+    <div class="bg-white shadow overflow-hidden sm:rounded-md">
+        <ul class="divide-y divide-gray-200">
+            {% for request in pending_requests %}
+                <li class="px-6 py-4">
+                    <div class="flex items-center justify-between">
+                        <div class="flex-1">
+                            <div class="flex items-center">
+                                <div class="flex-1">
+                                    <h3 class="text-sm font-medium text-gray-900">{{ request.email }}</h3>
+                                    <p class="text-sm text-gray-500">{{ request.role.nomRole }}</p>
+                                    <p class="text-sm text-gray-600 mt-1">{{ request.description }}</p>
+                                    <p class="text-xs text-gray-400 mt-1">Demandé le {{ request.createdAt|date('d/m/Y H:i') }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex space-x-2">
+                            <form method="post" action="{{ path('admin_approve_request', {id: request.id}) }}" class="inline">
+                                <input type="hidden" name="_token" value="{{ csrf_token('approve' ~ request.id) }}">
+                                <button type="submit" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+                                    Approuver
+                                </button>
+                            </form>
+                            <form method="post" action="{{ path('admin_reject_request', {id: request.id}) }}" class="inline">
+                                <input type="hidden" name="_token" value="{{ csrf_token('reject' ~ request.id) }}">
+                                <button type="submit" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+                                    Rejeter
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </li>
+            {% else %}
+                <li class="px-6 py-4 text-center text-gray-500">
+                    Aucune demande en attente.
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+{% endblock %}
