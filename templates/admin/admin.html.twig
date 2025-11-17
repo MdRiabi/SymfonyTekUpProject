@@ -3,11 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Projets actifs - Administration</title>
+    <title>Tableau de Bord - Administration Projets</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Styles Personnalisés -->
     <style>
-        /* Ajout de styles personnalisés si nécessaire */
+        /* Styles pour la sidebar et les animations */
         .sidebar-item {
             transition: all 0.2s ease;
         }
@@ -31,37 +34,7 @@
             transform: translateX(0);
         }
         
-        /* Texte des éléments de la sidebar */
-        .sidebar-text {
-            transition: opacity 0.3s ease-in-out;
-        }
-        .sidebar-text-hidden {
-            opacity: 0;
-            visibility: hidden;
-        }
-        
-        /* Tooltip pour les icônes quand la sidebar est compacte */
-        .sidebar-tooltip {
-            position: relative;
-        }
-        .sidebar-tooltip:hover::after {
-            content: attr(data-tooltip);
-            position: absolute;
-            left: 100%;
-            top: 50%;
-            transform: translateY(-50%);
-            margin-left: 10px;
-            background-color: #1f2937;
-            color: white;
-            padding: 6px 12px;
-            border-radius: 6px;
-            white-space: nowrap;
-            font-size: 14px;
-            z-index: 1000;
-            pointer-events: none;
-        }
-        
-        /* Overlay pour sidebar ouverte */
+        /* Overlay pour la sidebar */
         .sidebar-overlay {
             position: fixed;
             top: 0;
@@ -79,47 +52,16 @@
             visibility: visible;
         }
         
-        /* Logo text transition */
-        .logo-text {
-            transition: opacity 0.3s ease-in-out;
-        }
-        .logo-text-hidden {
-            opacity: 0;
-            visibility: hidden;
-        }
-        
-        /* Optimisation de l'espace */
-        .projects-container {
-            height: calc(100vh - 88px); /* Hauteur totale moins l'en-tête */
-            overflow-y: auto;
-        }
-        
-        /* Scrollbar personnalisée */
-        .projects-container::-webkit-scrollbar {
-            width: 8px;
-        }
-        .projects-container::-webkit-scrollbar-track {
-            background: #f1f1f1;
-            border-radius: 4px;
-        }
-        .projects-container::-webkit-scrollbar-thumb {
-            background: #d1d5db;
-            border-radius: 4px;
-        }
-        .projects-container::-webkit-scrollbar-thumb:hover {
-            background: #9ca3af;
-        }
-        
-        /* Sidebar en mode overlay */
+        /* Sidebar en mode overlay pour mobile */
         .sidebar-overlay-mode {
             position: fixed;
             top: 0;
             left: 0;
             height: 100vh;
-            z-index: 50;
+            z-index: 60;
             box-shadow: 4px 0 10px rgba(0, 0, 0, 0.1);
         }
-        
+
         /* Animation pour le bouton hamburger */
         .hamburger-btn {
             transition: all 0.3s ease;
@@ -129,18 +71,22 @@
         }
     </style>
 </head>
-<body class="bg-gray-50 font-sans">
-    <!-- Overlay pour sidebar -->
+<body class="bg-gray-50 font-sans h-screen overflow-hidden">
+
+    <!-- ======================================================= -->
+    <!-- SIDEBAR -->
+    <!-- ======================================================= -->
+    <!-- Overlay qui s'affiche quand la sidebar est ouverte -->
     <div id="sidebarOverlay" class="sidebar-overlay"></div>
 
-    <!-- Sidebar en mode overlay -->
-    <aside id="sidebar" class="sidebar sidebar-hidden sidebar-overlay-mode w-64 bg-white h-full">
+    <!-- La sidebar elle-même (cachée par défaut) -->
+    <aside id="sidebar" class="sidebar sidebar-hidden sidebar-overlay-mode w-64 bg-white h-full ">
         <div class="p-6 border-b flex justify-between items-center">
             <div class="flex items-center">
                 <i class="fas fa-folder-open text-blue-600 text-2xl"></i>
-                <h1 id="logoText" class="logo-text ml-3 text-xl font-bold text-gray-800">Admin Dashboard</h1>
+                <h1 id="logoText" class="ml-3 text-xl font-bold text-gray-800">Admin Dashboard</h1>
             </div>
-            <!-- Bouton de fermeture dans la sidebar -->
+            <!-- Bouton pour fermer la sidebar (visible sur mobile) -->
             <button id="closeSidebarBtn" class="p-2 hover:bg-gray-100 rounded-lg transition-colors">
                 <i class="fas fa-times text-gray-600"></i>
             </button>
@@ -148,234 +94,184 @@
         <nav class="p-4">
             <ul class="space-y-2">
                 <li>
-                    <a href="#" class="sidebar-item sidebar-tooltip flex items-center p-3 rounded-lg text-gray-700 hover:bg-blue-50 hover:text-blue-600" data-tooltip="Tableau de Bord">
+                    <a href="#" class="sidebar-item flex items-center p-3 rounded-lg text-gray-700 hover:bg-blue-50 hover:text-blue-600">
                         <i class="fas fa-tachometer-alt w-7 h-7 text-xl flex-shrink-0 text-slate-400"></i>
-                        <span class="sidebar-text ml-3">Tableau de Bord</span>
+                        <span class="ml-3">Tableau de Bord</span>
                     </a>
                 </li>
-               
                 <li>
-                    <a href="#" class="sidebar-item sidebar-tooltip flex items-center p-3 rounded-lg text-gray-700 hover:bg-blue-50 hover:text-blue-600" data-tooltip="Projets">
+                    <a href="#" class="sidebar-item flex items-center p-3 rounded-lg text-gray-700 hover:bg-blue-50 hover:text-blue-600">
                         <i class="fas fa-folder-open w-7 h-7 text-xl flex-shrink-0 text-slate-400"></i>
-                        <span class="sidebar-text ml-3">Projets</span>
+                        <span class="ml-3">Projets</span>
                     </a>
                 </li>
                 <li>
-                    <a href="#" class="sidebar-item sidebar-tooltip flex items-center p-3 rounded-lg text-gray-700 hover:bg-blue-50 hover:text-blue-600" data-tooltip="Utilisateurs & Rôles">
-                        <i class="fas fa-tasks w-7 h-7 text-xl text-center"></i>
-                        <span class="sidebar-text ml-3">Utilisateurs & Rôles</span>
+                    <a href="#" class="sidebar-item flex items-center p-3 rounded-lg text-gray-700 hover:bg-blue-50 hover:text-blue-600">
+                        <i class="fas fa-users w-7 h-7 text-xl flex-shrink-0 text-slate-400"></i>
+                        <span class="ml-3">Utilisateurs & Rôles</span>
                     </a>
                 </li>
                 <li>
-                    <a href="#" class="sidebar-item sidebar-tooltip flex items-center p-3 rounded-lg text-gray-700 hover:bg-blue-50 hover:text-blue-600" data-tooltip="Administration">
-                        <i class="fas fa-calendar-alt w-7 h-7 text-xl text-center"></i>
-                        <span class="sidebar-text ml-3">Administration</span>
+                    <a href="#" class="sidebar-item flex items-center p-3 rounded-lg text-gray-700 hover:bg-blue-50 hover:text-blue-600">
+                        <i class="fas fa-cogs w-7 h-7 text-xl flex-shrink-0 text-slate-400"></i>
+                        <span class="ml-3">Administration</span>
                     </a>
                 </li>
                 <li>
-                    <a href="#" class="sidebar-item sidebar-tooltip flex items-center p-3 rounded-lg text-gray-700 hover:bg-blue-50 hover:text-blue-600" data-tooltip="Rapports">
-                        <i class="fas fa-chart-line w-7 h-7 text-xl text-center"></i>
-                        <span class="sidebar-text ml-3">Rapports</span>
+                    <a href="#" class="sidebar-item flex items-center p-3 rounded-lg text-gray-700 hover:bg-blue-50 hover:text-blue-600">
+                        <i class="fas fa-chart-bar w-7 h-7 text-xl flex-shrink-0 text-slate-400"></i>
+                        <span class="ml-3">Rapports</span>
                     </a>
                 </li>
                 <li>
-                    <a href="#" class="sidebar-item sidebar-tooltip flex items-center p-3 rounded-lg text-gray-700 hover:bg-blue-50 hover:text-blue-600" data-tooltip="Mon Profil">
-                        <i class="fas fa-cog w-7 h-7 text-xl text-center"></i>
-                        <span class="sidebar-text ml-3">Mon Profil</span>
+                    <a href="#" class="sidebar-item flex items-center p-3 rounded-lg text-gray-700 hover:bg-blue-50 hover:text-blue-600">
+                        <i class="fas fa-user-circle w-7 h-7 text-xl flex-shrink-0 text-slate-400"></i>
+                        <span class="ml-3">Mon Profil</span>
                     </a>
                 </li>
             </ul>
         </nav>
     </aside>
 
-    <!-- Main Content -->
-    <main class="flex-1 overflow-hidden">
-        <!-- Header -->
-        <header class="bg-white shadow-sm border-b px-6 py-3 relative z-10">
+    <!-- ======================================================= -->
+    <!-- CONTENU PRINCIPAL -->
+    <!-- ======================================================= -->
+    <main class="h-full pt-16 overflow-y-auto">
+        
+        <!-- ======================================================= -->
+        <!-- TOPBAR (Header) -->
+        <!-- ======================================================= -->
+        <header class="fixed top-0 left-0 right-0 bg-white shadow-sm border-b px-6 py-3 z-50">
             <div class="flex justify-between items-center">
+                <!-- Section de gauche -->
                 <div class="flex items-center space-x-4">
                     <!-- Bouton hamburger pour ouvrir la sidebar -->
                     <button id="hamburgerBtn" class="hamburger-btn p-2 hover:bg-gray-100 rounded-lg transition-colors">
                         <i class="fas fa-bars text-gray-600 text-xl"></i>
                     </button>
-                    
                 </div>
+
+                <!-- Section de droite -->
                 <div class="flex items-center space-x-3">
+                    <!-- Barre de recherche -->
                     <div class="relative">
-                        <input type="text" placeholder="Rechercher un projet..." class="pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 w-64 text-sm">
+                        <input type="text" placeholder="Rechercher un projet..." class="pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 w-90 text-sm">
                         <i class="fas fa-search absolute left-3 top-2.5 text-gray-400"></i>
                     </div>
+                    <!-- Bouton Notification -->
                     <button class="flex items-center px-3 py-2 border rounded-lg hover:bg-gray-50 text-sm">
                         <i class="fas fa-filter mr-2"></i>
                         <span>Filtrer</span>
                     </button>
-                    <button class="flex items-center px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm">
-                        <i class="fas fa-plus mr-2"></i>
-                        <span>Projet</span>
-                    </button>
+                    
+                    <!-- ======================================================= -->
+                    <!-- BOUTON "CRÉER" AVEC MENU DÉROULANT INTÉGRÉ -->
+                    <!-- ======================================================= -->
+                    <div class="relative">
+                        <!-- Le bouton principal -->
+                        <button id="createDropdownButton" class="flex items-center px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm">
+                            <i class="fas fa-plus mr-2"></i>
+                            <span>Créer</span>
+                            <!-- La flèche qui déclenche le menu -->
+                            <span class="text-white ml-2 text-xs">&#9660;</span>
+                        </button>
+
+                        <!-- La liste déroulante (cachée par défaut) -->
+                        <div id="createDropdownMenu" class="hidden origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-50">
+                            <div class="py-1">
+                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                    <i class="fas fa-tasks mr-2 text-gray-400"></i> Tâche
+                                </a>
+                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                    <i class="fas fa-flag mr-2 text-green-500"></i> Jalon (Milestone)
+                                </a>
+                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                    <i class="fas fa-layer-group mr-2 text-orange-500"></i> Tâche Résumé
+                                </a>
+                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                    <i class="fas fa-exclamation-circle mr-2 text-purple-500"></i> Epic
+                                </a>
+                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                    <i class="fas fa-book mr-2 text-blue-500"></i> User Story
+                                </a>
+                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                    <i class="fas fa-bug mr-2 text-red-500"></i> Bug
+                                </a>
+                                <hr class="my-1">
+                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                    <i class="fas fa-folder-plus mr-2 text-gray-400"></i> Nouveau Projet
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ======================================================= -->
+                    <!-- MENU PROFIL UTILISATEUR -->
+                    <!-- ======================================================= -->
+                    <div class="relative ml-3">
+                        <button id="profileMenuButton" class="flex items-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                            <img class="h-8 w-8 rounded-full object-cover" src="https://picsum.photos/seed/user-profile/100/100.jpg" alt="Photo de profil">
+                        </button>
+                        <!-- Menu déroulant (caché par défaut) -->
+                        <div id="profileDropdown" class="hidden origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-50">
+                            <div class="py-1">
+                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"><i class="fas fa-user mr-2"></i> Mon Profil</a>
+                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"><i class="fas fa-cog mr-2"></i> Paramètres</a>
+                                <hr class="my-1">
+                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"><i class="fas fa-sign-out-alt mr-2"></i> Déconnexion</a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </header>
 
-        <!-- Projects List -->
-        <div class="projects-container">
-            <div class="p-4">
-                <div class="grid gap-4">
-                    <!-- Project Card 1 -->
-                    <div class="project-card bg-white rounded-lg shadow p-5">
-                        <div class="flex justify-between items-start">
-                            <div class="flex-1">
-                                <h3 class="text-lg font-semibold text-gray-800 mb-2">Demo project</h3>
-                                <div class="flex items-center space-x-4 text-sm text-gray-600">
-                                    <div class="flex items-center">
-                                        <i class="fas fa-calendar-alt mr-2"></i>
-                                        <span>Créé: 15/11/2025</span>
-                                    </div>
-                                    <div class="flex items-center">
-                                        <i class="fas fa-clock mr-2"></i>
-                                        <span>Dernière activité: 15/11/2025</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="flex flex-col items-end ml-4">
-                                <span class="px-3 py-1 bg-green-100 text-green-800 rounded-full text-xs font-medium mb-2 whitespace-nowrap">
-                                    SUR LA BONNE VOIE
-                                </span>
-                                <div class="flex space-x-2">
-                                    <button class="p-2 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded transition-colors">
-                                        <i class="fas fa-edit text-sm"></i>
-                                    </button>
-                                    <button class="p-2 text-gray-600 hover:text-red-600 hover:bg-red-50 rounded transition-colors">
-                                        <i class="fas fa-trash text-sm"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+        <!-- ======================================================= -->
+        <!-- LISTE DES PROJETS -->
+        <!-- ======================================================= -->
+        <div class="p-4 md:p-6 lg:p-8">
+            <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+               
 
-                    <!-- Project Card 2 -->
-                    <div class="project-card bg-white rounded-lg shadow p-5">
-                        <div class="flex justify-between items-start">
-                            <div class="flex-1">
-                                <h3 class="text-lg font-semibold text-gray-800 mb-2">Scrum project</h3>
-                                <div class="flex items-center space-x-4 text-sm text-gray-600">
-                                    <div class="flex items-center">
-                                        <i class="fas fa-calendar-alt mr-2"></i>
-                                        <span>Créé: 15/11/2025</span>
-                                    </div>
-                                    <div class="flex items-center">
-                                        <i class="fas fa-clock mr-2"></i>
-                                        <span>Dernière activité: 15/11/2025</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="flex flex-col items-end ml-4">
-                                <span class="px-3 py-1 bg-green-100 text-green-800 rounded-full text-xs font-medium mb-2 whitespace-nowrap">
-                                    SUR LA BONNE VOIE
-                                </span>
-                                <div class="flex space-x-2">
-                                    <button class="p-2 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded transition-colors">
-                                        <i class="fas fa-edit text-sm"></i>
-                                    </button>
-                                    <button class="p-2 text-gray-600 hover:text-red-600 hover:bg-red-50 rounded transition-colors">
-                                        <i class="fas fa-trash text-sm"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                <!-- ======================================================= -->
+                <!-- ICI EST LA PARTIE DE CHAQUE ELEMENT DE LA LISTE DES FONCTIONNALITES DE LA SIDEBAR -->
+                <!-- ======================================================= -->
 
-                    <!-- Project Card 3 (exemple supplémentaire) -->
-                    <div class="project-card bg-white rounded-lg shadow p-5">
-                        <div class="flex justify-between items-start">
-                            <div class="flex-1">
-                                <h3 class="text-lg font-semibold text-gray-800 mb-2">Development Project</h3>
-                                <div class="flex items-center space-x-4 text-sm text-gray-600">
-                                    <div class="flex items-center">
-                                        <i class="fas fa-calendar-alt mr-2"></i>
-                                        <span>Créé: 10/11/2025</span>
-                                    </div>
-                                    <div class="flex items-center">
-                                        <i class="fas fa-clock mr-2"></i>
-                                        <span>Dernière activité: 14/11/2025</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="flex flex-col items-end ml-4">
-                                <span class="px-3 py-1 bg-yellow-100 text-yellow-800 rounded-full text-xs font-medium mb-2 whitespace-nowrap">
-                                    EN COURS
-                                </span>
-                                <div class="flex space-x-2">
-                                    <button class="p-2 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded transition-colors">
-                                        <i class="fas fa-edit text-sm"></i>
-                                    </button>
-                                    <button class="p-2 text-gray-600 hover:text-red-600 hover:bg-red-50 rounded transition-colors">
-                                        <i class="fas fa-trash text-sm"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                
 
-                    <!-- Project Card 4 (exemple supplémentaire) -->
-                    <div class="project-card bg-white rounded-lg shadow p-5">
-                        <div class="flex justify-between items-start">
-                            <div class="flex-1">
-                                <h3 class="text-lg font-semibold text-gray-800 mb-2">Marketing Campaign</h3>
-                                <div class="flex items-center space-x-4 text-sm text-gray-600">
-                                    <div class="flex items-center">
-                                        <i class="fas fa-calendar-alt mr-2"></i>
-                                        <span>Créé: 05/11/2025</span>
-                                    </div>
-                                    <div class="flex items-center">
-                                        <i class="fas fa-clock mr-2"></i>
-                                        <span>Dernière activité: 13/11/2025</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="flex flex-col items-end ml-4">
-                                <span class="px-3 py-1 bg-red-100 text-red-800 rounded-full text-xs font-medium mb-2 whitespace-nowrap">
-                                    EN RETARD
-                                </span>
-                                <div class="flex space-x-2">
-                                    <button class="p-2 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded transition-colors">
-                                        <i class="fas fa-edit text-sm"></i>
-                                    </button>
-                                    <button class="p-2 text-gray-600 hover:text-red-600 hover:bg-red-50 rounded transition-colors">
-                                        <i class="fas fa-trash text-sm"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+
+                
+
+                
+                
             </div>
         </div>
     </main>
 
-    <!-- JavaScript pour les interactions -->
+    <!-- ======================================================= -->
+    <!-- JAVASCRIPT -->
+    <!-- ======================================================= -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // --- Éléments de la Sidebar ---
             const sidebar = document.getElementById('sidebar');
             const sidebarOverlay = document.getElementById('sidebarOverlay');
             const hamburgerBtn = document.getElementById('hamburgerBtn');
             const closeSidebarBtn = document.getElementById('closeSidebarBtn');
-            const logoText = document.getElementById('logoText');
-            const sidebarTexts = document.querySelectorAll('.sidebar-text');
-            
             let sidebarVisible = false;
 
-            // Fonction pour ouvrir la sidebar
+            // --- Éléments du Menu Profil ---
+            const profileMenuButton = document.getElementById('profileMenuButton');
+            const profileDropdown = document.getElementById('profileDropdown');
+
+            // --- Fonctions pour la Sidebar ---
             function openSidebar() {
                 sidebarVisible = true;
                 sidebar.classList.remove('sidebar-hidden');
                 sidebar.classList.add('sidebar-visible');
                 sidebarOverlay.classList.add('sidebar-overlay-active');
-                logoText.classList.remove('logo-text-hidden');
-                sidebarTexts.forEach(text => text.classList.remove('sidebar-text-hidden'));
             }
 
-            // Fonction pour fermer la sidebar
             function closeSidebar() {
                 sidebarVisible = false;
                 sidebar.classList.remove('sidebar-visible');
@@ -383,29 +279,78 @@
                 sidebarOverlay.classList.remove('sidebar-overlay-active');
             }
 
-            // Écouteurs d'événements
+            // --- Fonctions pour le Menu Profil ---
+            function toggleProfileDropdown() {
+                profileDropdown.classList.toggle('hidden');
+            }
+
+            // --- Écouteurs d'événements pour la Sidebar ---
             hamburgerBtn.addEventListener('click', openSidebar);
             closeSidebarBtn.addEventListener('click', closeSidebar);
             sidebarOverlay.addEventListener('click', closeSidebar);
-
-            // Fermer la sidebar avec la touche Escape
             document.addEventListener('keydown', function(e) {
                 if (e.key === 'Escape' && sidebarVisible) {
                     closeSidebar();
                 }
             });
 
-            // Exemple: Filtrage des projets
-            const filterBtn = document.querySelector('button:has(.fa-filter)');
-            filterBtn.addEventListener('click', function() {
-                alert('Fonctionnalité de filtrage à implémenter');
+            // --- Écouteurs d'événements pour le Menu Profil ---
+            if (profileMenuButton) {
+                profileMenuButton.addEventListener('click', function (event) {
+                    event.stopPropagation(); 
+                    toggleProfileDropdown();
+                });
+            }
+
+            document.addEventListener('click', function (event) {
+                if (profileDropdown && !profileDropdown.classList.contains('hidden')) {
+                    if (!profileMenuButton.contains(event.target) && !profileDropdown.contains(event.target)) {
+                        profileDropdown.classList.add('hidden');
+                    }
+                }
             });
 
-            // Exemple: Ajout d'un nouveau projet
-            const addProjectBtn = document.querySelector('button:has(.fa-plus)');
-            addProjectBtn.addEventListener('click', function() {
-                alert('Formulaire d\'ajout de projet à implémenter');
+            // =======================================================
+            // DÉBUT DU SCRIPT POUR LE MENU DÉROULANT "CRÉER"
+            // =======================================================
+            
+            // Sélectionne les éléments du DOM
+            const createDropdownButton = document.getElementById('createDropdownButton');
+            const createDropdownMenu = document.getElementById('createDropdownMenu');
+
+            // Fonction pour basculer l'affichage du menu
+            function toggleCreateDropdown() {
+                createDropdownMenu.classList.toggle('hidden');
+            }
+
+            // Ouvre/Ferme le menu au clic sur le bouton
+            if (createDropdownButton) {
+                createDropdownButton.addEventListener('click', function (event) {
+                    // Empêche le clic de se propager et de fermer le menu immédiatement
+                    event.stopPropagation(); 
+                    toggleCreateDropdown();
+                });
+            }
+
+            // Ferme le menu si l'utilisateur clique n'importe où ailleurs sur la page
+            document.addEventListener('click', function (event) {
+                // Vérifie si le menu est visible et si le clic est à l'extérieur
+                if (createDropdownMenu && !createDropdownMenu.classList.contains('hidden')) {
+                    if (!createDropdownButton.contains(event.target) && !createDropdownMenu.contains(event.target)) {
+                        createDropdownMenu.classList.add('hidden');
+                    }
+                }
             });
+            // =======================================================
+            // FIN DU SCRIPT POUR LE MENU DÉROULANT "CRÉER"
+            // =======================================================
+
+
+            // --- Actions sur les boutons (exemples) ---
+            const filterBtn = document.querySelector('button:has(.fa-filter)');
+            if(filterBtn) {
+                filterBtn.addEventListener('click', () => alert('Fonctionnalité de filtrage à implémenter'));
+            }
         });
     </script>
 </body>
