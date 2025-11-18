@@ -1,0 +1,60 @@
+{# templates/admin/users/createUser.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Créer un Utilisateur{% endblock %}
+
+{% block body %}
+    <main class="pt-16 overflow-y-auto">
+        <div class="p-4 md:p-6 lg:p-8 max-w-2xl mx-auto">
+            <div class="bg-white shadow sm:rounded-lg">
+                <div class="px-4 py-5 sm:p-6">
+                    <h3 class="text-lg leading-6 font-medium text-gray-900 mb-4">
+                        Approuver la demande de {{ accountRequest.email }}
+                    </h3>
+                    <p class="text-sm text-gray-500 mb-6">
+                        Rôle demandé : <span class="font-semibold">{{ accountRequest.role.nomRole }}</span>
+                    </p>
+
+                    {{ form_start(userCreationForm, {'attr': {'class': 'space-y-6'}}) }}
+                        
+                        {# Champ Email (pré-rempli et désactivé) #}
+                        <div>
+                            {{ form_label(userCreationForm.email, 'Adresse Email', {'label_attr': {'class': 'block text-sm font-medium text-gray-700'}}) }}
+                            {{ form_widget(userCreationForm.email, {'attr': {
+                                'class': 'mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 sm:text-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500',
+                                'disabled': true
+                            }}) }}
+                        </div>
+
+                        {# Champ Rôle (pré-rempli et désactivé) #}
+                        <div>
+                            {{ form_label(userCreationForm.role, 'Rôle', {'label_attr': {'class': 'block text-sm font-medium text-gray-700'}}) }}
+                            {{ form_widget(userCreationForm.role, {'attr': {
+                                'class': 'mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 sm:text-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500',
+                                'disabled': true
+                            }}) }}
+                        </div>
+
+                        {# Champs à remplir par l'admin #}
+                        {{ form_row(userCreationForm.nom) }}
+                        {{ form_row(userCreationForm.prenom) }}
+                        {{ form_row(userCreationForm.plainPassword, {
+                            'label': 'Mot de passe',
+                            'attr': {'class': 'mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 sm:text-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500'}
+                        }) }}
+
+                        <div class="pt-5">
+                            <button type="submit" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                                <i class="fas fa-user-check mr-2"></i>
+                                Créer le compte
+                            </button>
+                            <a href="{{ path('admin_manage_requests') }}" class="ml-3 inline-flex justify-center py-2 px-4 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                                Annuler
+                            </a>
+                        </div>
+                    {{ form_end(userCreationForm) }}
+                </div>
+            </div>
+        </div>
+    </main>
+{% endblock %}
