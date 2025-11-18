@@ -1,37 +1,88 @@
+{# templates/admin/users.html.twig #}
 {% extends 'base.html.twig' %}
 
-{% block title %}Gestion des Utilisateurs - Admin{% endblock %}
+{% block title %}Gestion des Utilisateurs & Rôles{% endblock %}
 
 {% block body %}
-<div class="min-h-screen bg-gray-50">
-    <div class="container mx-auto px-4 py-8">
-        <div class="bg-white rounded-lg shadow-sm p-6">
-            <h1 class="text-3xl font-bold text-gray-900 mb-8">Gestion des Utilisateurs & Rôles</h1>
+    <main class="pt-16 overflow-y-auto">
+        <div class="p-4 md:p-6 lg:p-8">
+            <h1 class="text-2xl font-semibold text-gray-900 mb-8">Gestion des Utilisateurs & Rôles</h1>
 
-            <div class="mb-6">
-                <a href="{{ path('app_admin') }}" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
-                    <i class="fas fa-arrow-left mr-2"></i>Retour au tableau de bord admin
-                </a>
-            </div>
-
-            <!-- Placeholder content for user management -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <div class="bg-gray-50 p-6 rounded-lg">
-                    <h3 class="text-lg font-semibold mb-4">Utilisateurs actifs</h3>
-                    <p class="text-gray-600">Gestion des comptes utilisateur existants</p>
+            <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4 mb-8">
+                {# Widget : Total Utilisateurs #}
+                <div class="bg-white overflow-hidden shadow rounded-lg">
+                    <div class="p-5">
+                        <div class="flex items-center">
+                            <div class="flex-shrink-0 bg-blue-500 rounded-md p-3">
+                                <i class="fas fa-users text-white"></i>
+                            </div>
+                            <div class="ml-5 w-0 flex-1">
+                                <dl>
+                                    <dt class="text-sm font-medium text-gray-500 truncate">Total Utilisateurs</dt>
+                                    <dd class="text-lg font-medium text-gray-900">{{ total_users_count }}</dd>
+                                </dl>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="bg-gray-50 p-6 rounded-lg">
-                    <h3 class="text-lg font-semibold mb-4">Demandes de compte</h3>
-                    <p class="text-gray-600">Approuver ou rejeter les nouvelles demandes</p>
+                {# Widget : Demandes en Attente (lien vers la page de gestion) #}
+                <div class="bg-white overflow-hidden shadow rounded-lg">
+                    <a href="{{ path('admin_manage_requests') }}" class="block">
+                        <div class="p-5">
+                            <div class="flex items-center">
+                                <div class="flex-shrink-0 bg-yellow-500 rounded-md p-3">
+                                    <i class="fas fa-user-clock text-white"></i>
+                                </div>
+                                <div class="ml-5 w-0 flex-1">
+                                    <dl>
+                                        <dt class="text-sm font-medium text-gray-500 truncate">Demandes en Attente</dt>
+                                        <dd class="text-lg font-medium text-gray-900">{{ pending_requests_count }}</dd>
+                                    </dl>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
                 </div>
 
-                <div class="bg-gray-50 p-6 rounded-lg">
-                    <h3 class="text-lg font-semibold mb-4">Rôles et permissions</h3>
-                    <p class="text-gray-600">Configuration des rôles utilisateur</p>
+                {# Widget : Rôles et Permissions #}
+                <div class="bg-white overflow-hidden shadow rounded-lg">
+                    <a href="#" class="block">
+                        <div class="p-5">
+                            <div class="flex items-center">
+                                <div class="flex-shrink-0 bg-purple-500 rounded-md p-3">
+                                    <i class="fas fa-shield-alt text-white"></i>
+                                </div>
+                                <div class="ml-5 w-0 flex-1">
+                                    <dl>
+                                        <dt class="text-sm font-medium text-gray-500 truncate">Rôles et Permissions</dt>
+                                        <dd class="text-lg font-medium text-gray-900">{{ total_roles_count }}</dd>
+                                    </dl>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                {# Widget : Ajout rapide #}
+                <div class="bg-white overflow-hidden shadow rounded-lg">
+                    <a href="{{ path('admin_manage_users') }}" class="block">
+                        <div class="p-5">
+                            <div class="flex items-center">
+                                <div class="flex-shrink-0 bg-green-500 rounded-md p-3">
+                                    <i class="fas fa-user-plus text-white"></i>
+                                </div>
+                                <div class="ml-5 w-0 flex-1">
+                                    <dl>
+                                        <dt class="text-sm font-medium text-gray-500 truncate">Voir tous les utilisateurs</dt>
+                                        <dd class="text-sm font-medium text-gray-900">Gérer le annuaire</dd>
+                                    </dl>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
                 </div>
             </div>
         </div>
-    </div>
-</div>
+    </main>
 {% endblock %}
