@@ -12,7 +12,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[IsGranted('ROLE_ADMIN')]
 class AdminController extends AbstractController
 {
-    #[Route('/admin', name: 'app_admin')]
+    #[Route('/admin/dashboard', name: 'admin_dashboard_old')]
     public function index(EntityManagerInterface $entityManager): Response
     {
         $pendingRequestsCount = $entityManager->getRepository(AccountRequest::class)->count(['status' => AccountRequest::STATUS_PENDING]);
@@ -23,11 +23,5 @@ class AdminController extends AbstractController
         ]);
     }
 
-    #[Route('/admin/users', name: 'admin_manage_users')]
-    public function manageUsers(): Response
-    {
-        return $this->render('admin/users.html.twig', [
-            'user' => $this->getUser(),
-        ]);
-    }
+
 }

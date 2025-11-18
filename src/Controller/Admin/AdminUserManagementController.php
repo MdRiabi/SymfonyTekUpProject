@@ -1,19 +1,21 @@
-<?php
+<?php namespace App\Controller\Admin;
 
 use App\Repository\UtilisateurRepository;
+use App\Repository\RoleRepository;
+use App\Repository\AccountRequestRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\Utilisateur;
+use App\Entity\AccountRequest;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
 
-#[IsGranted('ROLE_ADMIN')]
-class UserController extends AbstractController
+class AdminUserManagementController extends AbstractController
 {
-    #[Route('/users', name: 'admin_manage_users')]
+    #[Route('/admin/users', name: 'admin_manage_users')]
     public function list(UtilisateurRepository $utilisateurRepository): Response
     {
         $users = $utilisateurRepository->findAll();
@@ -25,7 +27,7 @@ class UserController extends AbstractController
 
 
 
-    #[Route('/users', name: 'admin_manage_users')]
+    #[Route('/admin', name: 'app_admin')]
     public function manage(
         UtilisateurRepository $utilisateurRepository,
         RoleRepository $roleRepository,
