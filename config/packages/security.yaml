@@ -37,9 +37,9 @@ security:
 
     access_control:
         - { path: ^/admin, roles: ROLE_ADMIN }
-        - { path: ^/request-account, roles: PUBLIC_ACCESS }
-        - { path: ^/signin, roles: PUBLIC_ACCESS }
-        - { path: ^/logout, roles: PUBLIC_ACCESS }
+        - { path: ^/request-account, roles: [] }
+        - { path: ^/signin, roles: [] }
+        - { path: ^/logout, roles: IS_AUTHENTICATED_ANONYMOUSLY }
 
 when@test:
     security:
