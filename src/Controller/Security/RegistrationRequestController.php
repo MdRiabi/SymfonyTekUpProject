@@ -53,6 +53,13 @@ class RegistrationRequestController extends AbstractController
         $form = $this->createForm(RequestAccountFormType::class, $accountRequest);
         $form->handleRequest($request);
 
+        /* dd([
+        'is_submitted' => $form->isSubmitted(),
+        'is_valid' => $form->isSubmitted() ? $form->isValid() : null,
+        'request_method' => $request->getMethod(),
+        'all_form_data' => $request->request->all(), // Affiche toutes les données POST
+       ]); */
+
         if ($form->isSubmitted() && $form->isValid()) {
             // 3. Plus besoin de faire les setXXX() un par un !
             // Le formulaire a déjà hydraté l'objet $accountRequest.
@@ -61,6 +68,12 @@ class RegistrationRequestController extends AbstractController
             // 4. On sauvegarde directement
             $entityManager->persist($accountRequest);
             $entityManager->flush();
+             dd([
+            'is_submitted' => $form->isSubmitted(),
+            'is_valid' => $form->isValid(),
+            'request_method' => $request->getMethod(),
+            'all_form_data' => $request->request->all(),
+             ]);
 
             $this->addFlash('success', 'Votre demande de compte a été envoyée. Un administrateur la traitera bientôt.');
             return $this->redirectToRoute('app_signin');
