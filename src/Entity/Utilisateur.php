@@ -6,12 +6,15 @@ use App\Repository\UtilisateurRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 #[ORM\Entity(repositoryClass: UtilisateurRepository::class)]
 #[ORM\Table(name: 'utilisateur')]
+#[Vich\Uploadable]
 class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -69,17 +72,23 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     #[Assert\GreaterThan(0)]
     private ?string $capaciteHebdoH = null;
 
-    #[ORM\ManyToMany(targetEntity: Competence::class, inversedBy: 'utilisateurs')]
-    private Collection $competences;
+    #[ORM\Column(type: 'json', nullable: true)]
+    private ?array $competences = [];
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $photoProfil = null;
+
+    #[Vich\UploadableField(mapping: 'user_photos', fileNameProperty: 'photoProfil')]
+    private ?File $photoFile = null;
 
     #[ORM\ManyToOne(targetEntity: self::class)]
     private ?self $manager = null;
 
     #[ORM\Column]
     private \DateTimeImmutable $dateCreation;
+
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
+    private ?\DateTimeImmutable $updatedAt = null;
 
     #[ORM\OneToMany(mappedBy: 'createur', targetEntity: Tache::class)]
     private Collection $tachesCrees;
@@ -89,10 +98,11 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function __construct()
     {
-        $this->competences = new ArrayCollection();
+        $this->competences = [];
         $this->tachesCrees = new ArrayCollection();
         $this->tachesAssignees = new ArrayCollection();
         $this->dateCreation = new \DateTimeImmutable();
+        $this->updatedAt = new \DateTimeImmutable();
     }
 
     public function getId(): ?int
@@ -254,25 +264,14 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /**
-     * @return Collection<int, Competence>
-     */
-    public function getCompetences(): Collection
+    public function getCompetences(): ?array
     {
         return $this->competences;
     }
 
-    public function addCompetence(Competence $competence): self
+    public function setCompetences(?array $competences): self
     {
-        if (!$this->competences->contains($competence)) {
-            $this->competences->add($competence);
-        }
-        return $this;
-    }
-
-    public function removeCompetence(Competence $competence): self
-    {
-        $this->competences->removeElement($competence);
+        $this->competences = $competences;
         return $this;
     }
 
@@ -307,6 +306,30 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $this->dateCreation = $dateCreation;
         return $this;
+    }
+
+    public function getUpdatedAt(): ?\DateTimeImmutable
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(?\DateTimeImmutable $updatedAt): self
+    {
+        $this->updatedAt = $updatedAt;
+        return $this;
+    }
+
+    public function getPhotoFile(): ?File
+    {
+        return $this->photoFile;
+    }
+
+    public function setPhotoFile(?File $photoFile = null): void
+    {
+        $this->photoFile = $photoFile;
+        if (null !== $photoFile) {
+            $this->updatedAt = new \DateTimeImmutable();
+        }
     }
 
     /**

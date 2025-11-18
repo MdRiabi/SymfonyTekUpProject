@@ -38,6 +38,17 @@
                         {# Champs à remplir par l'admin #}
                         {{ form_row(userCreationForm.nom) }}
                         {{ form_row(userCreationForm.prenom) }}
+                        {{ form_row(userCreationForm.adresse) }}
+                        {{ form_row(userCreationForm.titrePoste) }}
+                        {{ form_row(userCreationForm.departement) }}
+                        {{ form_row(userCreationForm.equipe) }}
+                        {{ form_row(userCreationForm.message) }}
+                        {{ form_row(userCreationForm.matricule) }}
+                        {{ form_row(userCreationForm.estActif) }}
+                        {{ form_row(userCreationForm.capaciteHebdoH) }}
+                        {{ form_row(userCreationForm.competences) }}
+                        {{ form_row(userCreationForm.photoFile) }}
+                        {{ form_row(userCreationForm.manager) }}
                         {{ form_row(userCreationForm.plainPassword, {
                             'label': 'Mot de passe',
                             'attr': {'class': 'mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 sm:text-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500'}

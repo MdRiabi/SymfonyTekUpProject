@@ -18,11 +18,7 @@ class Competence
     #[Assert\NotBlank]
     private ?string $nom = null;
 
-    #[ORM\ManyToMany(targetEntity: Utilisateur::class, mappedBy: 'competences')]
-    private Collection $utilisateurs;
-
     public function __construct() {
-        $this->utilisateurs = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -47,23 +43,5 @@ class Competence
         return $this;
     }
 
-    public function getUtilisateurs(): Collection
-    {
-        return $this->utilisateurs;
-    }
-
-    public function addUtilisateur(Utilisateur $utilisateur): static
-    {
-        if (!$this->utilisateurs->contains($utilisateur)) {
-            $this->utilisateurs->add($utilisateur);
-        }
-        return $this;
-    }
-
-    public function removeUtilisateur(Utilisateur $utilisateur): static
-    {
-        $this->utilisateurs->removeElement($utilisateur);
-        return $this;
-    }
 
 }
