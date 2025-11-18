@@ -3,12 +3,15 @@
 namespace App\Controller\Admin;
 
 use App\Entity\AccountRequest;
+use App\Entity\Utilisateur;
+use App\Form\Admin\UserCreationType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 #[IsGranted('ROLE_ADMIN')]
 class RequestManagementController extends AbstractController

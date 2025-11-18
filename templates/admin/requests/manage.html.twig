@@ -28,12 +28,9 @@
                             </div>
                         </div>
                         <div class="flex space-x-2">
-                            <form method="post" action="{{ path('admin_approve_request', {id: request.id}) }}" class="inline">
-                                <input type="hidden" name="_token" value="{{ csrf_token('approve' ~ request.id) }}">
-                                <button type="submit" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
-                                    Approuver
-                                </button>
-                            </form>
+                            <a href="{{ path('admin_approve_request', {id: request.id}) }}" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded inline-block">
+                                Approuver
+                            </a>
                             <form method="post" action="{{ path('admin_reject_request', {id: request.id}) }}" class="inline">
                                 <input type="hidden" name="_token" value="{{ csrf_token('reject' ~ request.id) }}">
                                 <button type="submit" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
