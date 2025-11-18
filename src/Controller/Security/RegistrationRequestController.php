@@ -68,15 +68,13 @@ class RegistrationRequestController extends AbstractController
             // 4. On sauvegarde directement
             $entityManager->persist($accountRequest);
             $entityManager->flush();
-             dd([
-            'is_submitted' => $form->isSubmitted(),
-            'is_valid' => $form->isValid(),
-            'request_method' => $request->getMethod(),
-            'all_form_data' => $request->request->all(),
-             ]);
+             
 
             $this->addFlash('success', 'Votre demande de compte a été envoyée. Un administrateur la traitera bientôt.');
-            return $this->redirectToRoute('app_signin');
+
+            // Recreate the form with a new entity to clear it
+            $accountRequest = new AccountRequest();
+            $form = $this->createForm(RequestAccountFormType::class, $accountRequest);
         }
 
         return $this->render('security/RequestAccount.html.twig', [
