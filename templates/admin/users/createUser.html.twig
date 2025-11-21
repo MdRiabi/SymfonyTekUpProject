@@ -1,0 +1,473 @@
+{# templates/admin/users/createUser.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Créer un Utilisateur - Admin{% endblock %}
+
+{% block body %}
+    <main class="pt-16 overflow-y-auto bg-gray-50" x-data="wizardForm()">
+        <div class="p-4 md:p-6 lg:p-8 max-w-5xl mx-auto">
+            <!-- Header -->
+            <div class="flex items-center justify-between mb-6">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path>
+                        </svg>
+                    </div>
+                    <h1 class="text-xl font-bold text-gray-900">Créer un nouvel utilisateur</h1>
+                </div>
+                <a href="{{ path('admin_manage_users') }}" class="text-sm text-blue-600 hover:text-blue-800 font-medium">
+                    ← Retour à la liste
+                </a>
+            </div>
+
+            <!-- Stepper Progress Bar -->
+            <div class="mb-8">
+                <div class="flex items-center justify-between">
+                    <template x-for="step in steps" :key="step.number">
+                        <div class="flex-1 flex flex-col items-center">
+                            <div class="flex items-center w-full">
+                                <!-- Circle -->
+                                <div class="flex items-center justify-center w-10 h-10 rounded-full border-2 transition-all duration-300"
+                                     :class="currentStep >= step.number ? 'bg-blue-600 border-blue-600' : 'bg-white border-gray-300'">
+                                    <span class="text-sm font-semibold"
+                                          :class="currentStep >= step.number ? 'text-white' : 'text-gray-500'"
+                                          x-text="step.number"></span>
+                                </div>
+                                <!-- Line -->
+                                <div x-show="step.number < steps.length" 
+                                     class="flex-1 h-1 mx-2 transition-all duration-300"
+                                     :class="currentStep > step.number ? 'bg-blue-600' : 'bg-gray-300'"></div>
+                            </div>
+                            <!-- Label -->
+                            <span class="mt-2 text-xs font-medium text-center"
+                                  :class="currentStep >= step.number ? 'text-blue-600' : 'text-gray-500'"
+                                  x-text="step.title"></span>
+                        </div>
+                    </template>
+                </div>
+            </div>
+
+            <!-- Main Card -->
+            <div class="bg-white shadow-lg rounded-xl overflow-hidden">
+                <div class="bg-gradient-to-r from-blue-600 to-blue-700 px-6 py-4">
+                    <h2 class="text-xl font-semibold text-white" x-text="steps[currentStep - 1].title"></h2>
+                    <p class="text-blue-100 mt-1" x-text="steps[currentStep - 1].description"></p>
+                </div>
+
+                {{ form_start(userCreationForm, {'attr': {'@submit.prevent': 'submitForm', 'class': 'px-6 py-6'}}) }}
+
+                    <!-- Step 1: Informations Générales -->
+                    <div x-show="currentStep === 1" x-transition class="space-y-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 flex items-center gap-2">
+                                    <i class="fas fa-envelope text-blue-500"></i>
+                                    Adresse Email <span class="text-red-500">*</span>
+                                </label>
+                                {{ form_widget(userCreationForm.email, {
+                                    'attr': {
+                                        'class': 'mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 sm:text-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500',
+                                        'x-model': 'formData.email'
+                                    }
+                                }) }}
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 flex items-center gap-2">
+                                    <i class="fas fa-user-tag text-blue-500"></i>
+                                    Rôle <span class="text-red-500">*</span>
+                                </label>
+                                {{ form_widget(userCreationForm.role, {
+                                    'attr': {
+                                        'class': 'mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 sm:text-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500',
+                                        'x-model': 'formData.role'
+                                    }
+                                }) }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 2: Profil de l'utilisateur -->
+                    <div x-show="currentStep === 2" x-transition class="space-y-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            {{ form_row(userCreationForm.nom, {
+                                'label': '<i class="fas fa-user text-blue-500 mr-2"></i> Nom <span class="text-red-500">*</span>',
+                                'label_html': true,
+                                'attr': {
+                                    'class': 'mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 sm:text-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500',
+                                    'x-model': 'formData.nom'
+                                },
+                                'label_attr': {'class': 'block text-sm font-medium text-gray-700 flex items-center gap-2'}
+                            }) }}
+
+                            {{ form_row(userCreationForm.prenom, {
+                                'label': '<i class="fas fa-user text-blue-500 mr-2"></i> Prénom <span class="text-red-500">*</span>',
+                                'label_html': true,
+                                'attr': {
+                                    'class': 'mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 sm:text-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500',
+                                    'x-model': 'formData.prenom'
+                                },
+                                'label_attr': {'class': 'block text-sm font-medium text-gray-700 flex items-center gap-2'}
+                            }) }}
+
+                            {{ form_row(userCreationForm.adresse, {
+                                'label': '<i class="fas fa-map-marker-alt text-blue-500 mr-2"></i> Adresse',
+                                'label_html': true,
+                                'attr': {
+                                    'class': 'mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 sm:text-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500',
+                                    'x-model': 'formData.adresse'
+                                },
+                                'label_attr': {'class': 'block text-sm font-medium text-gray-700 flex items-center gap-2'}
+                            }) }}
+
+                            {{ form_row(userCreationForm.titrePoste, {
+                                'label': '<i class="fas fa-briefcase text-blue-500 mr-2"></i> Titre du Poste',
+                                'label_html': true,
+                                'attr': {
+                                    'class': 'mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 sm:text-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500',
+                                    'x-model': 'formData.titrePoste'
+                                },
+                                'label_attr': {'class': 'block text-sm font-medium text-gray-700 flex items-center gap-2'}
+                            }) }}
+
+                            {{ form_row(userCreationForm.departement, {
+                                'label': '<i class="fas fa-building text-blue-500 mr-2"></i> Département',
+                                'label_html': true,
+                                'attr': {
+                                    'class': 'mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 sm:text-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500',
+                                    'x-model': 'formData.departement'
+                                },
+                                'label_attr': {'class': 'block text-sm font-medium text-gray-700 flex items-center gap-2'}
+                            }) }}
+
+                            {{ form_row(userCreationForm.equipe, {
+                                'label': '<i class="fas fa-users text-blue-500 mr-2"></i> Équipe',
+                                'label_html': true,
+                                'attr': {
+                                    'class': 'mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 sm:text-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500',
+                                    'x-model': 'formData.equipe'
+                                },
+                                'label_attr': {'class': 'block text-sm font-medium text-gray-700 flex items-center gap-2'}
+                            }) }}
+                        </div>
+                    </div>
+
+                    <!-- Step 3: Détails Techniques -->
+                    <div x-show="currentStep === 3" x-transition class="space-y-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            {{ form_row(userCreationForm.matricule, {
+                                'label': '<i class="fas fa-id-card text-blue-500 mr-2"></i> Matricule',
+                                'label_html': true,
+                                'attr': {
+                                    'class': 'mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 sm:text-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500',
+                                    'x-model': 'formData.matricule'
+                                },
+                                'label_attr': {'class': 'block text-sm font-medium text-gray-700 flex items-center gap-2'}
+                            }) }}
+
+                            {{ form_row(userCreationForm.capaciteHebdoH, {
+                                'label': '<i class="fas fa-clock text-blue-500 mr-2"></i> Capacité Hebdo (en Heures)',
+                                'label_html': true,
+                                'attr': {
+                                    'class': 'mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 sm:text-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500',
+                                    'x-model': 'formData.capaciteHebdoH'
+                                },
+                                'label_attr': {'class': 'block text-sm font-medium text-gray-700 flex items-center gap-2'}
+                            }) }}
+
+                            {{ form_row(userCreationForm.manager, {
+                                'label': '<i class="fas fa-user-tie text-blue-500 mr-2"></i> Manager / N+1',
+                                'label_html': true,
+                                'attr': {
+                                    'class': 'mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 sm:text-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500',
+                                    'x-model': 'formData.manager'
+                                },
+                                'label_attr': {'class': 'block text-sm font-medium text-gray-700 flex items-center gap-2'}
+                            }) }}
+
+                            {{ form_row(userCreationForm.estActif, {
+                                'label': '<i class="fas fa-toggle-on text-blue-500 mr-2"></i> Est Actif',
+                                'label_html': true,
+                                'attr': {
+                                    'class': 'mt-1',
+                                    'x-model': 'formData.estActif'
+                                },
+                                'label_attr': {'class': 'block text-sm font-medium text-gray-700 flex items-center gap-2'}
+                            }) }}
+                        </div>
+                        
+                        <!-- Message / Justification (full width) -->
+                        <div class="mt-4">
+                            {{ form_row(userCreationForm.message, {
+                                'label': '<i class="fas fa-comment-dots text-blue-500 mr-2"></i> Message / Justification',
+                                'label_html': true,
+                                'attr': {
+                                    'class': 'mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 sm:text-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500',
+                                    'rows': 4,
+                                    'x-model': 'formData.message',
+                                    'placeholder': 'Notes ou justifications concernant cet utilisateur...'
+                                },
+                                'label_attr': {'class': 'block text-sm font-medium text-gray-700 flex items-center gap-2'}
+                            }) }}
+                        </div>
+                    </div>
+
+                    <!-- Step 4: Compétences & Photo -->
+                    <div x-show="currentStep === 4" x-transition class="space-y-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            {{ form_row(userCreationForm.competences, {
+                                'label': '<i class="fas fa-laptop-code text-blue-500 mr-2"></i> Compétences',
+                                'label_html': true,
+                                'attr': {
+                                    'class': 'mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 sm:text-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500',
+                                    'multiple': true,
+                                    'size': 8
+                                },
+                                'label_attr': {'class': 'block text-sm font-medium text-gray-700 flex items-center gap-2'}
+                            }) }}
+
+                            {{ form_row(userCreationForm.photoFile, {
+                                'label': '<i class="fas fa-image text-blue-500 mr-2"></i> Photo de Profil',
+                                'label_html': true,
+                                'attr': {
+                                    'class': 'mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100'
+                                },
+                                'label_attr': {'class': 'block text-sm font-medium text-gray-700 flex items-center gap-2'}
+                            }) }}
+                        </div>
+                    </div>
+
+                    <!-- Step 5: Mot de passe -->
+                    <div x-show="currentStep === 5" x-transition class="space-y-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            {{ form_row(userCreationForm.plainPassword, {
+                                'label': '<i class="fas fa-lock text-blue-500 mr-2"></i> Mot de passe <span class="text-red-500">*</span>',
+                                'label_html': true,
+                                'attr': {
+                                    'class': 'mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 sm:text-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500',
+                                    'x-model': 'formData.password',
+                                    'placeholder': 'Minimum 6 caractères'
+                                },
+                                'label_attr': {'class': 'block text-sm font-medium text-gray-700 flex items-center gap-2'}
+                            }) }}
+                        </div>
+                        <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                            <div class="flex">
+                                <i class="fas fa-info-circle text-blue-500 mt-0.5 mr-3"></i>
+                                <div class="text-sm text-blue-700">
+                                    <p class="font-semibold mb-1">Exigences du mot de passe :</p>
+                                    <ul class="list-disc list-inside space-y-1">
+                                        <li>Minimum 6 caractères</li>
+                                        <li>Recommandé : mélange de lettres, chiffres et symboles</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 6: Récapitulatif -->
+                    <div x-show="currentStep === 6" x-transition class="space-y-6">
+                        <div class="bg-gray-50 rounded-lg p-6">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-4">Récapitulatif des informations</h3>
+                            
+                            <!-- Informations Générales -->
+                            <div class="mb-6">
+                                <h4 class="text-sm font-semibold text-gray-700 mb-2 flex items-center">
+                                    <i class="fas fa-info-circle text-blue-500 mr-2"></i>
+                                    Informations Générales
+                                </h4>
+                                <div class="bg-white rounded-md p-4 space-y-2">
+                                    <div class="flex justify-between">
+                                        <span class="text-sm text-gray-600">Email :</span>
+                                        <span class="text-sm font-medium text-gray-900" x-text="formData.email || 'Non renseigné'"></span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span class="text-sm text-gray-600">Rôle :</span>
+                                        <span class="text-sm font-medium text-gray-900" x-text="getRoleLabel() || 'Non renseigné'"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Profil -->
+                            <div class="mb-6">
+                                <h4 class="text-sm font-semibold text-gray-700 mb-2 flex items-center">
+                                    <i class="fas fa-user text-blue-500 mr-2"></i>
+                                    Profil de l'utilisateur
+                                </h4>
+                                <div class="bg-white rounded-md p-4 space-y-2">
+                                    <div class="flex justify-between">
+                                        <span class="text-sm text-gray-600">Nom :</span>
+                                        <span class="text-sm font-medium text-gray-900" x-text="formData.nom || 'Non renseigné'"></span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span class="text-sm text-gray-600">Prénom :</span>
+                                        <span class="text-sm font-medium text-gray-900" x-text="formData.prenom || 'Non renseigné'"></span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span class="text-sm text-gray-600">Département :</span>
+                                        <span class="text-sm font-medium text-gray-900" x-text="formData.departement || 'Non renseigné'"></span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span class="text-sm text-gray-600">Équipe :</span>
+                                        <span class="text-sm font-medium text-gray-900" x-text="formData.equipe || 'Non renseigné'"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Détails Techniques -->
+                            <div class="mb-6">
+                                <h4 class="text-sm font-semibold text-gray-700 mb-2 flex items-center">
+                                    <i class="fas fa-cog text-blue-500 mr-2"></i>
+                                    Détails Techniques
+                                </h4>
+                                <div class="bg-white rounded-md p-4 space-y-2">
+                                    <div class="flex justify-between">
+                                        <span class="text-sm text-gray-600">Matricule :</span>
+                                        <span class="text-sm font-medium text-gray-900" x-text="formData.matricule || 'Non renseigné'"></span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span class="text-sm text-gray-600">Capacité Hebdo :</span>
+                                        <span class="text-sm font-medium text-gray-900" x-text="formData.capaciteHebdoH ? formData.capaciteHebdoH + ' heures' : 'Non renseigné'"></span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span class="text-sm text-gray-600">Statut :</span>
+                                        <span class="text-sm font-medium" :class="formData.estActif ? 'text-green-600' : 'text-red-600'" x-text="formData.estActif ? 'Actif' : 'Inactif'"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Navigation Buttons -->
+                    <div class="mt-8 pt-6 border-t flex justify-between">
+                        <button type="button" 
+                                @click="previousStep()"
+                                x-show="currentStep > 1"
+                                class="inline-flex items-center justify-center py-2 px-4 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                            <i class="fas fa-arrow-left mr-2"></i>
+                            Précédent
+                        </button>
+                        
+                        <div class="flex space-x-3">
+                            <a href="{{ path('admin_manage_users') }}" 
+                               class="inline-flex items-center justify-center py-2 px-4 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                                <i class="fas fa-times mr-2"></i>
+                                Annuler
+                            </a>
+                            
+                            <button type="button" 
+                                    @click="nextStep()"
+                                    x-show="currentStep < 6"
+                                    class="inline-flex items-center justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                                Suivant
+                                <i class="fas fa-arrow-right ml-2"></i>
+                            </button>
+                            
+                            <button type="submit" 
+                                    x-show="currentStep === 6"
+                                    class="inline-flex items-center justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                                <i class="fas fa-check mr-2"></i>
+                                Créer l'utilisateur
+                            </button>
+                        </div>
+                    </div>
+
+                {{ form_end(userCreationForm) }}
+            </div>
+        </div>
+    </main>
+
+    <script>
+        function wizardForm() {
+            return {
+                currentStep: 1,
+                steps: [
+                    { number: 1, title: 'Informations Générales', description: 'Email et rôle de l\'utilisateur' },
+                    { number: 2, title: 'Profil', description: 'Informations personnelles et professionnelles' },
+                    { number: 3, title: 'Détails Techniques', description: 'Matricule, capacité et manager' },
+                    { number: 4, title: 'Compétences & Photo', description: 'Compétences et photo de profil' },
+                    { number: 5, title: 'Mot de passe', description: 'Définir le mot de passe' },
+                    { number: 6, title: 'Récapitulatif', description: 'Vérifier les informations avant création' }
+                ],
+                formData: {
+                    email: '',
+                    role: '',
+                    nom: '',
+                    prenom: '',
+                    adresse: '',
+                    titrePoste: '',
+                    departement: '',
+                    equipe: '',
+                    matricule: '',
+                    capaciteHebdoH: '',
+                    manager: '',
+                    estActif: true,
+                    message: '',
+                    password: ''
+                },
+                
+                nextStep() {
+                    if (this.validateCurrentStep()) {
+                        if (this.currentStep < 6) {
+                            this.currentStep++;
+                            window.scrollTo({ top: 0, behavior: 'smooth' });
+                        }
+                    }
+                },
+                
+                previousStep() {
+                    if (this.currentStep > 1) {
+                        this.currentStep--;
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }
+                },
+                
+                validateCurrentStep() {
+                    let isValid = true;
+                    let message = '';
+                    
+                    switch(this.currentStep) {
+                        case 1:
+                            if (!this.formData.email || !this.formData.role) {
+                                message = 'Veuillez remplir l\'email et le rôle.';
+                                isValid = false;
+                            }
+                            break;
+                        case 2:
+                            if (!this.formData.nom || !this.formData.prenom) {
+                                message = 'Veuillez remplir le nom et le prénom.';
+                                isValid = false;
+                            }
+                            break;
+                        case 5:
+                            if (!this.formData.password || this.formData.password.length < 6) {
+                                message = 'Le mot de passe doit contenir au moins 6 caractères.';
+                                isValid = false;
+                            }
+                            break;
+                    }
+                    
+                    if (!isValid && message) {
+                        alert(message);
+                    }
+                    
+                    return isValid;
+                },
+                
+                submitForm() {
+                    // Le formulaire sera soumis normalement
+                    return true;
+                },
+                
+                getRoleLabel() {
+                    const roleSelect = document.querySelector('select[name*="[role]"]');
+                    if (roleSelect && roleSelect.selectedOptions.length > 0) {
+                        return roleSelect.selectedOptions[0].text;
+                    }
+                    return '';
+                }
+            }
+        }
+    </script>
+{% endblock %}
