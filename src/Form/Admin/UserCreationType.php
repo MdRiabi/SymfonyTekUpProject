@@ -121,7 +121,7 @@ class UserCreationType extends AbstractType
                 ],
                 'label' => 'Compétences',
                 'multiple' => true,
-                'expanded' => true,
+                'expanded' => false,
                 'required' => false,
             ])
             ->add('photoFile', FileType::class, [
