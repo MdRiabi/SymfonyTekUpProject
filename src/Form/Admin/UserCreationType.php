@@ -110,7 +110,7 @@ class UserCreationType extends AbstractType
             ])
             ->add('competences', ChoiceType::class, [
                 'choices' => [
-                    'Développement' => 'developpement',
+                    'Dév' => 'dev',
                     'Design' => 'design',
                     'DevOps' => 'DevOps',
                     'DevSecOps' => 'DevSecOps',

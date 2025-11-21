@@ -69,7 +69,7 @@ class RequestManagementController extends AbstractController
         }
 
         // 5. Le formulaire n'est pas soumis, on affiche la page de création
-        return $this->render('admin/users/createUser.html.twig', [
+        return $this->render('admin/users/createProvedUser.html.twig', [
             'userCreationForm' => $form->createView(),
             'accountRequest' => $accountRequest, // On passe la demande pour le contexte
         ]);
