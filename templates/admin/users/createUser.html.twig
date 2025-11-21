@@ -455,9 +455,14 @@
                     return isValid;
                 },
                 
-                submitForm() {
-                    // Le formulaire sera soumis normalement
-                    return true;
+                submitForm(event) {
+                    // Valider le dernier step avant soumission
+                    if (!this.validateCurrentStep()) {
+                        return false;
+                    }
+                    
+                    // Soumettre le formulaire réellement
+                    event.target.submit();
                 },
                 
                 getRoleLabel() {
