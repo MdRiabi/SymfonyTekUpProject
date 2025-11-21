@@ -4,7 +4,7 @@ namespace App\Controller\Admin;
 
 use App\Entity\AccountRequest;
 use App\Entity\Utilisateur;
-use App\Form\Admin\UserCreationType;
+use App\Form\Admin\ApproveUserCreationType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -38,40 +38,46 @@ class RequestManagementController extends AbstractController
         // 1. On crée une nouvelle entité Utilisateur
         $user = new Utilisateur();
         
-        // 2. On pré-remplit avec les données de la demande
+        // 2. On pré-remplit avec les données de la demande (email et rôle)
+        // Ces champs ne sont PAS dans le formulaire
         $user->setEmail($accountRequest->getEmail());
         $user->setRole($accountRequest->getRole());
 
-        // 3. On crée le formulaire et on le lie à notre utilisateur
-        $form = $this->createForm(UserCreationType::class, $user);
+        // 3. On crée le formulaire sans les champs email et role
+        $form = $this->createForm(ApproveUserCreationType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // 4. Le formulaire est soumis, on traite la création
+            // 4. On s'assure que l'email et le rôle sont toujours définis
+            // (au cas où ils auraient été écrasés)
+            $user->setEmail($accountRequest->getEmail());
+            $user->setRole($accountRequest->getRole());
+            
+            // 5. Hash du mot de passe
             $hashedPassword = $passwordHasher->hashPassword($user, $user->getPlainPassword());
             $user->setPassword($hashedPassword);
             
-            // On sauvegarde le nouvel utilisateur
+            // 6. Sauvegarde de l'utilisateur
             $entityManager->persist($user);
             
-            // On met à jour le statut de la demande
+            // 7. Mise à jour du statut de la demande
             $accountRequest->setStatus(AccountRequest::STATUS_APPROVED);
             $entityManager->persist($accountRequest);
 
-            // On exécute les deux opérations
+            // 8. Exécution des opérations
             $entityManager->flush();
 
-            // TODO: Envoyer l'email de bienvenue ici en utilisant votre NotificationService
+            // TODO: Envoyer l'email de bienvenue ici
             // $this->notificationService->sendWelcomeEmail($user, $user->getPlainPassword());
 
             $this->addFlash('success', "L'utilisateur {$user->getEmail()} a été créé avec succès !");
             return $this->redirectToRoute('admin_manage_users');
         }
 
-        // 5. Le formulaire n'est pas soumis, on affiche la page de création
+        // 9. Affichage du formulaire
         return $this->render('admin/users/createProvedUser.html.twig', [
             'userCreationForm' => $form->createView(),
-            'accountRequest' => $accountRequest, // On passe la demande pour le contexte
+            'accountRequest' => $accountRequest,
         ]);
     }
 
