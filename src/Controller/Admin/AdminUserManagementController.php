@@ -89,12 +89,48 @@ class AdminUserManagementController extends AbstractController
     public function editUser(
         Utilisateur $user,
         Request $request,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
+        RoleRepository $roleRepository,
+        UtilisateurRepository $utilisateurRepository
     ): Response {
-        $form = $this->createForm(UserEditType::class, $user);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
+        try {
+            // Get form data
+            $data = $request->request->all('user_edit_type');
+            
+            // Update user properties
+            if (isset($data['nom'])) $user->setNom($data['nom']);
+            if (isset($data['prenom'])) $user->setPrenom($data['prenom']);
+            if (isset($data['email'])) $user->setEmail($data['email']);
+            if (isset($data['adresse'])) $user->setAdresse($data['adresse']);
+            if (isset($data['titrePoste'])) $user->setTitrePoste($data['titrePoste']);
+            if (isset($data['departement'])) $user->setDepartement($data['departement']);
+            if (isset($data['equipe'])) $user->setEquipe($data['equipe']);
+            if (isset($data['matricule'])) $user->setMatricule($data['matricule']);
+            if (isset($data['capaciteHebdoH'])) $user->setCapaciteHebdoH($data['capaciteHebdoH']);
+            if (isset($data['message'])) $user->setMessage($data['message']);
+            
+            // Update role
+            if (isset($data['role'])) {
+                $role = $roleRepository->find($data['role']);
+                if ($role) $user->setRole($role);
+            }
+            
+            // Update manager
+            if (isset($data['manager']) && !empty($data['manager'])) {
+                $manager = $utilisateurRepository->find($data['manager']);
+                $user->setManager($manager);
+            } else {
+                $user->setManager(null);
+            }
+            
+            // Update competences
+            if (isset($data['competences'])) {
+                $user->setCompetences($data['competences']);
+            }
+            
+            // Update estActif
+            $user->setEstActif(isset($data['estActif']));
+            
             // Update timestamp
             $user->setUpdatedAt(new \DateTimeImmutable());
 
@@ -103,15 +139,10 @@ class AdminUserManagementController extends AbstractController
             $this->addFlash('success', 'Utilisateur modifié avec succès !');
 
             return $this->redirectToRoute('admin_manage_users');
+            
+        } catch (\Exception $e) {
+            return $this->json(['errors' => [$e->getMessage()]], 400);
         }
-
-        // If form has errors, return them as JSON
-        $errors = [];
-        foreach ($form->getErrors(true) as $error) {
-            $errors[] = $error->getMessage();
-        }
-
-        return $this->json(['errors' => $errors], 400);
     }
 
     #[Route('/admin/users/{id}/delete', name: 'admin_user_delete', methods: ['POST'])]
