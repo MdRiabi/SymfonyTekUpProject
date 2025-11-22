@@ -58,7 +58,7 @@
                                             </td>
                                             <td class="whitespace-nowrap px-6 py-4 text-sm text-gray-500">{{ user.dateCreation ? user.dateCreation|date('d/m/Y') : 'N/A' }}</td>
                                             <td class="whitespace-nowrap px-6 py-4 text-right text-sm font-medium">
-                                                <a href="#" class="text-blue-600 hover:text-blue-900 mr-3">Éditer</a>
+                                                <a href="#" class="text-blue-600 hover:text-blue-900 mr-3" onclick="openEditModal({{ user.id }}); return false;">Éditer</a>
                                                 <a href="#" class="text-red-600 hover:text-red-900">Supprimer</a>
                                             </td>
                                         </tr>
@@ -74,5 +74,352 @@
                 </div>
             </div>
         </div>
+
+        <!-- Edit User Modal -->
+        <div id="editUserModal" class="hidden fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+            <!-- Overlay -->
+            <div class="fixed inset-0 bg-gray-900 bg-opacity-75 transition-opacity" onclick="closeEditModal()"></div>
+
+            <!-- Modal Content -->
+            <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:p-0">
+                <div class="relative inline-block align-bottom bg-white rounded-xl text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:align-middle sm:max-w-4xl sm:w-full">
+                    <!-- Header -->
+                    <div class="bg-gradient-to-r from-blue-600 to-blue-700 px-6 py-4">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-10 h-10 bg-white bg-opacity-20 rounded-lg flex items-center justify-center">
+                                    <i class="fas fa-user-edit text-white text-lg"></i>
+                                </div>
+                                <h3 class="text-xl font-semibold text-white" id="modal-title">Modifier l'utilisateur</h3>
+                            </div>
+                            <button onclick="closeEditModal()" class="text-white hover:text-gray-200 transition-colors">
+                                <i class="fas fa-times text-2xl"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Form -->
+                    <form id="editUserForm" class="px-6 py-6">
+                        <input type="hidden" id="edit_user_id" name="user_id">
+
+                        <!-- Informations Générales -->
+                        <div class="mb-6">
+                            <h4 class="text-sm font-semibold text-gray-700 mb-4 flex items-center">
+                                <i class="fas fa-info-circle text-blue-500 mr-2"></i>
+                                Informations Générales
+                            </h4>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">
+                                        <i class="fas fa-user text-blue-500 mr-1"></i>
+                                        Nom <span class="text-red-500">*</span>
+                                    </label>
+                                    <input type="text" id="edit_nom" name="user_edit_type[nom]" required
+                                           class="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">
+                                        <i class="fas fa-user text-blue-500 mr-1"></i>
+                                        Prénom <span class="text-red-500">*</span>
+                                    </label>
+                                    <input type="text" id="edit_prenom" name="user_edit_type[prenom]" required
+                                           class="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">
+                                        <i class="fas fa-envelope text-blue-500 mr-1"></i>
+                                        Email <span class="text-red-500">*</span>
+                                    </label>
+                                    <input type="email" id="edit_email" name="user_edit_type[email]" required
+                                           class="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">
+                                        <i class="fas fa-user-tag text-blue-500 mr-1"></i>
+                                        Rôle <span class="text-red-500">*</span>
+                                    </label>
+                                    <select id="edit_role" name="user_edit_type[role]" required
+                                            class="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                        <!-- Options will be populated dynamically -->
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Profil -->
+                        <div class="mb-6">
+                            <h4 class="text-sm font-semibold text-gray-700 mb-4 flex items-center">
+                                <i class="fas fa-briefcase text-blue-500 mr-2"></i>
+                                Profil Professionnel
+                            </h4>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">
+                                        <i class="fas fa-map-marker-alt text-blue-500 mr-1"></i>
+                                        Adresse
+                                    </label>
+                                    <input type="text" id="edit_adresse" name="user_edit_type[adresse]"
+                                           class="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">
+                                        <i class="fas fa-briefcase text-blue-500 mr-1"></i>
+                                        Titre du Poste
+                                    </label>
+                                    <input type="text" id="edit_titrePoste" name="user_edit_type[titrePoste]"
+                                           class="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">
+                                        <i class="fas fa-building text-blue-500 mr-1"></i>
+                                        Département
+                                    </label>
+                                    <input type="text" id="edit_departement" name="user_edit_type[departement]"
+                                           class="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">
+                                        <i class="fas fa-users text-blue-500 mr-1"></i>
+                                        Équipe
+                                    </label>
+                                    <input type="text" id="edit_equipe" name="user_edit_type[equipe]"
+                                           class="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Détails Techniques -->
+                        <div class="mb-6">
+                            <h4 class="text-sm font-semibold text-gray-700 mb-4 flex items-center">
+                                <i class="fas fa-cog text-blue-500 mr-2"></i>
+                                Détails Techniques
+                            </h4>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">
+                                        <i class="fas fa-id-card text-blue-500 mr-1"></i>
+                                        Matricule
+                                    </label>
+                                    <input type="text" id="edit_matricule" name="user_edit_type[matricule]"
+                                           class="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">
+                                        <i class="fas fa-clock text-blue-500 mr-1"></i>
+                                        Capacité Hebdo (heures)
+                                    </label>
+                                    <input type="number" step="0.01" id="edit_capaciteHebdoH" name="user_edit_type[capaciteHebdoH]"
+                                           class="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">
+                                        <i class="fas fa-user-tie text-blue-500 mr-1"></i>
+                                        Manager / N+1
+                                    </label>
+                                    <select id="edit_manager" name="user_edit_type[manager]"
+                                            class="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                        <!-- Options will be populated dynamically -->
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="flex items-center space-x-2 cursor-pointer">
+                                        <input type="checkbox" id="edit_estActif" name="user_edit_type[estActif]" value="1"
+                                               class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
+                                        <span class="text-sm font-medium text-gray-700">
+                                            <i class="fas fa-toggle-on text-blue-500 mr-1"></i>
+                                            Est Actif
+                                        </span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Compétences -->
+                        <div class="mb-6">
+                            <h4 class="text-sm font-semibold text-gray-700 mb-4 flex items-center">
+                                <i class="fas fa-laptop-code text-blue-500 mr-2"></i>
+                                Compétences
+                            </h4>
+                            <select id="edit_competences" name="user_edit_type[competences][]" multiple
+                                    class="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                <option value="dev">Dév</option>
+                                <option value="design">Design</option>
+                                <option value="DevOps">DevOps</option>
+                                <option value="DevSecOps">DevSecOps</option>
+                                <option value="Cloud">Cloud</option>
+                                <option value="Reseaux">Réseaux</option>
+                                <option value="Systeme">Système</option>
+                                <option value="Ai">AI</option>
+                            </select>
+                            <p class="mt-1 text-xs text-gray-500">Maintenez Ctrl (ou Cmd) pour sélectionner plusieurs compétences</p>
+                        </div>
+
+                        <!-- Message -->
+                        <div class="mb-6">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">
+                                <i class="fas fa-comment-dots text-blue-500 mr-1"></i>
+                                Message / Justification
+                            </label>
+                            <textarea id="edit_message" name="user_edit_type[message]" rows="3"
+                                      class="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                      placeholder="Notes ou justifications concernant cet utilisateur..."></textarea>
+                        </div>
+
+                        <!-- Footer Buttons -->
+                        <div class="flex justify-end space-x-3 pt-4 border-t">
+                            <button type="button" onclick="closeEditModal()"
+                                    class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
+                                <i class="fas fa-times mr-2"></i>
+                                Annuler
+                            </button>
+                            <button type="submit"
+                                    class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
+                                <i class="fas fa-save mr-2"></i>
+                                Enregistrer
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </main>
+
+    <script>
+        let allRoles = [];
+        let allManagers = [];
+
+        // Fetch roles and managers on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            // Fetch roles from the page
+            fetch('{{ path('admin_create_user') }}')
+                .then(response => response.text())
+                .then(html => {
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(html, 'text/html');
+                    const roleSelect = doc.querySelector('select[name*="[role]"]');
+                    if (roleSelect) {
+                        allRoles = Array.from(roleSelect.options).map(opt => ({
+                            value: opt.value,
+                            text: opt.text
+                        }));
+                    }
+                    const managerSelect = doc.querySelector('select[name*="[manager]"]');
+                    if (managerSelect) {
+                        allManagers = Array.from(managerSelect.options).map(opt => ({
+                            value: opt.value,
+                            text: opt.text
+                        }));
+                    }
+                })
+                .catch(error => console.error('Error fetching form data:', error));
+        });
+
+        function openEditModal(userId) {
+            const modal = document.getElementById('editUserModal');
+            
+            // Fetch user data
+            fetch(`/admin/users/${userId}/edit-data`)
+                .then(response => response.json())
+                .then(data => {
+                    // Populate form fields
+                    document.getElementById('edit_user_id').value = data.id;
+                    document.getElementById('edit_nom').value = data.nom || '';
+                    document.getElementById('edit_prenom').value = data.prenom || '';
+                    document.getElementById('edit_email').value = data.email || '';
+                    document.getElementById('edit_adresse').value = data.adresse || '';
+                    document.getElementById('edit_titrePoste').value = data.titrePoste || '';
+                    document.getElementById('edit_departement').value = data.departement || '';
+                    document.getElementById('edit_equipe').value = data.equipe || '';
+                    document.getElementById('edit_matricule').value = data.matricule || '';
+                    document.getElementById('edit_capaciteHebdoH').value = data.capaciteHebdoH || '';
+                    document.getElementById('edit_message').value = data.message || '';
+                    document.getElementById('edit_estActif').checked = data.estActif;
+
+                    // Populate role select
+                    const roleSelect = document.getElementById('edit_role');
+                    roleSelect.innerHTML = '';
+                    allRoles.forEach(role => {
+                        const option = document.createElement('option');
+                        option.value = role.value;
+                        option.text = role.text;
+                        if (role.value == data.role) {
+                            option.selected = true;
+                        }
+                        roleSelect.appendChild(option);
+                    });
+
+                    // Populate manager select
+                    const managerSelect = document.getElementById('edit_manager');
+                    managerSelect.innerHTML = '';
+                    allManagers.forEach(manager => {
+                        const option = document.createElement('option');
+                        option.value = manager.value;
+                        option.text = manager.text;
+                        if (manager.value == data.manager) {
+                            option.selected = true;
+                        }
+                        managerSelect.appendChild(option);
+                    });
+
+                    // Populate competences
+                    const competencesSelect = document.getElementById('edit_competences');
+                    Array.from(competencesSelect.options).forEach(option => {
+                        option.selected = data.competences && data.competences.includes(option.value);
+                    });
+
+                    // Show modal with animation
+                    modal.classList.remove('hidden');
+                    setTimeout(() => {
+                        modal.querySelector('.inline-block').classList.add('scale-100', 'opacity-100');
+                    }, 10);
+                })
+                .catch(error => {
+                    console.error('Error fetching user data:', error);
+                    alert('Erreur lors du chargement des données utilisateur');
+                });
+        }
+
+        function closeEditModal() {
+            const modal = document.getElementById('editUserModal');
+            modal.querySelector('.inline-block').classList.remove('scale-100', 'opacity-100');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 300);
+        }
+
+        // Handle form submission
+        document.getElementById('editUserForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const userId = document.getElementById('edit_user_id').value;
+            const formData = new FormData(this);
+
+            fetch(`/admin/users/${userId}/edit`, {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
+                if (response.redirected) {
+                    window.location.href = response.url;
+                } else if (response.ok) {
+                    window.location.reload();
+                } else {
+                    return response.json().then(data => {
+                        throw new Error(data.errors ? data.errors.join(', ') : 'Erreur lors de la modification');
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Erreur: ' + error.message);
+            });
+        });
+
+        // Close modal on Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeEditModal();
+            }
+        });
+    </script>
 {% endblock %}

@@ -4,6 +4,7 @@ use App\Repository\UtilisateurRepository;
 use App\Repository\RoleRepository;
 use App\Repository\AccountRequestRepository;
 use App\Form\Admin\UserCreationType;
+use App\Form\Admin\UserEditType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -61,6 +62,57 @@ class AdminUserManagementController extends AbstractController
         ]);
     }
 
+
+    #[Route('/admin/users/{id}/edit-data', name: 'admin_user_edit_data', methods: ['GET'])]
+    public function getUserEditData(Utilisateur $user): Response
+    {
+        return $this->json([
+            'id' => $user->getId(),
+            'nom' => $user->getNom(),
+            'prenom' => $user->getPrenom(),
+            'email' => $user->getEmail(),
+            'adresse' => $user->getAdresse(),
+            'titrePoste' => $user->getTitrePoste(),
+            'departement' => $user->getDepartement(),
+            'equipe' => $user->getEquipe(),
+            'matricule' => $user->getMatricule(),
+            'role' => $user->getRole()?->getId(),
+            'estActif' => $user->isEstActif(),
+            'capaciteHebdoH' => $user->getCapaciteHebdoH(),
+            'competences' => $user->getCompetences(),
+            'message' => $user->getMessage(),
+            'manager' => $user->getManager()?->getId(),
+        ]);
+    }
+
+    #[Route('/admin/users/{id}/edit', name: 'admin_user_edit', methods: ['POST'])]
+    public function editUser(
+        Utilisateur $user,
+        Request $request,
+        EntityManagerInterface $entityManager
+    ): Response {
+        $form = $this->createForm(UserEditType::class, $user);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            // Update timestamp
+            $user->setUpdatedAt(new \DateTimeImmutable());
+
+            $entityManager->flush();
+
+            $this->addFlash('success', 'Utilisateur modifié avec succès !');
+
+            return $this->redirectToRoute('admin_manage_users');
+        }
+
+        // If form has errors, return them as JSON
+        $errors = [];
+        foreach ($form->getErrors(true) as $error) {
+            $errors[] = $error->getMessage();
+        }
+
+        return $this->json(['errors' => $errors], 400);
+    }
 
 
     #[Route('/admin', name: 'app_admin')]
