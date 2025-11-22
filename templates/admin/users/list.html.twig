@@ -59,7 +59,7 @@
                                             <td class="whitespace-nowrap px-6 py-4 text-sm text-gray-500">{{ user.dateCreation ? user.dateCreation|date('d/m/Y') : 'N/A' }}</td>
                                             <td class="whitespace-nowrap px-6 py-4 text-right text-sm font-medium">
                                                 <a href="#" class="text-blue-600 hover:text-blue-900 mr-3" onclick="openEditModal({{ user.id }}); return false;">Éditer</a>
-                                                <a href="#" class="text-red-600 hover:text-red-900">Supprimer</a>
+                                                <a href="#" class="text-red-600 hover:text-red-900" onclick="openDeleteModal({{ user.id }}, '{{ user.prenom }}', '{{ user.nom }}'); return false;">Supprimer</a>
                                             </td>
                                         </tr>
                                     {% else %}
@@ -90,11 +90,19 @@
                                 <div class="w-10 h-10 bg-white bg-opacity-20 rounded-lg flex items-center justify-center">
                                     <i class="fas fa-user-edit text-white text-lg"></i>
                                 </div>
-                                <h3 class="text-xl font-semibold text-white" id="modal-title">Modifier l'utilisateur</h3>
+                                <h3 class="text-xl font-semibold text-white" id="modal-title">Modifier l'utilisateur </h3>
                             </div>
                             <button onclick="closeEditModal()" class="text-white hover:text-gray-200 transition-colors">
                                 <i class="fas fa-times text-2xl"></i>
                             </button>
+                        </div>
+                    </div>
+
+                    <!-- Loading Spinner -->
+                    <div id="edit-modal-loading" class="absolute inset-0 bg-white bg-opacity-90 flex items-center justify-center z-10 hidden">
+                        <div class="text-center">
+                            <div class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+                            <p class="mt-3 text-sm text-gray-600 font-medium">Chargement des données...</p>
                         </div>
                     </div>
 
@@ -272,10 +280,10 @@
                                 <i class="fas fa-times mr-2"></i>
                                 Annuler
                             </button>
-                            <button type="submit"
-                                    class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
-                                <i class="fas fa-save mr-2"></i>
-                                Enregistrer
+                            <button type="submit" id="edit-submit-btn"
+                                    class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+                                <i class="fas fa-save mr-2" id="edit-submit-icon"></i>
+                                <span id="edit-submit-text">Enregistrer</span>
                             </button>
                         </div>
                     </form>
@@ -316,6 +324,16 @@
 
         function openEditModal(userId) {
             const modal = document.getElementById('editUserModal');
+            const loadingSpinner = document.getElementById('edit-modal-loading');
+            
+            // Show modal first
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.querySelector('.inline-block').classList.add('scale-100', 'opacity-100');
+            }, 10);
+            
+            // Show loading spinner
+            loadingSpinner.classList.remove('hidden');
             
             // Fetch user data
             fetch(`/admin/users/${userId}/edit-data`)
@@ -334,6 +352,9 @@
                     document.getElementById('edit_capaciteHebdoH').value = data.capaciteHebdoH || '';
                     document.getElementById('edit_message').value = data.message || '';
                     document.getElementById('edit_estActif').checked = data.estActif;
+
+                    // Update modal title with user name
+                    document.getElementById('modal-title').textContent = `Modifier l'utilisateur ${data.prenom} ${data.nom}`;
 
                     // Populate role select
                     const roleSelect = document.getElementById('edit_role');
@@ -367,15 +388,14 @@
                         option.selected = data.competences && data.competences.includes(option.value);
                     });
 
-                    // Show modal with animation
-                    modal.classList.remove('hidden');
-                    setTimeout(() => {
-                        modal.querySelector('.inline-block').classList.add('scale-100', 'opacity-100');
-                    }, 10);
+                    // Hide loading spinner
+                    loadingSpinner.classList.add('hidden');
                 })
                 .catch(error => {
                     console.error('Error fetching user data:', error);
+                    loadingSpinner.classList.add('hidden');
                     alert('Erreur lors du chargement des données utilisateur');
+                    closeEditModal();
                 });
         }
 
@@ -393,6 +413,14 @@
             
             const userId = document.getElementById('edit_user_id').value;
             const formData = new FormData(this);
+            const submitBtn = document.getElementById('edit-submit-btn');
+            const submitIcon = document.getElementById('edit-submit-icon');
+            const submitText = document.getElementById('edit-submit-text');
+
+            // Show loading state
+            submitBtn.disabled = true;
+            submitIcon.className = 'fas fa-spinner fa-spin mr-2';
+            submitText.textContent = 'Enregistrement...';
 
             fetch(`/admin/users/${userId}/edit`, {
                 method: 'POST',
@@ -412,14 +440,119 @@
             .catch(error => {
                 console.error('Error:', error);
                 alert('Erreur: ' + error.message);
+                
+                // Reset button state
+                submitBtn.disabled = false;
+                submitIcon.className = 'fas fa-save mr-2';
+                submitText.textContent = 'Enregistrer';
             });
         });
+
 
         // Close modal on Escape key
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') {
                 closeEditModal();
+                closeDeleteModal();
             }
         });
+
+        // Delete Modal Functions
+        let deleteUserId = null;
+        let deleteUserName = '';
+
+        function openDeleteModal(userId, prenom, nom) {
+            deleteUserId = userId;
+            deleteUserName = `${prenom} ${nom}`;
+            
+            // Update modal content
+            document.getElementById('delete-user-name').textContent = deleteUserName;
+            
+            // Show modal
+            const modal = document.getElementById('deleteUserModal');
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.querySelector('.inline-block').classList.add('scale-100', 'opacity-100');
+            }, 10);
+        }
+
+        function closeDeleteModal() {
+            const modal = document.getElementById('deleteUserModal');
+            modal.querySelector('.inline-block').classList.remove('scale-100', 'opacity-100');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                deleteUserId = null;
+                deleteUserName = '';
+            }, 300);
+        }
+
+        function confirmDelete() {
+            if (deleteUserId) {
+                const submitBtn = document.getElementById('delete-submit-btn');
+                const submitIcon = document.getElementById('delete-submit-icon');
+                const submitText = document.getElementById('delete-submit-text');
+                
+                // Show loading state
+                submitBtn.disabled = true;
+                submitIcon.className = 'fas fa-spinner fa-spin mr-2';
+                submitText.textContent = 'Suppression...';
+                
+                // Create and submit form
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = `/admin/users/${deleteUserId}/delete`;
+                document.body.appendChild(form);
+                form.submit();
+            }
+        }
+    </script>
+
+    <!-- Delete Confirmation Modal -->
+    <div id="deleteUserModal" class="hidden fixed inset-0 z-50 overflow-y-auto" aria-labelledby="delete-modal-title" role="dialog" aria-modal="true">
+        <!-- Overlay -->
+        <div class="fixed inset-0 bg-gray-900 bg-opacity-75 transition-opacity" onclick="closeDeleteModal()"></div>
+
+        <!-- Modal Content -->
+        <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:p-0">
+            <div class="relative inline-block align-bottom bg-white rounded-xl text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+                <!-- Content -->
+                <div class="bg-white px-6 pt-6 pb-4">
+                    <div class="sm:flex sm:items-start">
+                        <div class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
+                            <i class="fas fa-exclamation-triangle text-red-600 text-xl"></i>
+                        </div>
+                        <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                            <h3 class="text-lg leading-6 font-medium text-gray-900" id="delete-modal-title">
+                                Confirmer la suppression
+                            </h3>
+                            <div class="mt-2">
+                                <p class="text-sm text-gray-500">
+                                    Êtes-vous sûr de vouloir supprimer l'utilisateur 
+                                    <span class="font-semibold text-gray-900" id="delete-user-name"></span> ?
+                                </p>
+                                <p class="text-sm text-gray-500 mt-2">
+                                    Cette action est <span class="font-semibold text-red-600">irréversible</span>.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Footer Buttons -->
+                <div class="bg-gray-50 px-6 py-3 sm:flex sm:flex-row-reverse gap-3">
+                    <button type="button" id="delete-submit-btn" onclick="confirmDelete()"
+                            class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+                        <i class="fas fa-trash mr-2" id="delete-submit-icon"></i>
+                        <span id="delete-submit-text">Supprimer</span>
+                    </button>
+                    <button type="button" onclick="closeDeleteModal()"
+                            class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:mt-0 sm:w-auto sm:text-sm transition-colors">
+                        <i class="fas fa-times mr-2"></i>
+                        Annuler
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
     </script>
 {% endblock %}

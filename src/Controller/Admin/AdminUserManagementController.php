@@ -114,6 +114,26 @@ class AdminUserManagementController extends AbstractController
         return $this->json(['errors' => $errors], 400);
     }
 
+    #[Route('/admin/users/{id}/delete', name: 'admin_user_delete', methods: ['POST'])]
+    public function deleteUser(
+        Utilisateur $user,
+        EntityManagerInterface $entityManager
+    ): Response {
+        try {
+            $userName = $user->getPrenom() . ' ' . $user->getNom();
+            
+            $entityManager->remove($user);
+            $entityManager->flush();
+
+            $this->addFlash('success', "L'utilisateur {$userName} a été supprimé avec succès !");
+
+            return $this->redirectToRoute('admin_manage_users');
+        } catch (\Exception $e) {
+            $this->addFlash('error', "Erreur lors de la suppression de l'utilisateur : " . $e->getMessage());
+            return $this->redirectToRoute('admin_manage_users');
+        }
+    }
+
 
     #[Route('/admin', name: 'app_admin')]
     public function manage(
