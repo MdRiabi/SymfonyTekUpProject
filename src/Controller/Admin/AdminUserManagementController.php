@@ -165,6 +165,56 @@ class AdminUserManagementController extends AbstractController
         }
     }
 
+    #[Route('/admin/profile', name: 'admin_profile', methods: ['GET'])]
+    public function profile(): Response
+    {
+        return $this->render('admin/users/profile.html.twig');
+    }
+
+    #[Route('/admin/profile/update', name: 'admin_profile_update', methods: ['POST'])]
+    public function updateProfile(
+        Request $request,
+        EntityManagerInterface $entityManager
+    ): Response {
+        $user = $this->getUser();
+        
+        if (!$user) {
+            throw $this->createAccessDeniedException();
+        }
+
+        try {
+            // Update user properties
+            if ($request->request->has('prenom')) {
+                $user->setPrenom($request->request->get('prenom'));
+            }
+            if ($request->request->has('nom')) {
+                $user->setNom($request->request->get('nom'));
+            }
+            if ($request->request->has('email')) {
+                $user->setEmail($request->request->get('email'));
+            }
+            if ($request->request->has('adresse')) {
+                $user->setAdresse($request->request->get('adresse'));
+            }
+            if ($request->request->has('titrePoste')) {
+                $user->setTitrePoste($request->request->get('titrePoste'));
+            }
+
+            // Update timestamp
+            $user->setUpdatedAt(new \DateTimeImmutable());
+
+            $entityManager->flush();
+
+            $this->addFlash('success', 'Votre profil a été mis à jour avec succès !');
+
+            return $this->redirectToRoute('admin_profile');
+            
+        } catch (\Exception $e) {
+            $this->addFlash('error', 'Erreur lors de la mise à jour du profil : ' . $e->getMessage());
+            return $this->redirectToRoute('admin_profile');
+        }
+    }
+
 
     #[Route('/admin', name: 'app_admin')]
     public function manage(
