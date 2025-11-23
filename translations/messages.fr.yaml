@@ -1,0 +1,121 @@
+vich_uploader.form_label.delete_confirm: "Supprimer?"
+vich_uploader.link.download: Télécharger
+profile.title: "Paramètres du Profil"
+profile.subtitle: "Gérez vos informations personnelles et vos préférences"
+profile.tabs.profile: Profil
+profile.tabs.language: "Langue et région"
+profile.tabs.interface: Interface
+profile.tabs.2fa: "Authentification à deux facteurs"
+profile.tabs.tokens: "Jetons d'accès"
+profile.tabs.session: "Gestion de session"
+profile.tabs.notifications: "Paramètres de notification"
+profile.tabs.email: "Rappels par e-mail"
+profile.tabs.avatar: Avatar
+profile.section.personal_info: "Informations personnelles"
+profile.section.first_name: Prénom
+profile.section.last_name: Nom
+profile.section.email: Email
+profile.section.address: Adresse
+profile.section.job_title: "Titre du poste"
+profile.section.save: Enregistrer
+profile.language.title: "Langue et région"
+profile.language.label: Langue
+profile.language.required: "*"
+profile.language.languages.fr: Français
+profile.language.languages.en: English
+profile.language.languages.it: Italiano
+profile.language.languages.ar: العربية
+profile.language.languages.es: Español
+profile.language.languages.de: Deutsch
+users.title: "Gestion des utilisateurs"
+users.list.title: "Liste des utilisateurs"
+users.list.add_user: "Ajouter un utilisateur"
+users.list.search: Rechercher...
+users.list.table.name: Nom
+users.list.table.email: Email
+users.list.table.role: Rôle
+users.list.table.status: Statut
+users.list.table.actions: Actions
+users.list.status.active: Actif
+users.list.status.inactive: Inactif
+users.list.actions.edit: Modifier
+users.list.actions.delete: Supprimer
+users.list.actions.view: Voir
+flash.success.profile_updated: "Votre profil a été mis à jour avec succès !"
+flash.success.language_updated: "Votre langue a été mise à jour avec succès !"
+flash.success.user_created: "Utilisateur créé avec succès !"
+flash.success.user_updated: "Utilisateur modifié avec succès !"
+flash.success.user_deleted: "L'utilisateur {name} a été supprimé avec succès !"
+flash.error.profile_update_failed: "Erreur lors de la mise à jour du profil : {error}"
+flash.error.language_update_failed: "Erreur lors de la mise à jour de la langue : {error}"
+flash.error.invalid_csrf: "Token CSRF invalide."
+flash.error.invalid_language: "Langue non valide."
+flash.error.user_delete_failed: "Erreur lors de la suppression de l'utilisateur : {error}"
+common.save: Enregistrer
+common.cancel: Annuler
+common.delete: Supprimer
+common.edit: Modifier
+common.close: Fermer
+common.confirm: Confirmer
+common.yes: Oui
+common.no: Non
+common.loading: Chargement...
+common.search: Rechercher
+common.filter: Filtrer
+common.export: Exporter
+common.import: Importer
+nav.dashboard: "Tableau de bord"
+nav.users: Utilisateurs
+nav.projects: Projets
+nav.tasks: Tâches
+nav.reports: Rapports
+nav.settings: Paramètres
+nav.profile: "Mon profil"
+nav.logout: Déconnexion
+nav.administration: Administration
+common.search_placeholder: "Rechercher un projet..."
+common.create: Créer
+create.task: Tâche
+create.milestone: "Jalon (Milestone)"
+create.summary_task: "Tâche Résumé"
+create.epic: Epic
+create.user_story: "User Story"
+create.bug: Bug
+create.new_project: "Nouveau Projet"
+
+# Dashboard
+dashboard:
+  page_title: "Tableau de Bord - Administration"
+  title: "Tableau de Bord (Admin)"
+  pending_requests: "Demandes en attente"
+  click_to_manage: "Cliquez pour gérer"
+
+# Users List
+users.list.title_active: "Utilisateurs Actifs"
+users.list.add_button: "Ajouter un utilisateur"
+users.list.table.department: "Département"
+users.list.table.team: "Équipe"
+users.list.table.created_at: "Date de création"
+users.list.empty: "Aucun utilisateur trouvé."
+users.list.modal.edit_title: "Modifier l'utilisateur"
+users.list.modal.general_info: "Informations Générales"
+users.list.modal.professional_profile: "Profil Professionnel"
+users.list.modal.technical_details: "Détails Techniques"
+users.list.modal.skills: "Compétences"
+users.list.modal.message: "Message / Justification"
+users.list.modal.cancel: "Annuler"
+users.list.modal.save: "Enregistrer"
+users.list.modal.saving: "Enregistrement..."
+users.list.modal.delete_title: "Confirmer la suppression"
+users.list.modal.delete_confirm: "Êtes-vous sûr de vouloir supprimer l'utilisateur"
+users.list.modal.delete_irreversible: "Cette action est irréversible."
+users.list.modal.delete_button: "Supprimer"
+users.list.modal.deleting: "Suppression..."
+
+# Users Dashboard
+users.dashboard.title: "Gestion des Utilisateurs & Rôles"
+users.dashboard.total_users: "Total Utilisateurs"
+users.dashboard.pending_requests: "Demandes en Attente"
+users.dashboard.roles_permissions: "Rôles et Permissions"
+users.dashboard.view_all: "Voir tous les utilisateurs"
+users.dashboard.manage_directory: "Gérer le annuaire"

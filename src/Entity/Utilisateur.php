@@ -90,6 +90,9 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     private ?\DateTimeImmutable $updatedAt = null;
 
+    #[ORM\Column(length: 2, options: ['default' => 'fr'])]
+    private string $language = 'fr';
+
     #[ORM\OneToMany(mappedBy: 'createur', targetEntity: Tache::class)]
     private Collection $tachesCrees;
 
@@ -316,6 +319,17 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     public function setUpdatedAt(?\DateTimeImmutable $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
+        return $this;
+    }
+
+    public function getLanguage(): string
+    {
+        return $this->language;
+    }
+
+    public function setLanguage(string $language): self
+    {
+        $this->language = $language;
         return $this;
     }
 

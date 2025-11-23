@@ -1,0 +1,153 @@
+# Spanish translations (Español)
+
+# Profile Page
+profile:
+  title: "Configuración del Perfil"
+  subtitle: "Gestiona tu información personal y preferencias"
+
+  # Tabs
+  tabs:
+    profile: "Perfil"
+    language: "Idioma y Región"
+    interface: "Interfaz"
+    2fa: "Autenticación de Dos Factores"
+    tokens: "Tokens de Acceso"
+    session: "Gestión de Sesión"
+    notifications: "Configuración de Notificaciones"
+    email: "Recordatorios por Correo"
+    avatar: "Avatar"
+
+  # Profile Section
+  section:
+    personal_info: "Información Personal"
+    first_name: "Nombre"
+    last_name: "Apellido"
+    email: "Correo Electrónico"
+    address: "Dirección"
+    job_title: "Título del Puesto"
+    save: "Guardar"
+
+  # Language Section
+  language:
+    title: "Idioma y Región"
+    label: "Idioma"
+    required: "*"
+    languages:
+      fr: "Français"
+      en: "English"
+      it: "Italiano"
+      ar: "العربية"
+      es: "Español"
+      de: "Deutsch"
+
+# User Management
+users:
+  title: "Gestión de Usuarios"
+  list:
+    title: "Lista de Usuarios"
+    add_user: "Agregar Usuario"
+    search: "Buscar..."
+    table:
+      name: "Nombre"
+      email: "Correo Electrónico"
+      role: "Rol"
+      status: "Estado"
+      actions: "Acciones"
+    status:
+      active: "Activo"
+      inactive: "Inactivo"
+    actions:
+      edit: "Editar"
+      delete: "Eliminar"
+      view: "Ver"
+
+# Flash Messages
+flash:
+  success:
+    profile_updated: "¡Tu perfil ha sido actualizado con éxito!"
+    language_updated: "¡Tu idioma ha sido actualizado con éxito!"
+    user_created: "¡Usuario creado con éxito!"
+    user_updated: "¡Usuario modificado con éxito!"
+    user_deleted: "¡El usuario {name} ha sido eliminado con éxito!"
+  error:
+    profile_update_failed: "Error al actualizar el perfil: {error}"
+    language_update_failed: "Error al actualizar el idioma: {error}"
+    invalid_csrf: "Token CSRF inválido."
+    invalid_language: "Idioma no válido."
+    user_delete_failed: "Error al eliminar el usuario: {error}"
+
+# Common
+common:
+  save: "Guardar"
+  cancel: "Cancelar"
+  delete: "Eliminar"
+  edit: "Editar"
+  close: "Cerrar"
+  confirm: "Confirmar"
+  yes: "Sí"
+  no: "No"
+  loading: "Cargando..."
+  search: "Buscar"
+  filter: "Filtrar"
+  export: "Exportar"
+  import: "Importar"
+  search_placeholder: "Buscar un proyecto..."
+  create: "Crear"
+
+# Navigation
+nav:
+  dashboard: "Panel de Control"
+  users: "Usuarios"
+  projects: "Proyectos"
+  tasks: "Tareas"
+  reports: "Informes"
+  settings: "Configuración"
+  profile: "Mi perfil"
+  logout: "Cerrar sesión"
+  administration: "Administración"
+
+create:
+  task: "Tarea"
+  milestone: "Hito"
+  summary_task: "Tarea de resumen"
+  epic: "Épica"
+  user_story: "Historia de usuario"
+  bug: "Error"
+  new_project: "Nuevo Proyecto"
+
+# Dashboard
+dashboard:
+  page_title: "Panel de Control - Administración"
+  title: "Panel de Control"
+  pending_requests: "Solicitudes pendientes"
+  click_to_manage: "Haga clic para gestionar"
+
+# Users List
+users.list.title_active: "Usuarios Activos"
+users.list.add_button: "Agregar Usuario"
+users.list.table.department: "Departamento"
+users.list.table.team: "Equipo"
+users.list.table.created_at: "Fecha de creación"
+users.list.empty: "No se encontraron usuarios."
+users.list.modal.edit_title: "Editar Usuario"
+users.list.modal.general_info: "Información General"
+users.list.modal.professional_profile: "Perfil Profesional"
+users.list.modal.technical_details: "Detalles Técnicos"
+users.list.modal.skills: "Habilidades"
+users.list.modal.message: "Mensaje / Justificación"
+users.list.modal.cancel: "Cancelar"
+users.list.modal.save: "Guardar"
+users.list.modal.saving: "Guardando..."
+users.list.modal.delete_title: "Confirmar Eliminación"
+users.list.modal.delete_confirm: "¿Estás seguro de que quieres eliminar al usuario"
+users.list.modal.delete_irreversible: "Esta acción es irreversible."
+users.list.modal.delete_button: "Eliminar"
+users.list.modal.deleting: "Eliminando..."
+
+# Users Dashboard
+users.dashboard.title: "Gestión de Usuarios y Roles"
+users.dashboard.total_users: "Total de Usuarios"
+users.dashboard.pending_requests: "Solicitudes Pendientes"
+users.dashboard.roles_permissions: "Roles y Permisos"
+users.dashboard.view_all: "Ver Todos los Usuarios"
+users.dashboard.manage_directory: "Gestionar el Directorio"

@@ -1,0 +1,153 @@
+# Arabic translations (العربية)
+
+# Profile Page
+profile:
+  title: "إعدادات الملف الشخصي"
+  subtitle: "إدارة معلوماتك الشخصية وتفضيلاتك"
+
+  # Tabs
+  tabs:
+    profile: "الملف الشخصي"
+    language: "اللغة والمنطقة"
+    interface: "الواجهة"
+    2fa: "المصادقة الثنائية"
+    tokens: "رموز الوصول"
+    session: "إدارة الجلسة"
+    notifications: "إعدادات الإشعارات"
+    email: "تذكيرات البريد الإلكتروني"
+    avatar: "الصورة الرمزية"
+
+  # Profile Section
+  section:
+    personal_info: "المعلومات الشخصية"
+    first_name: "الاسم الأول"
+    last_name: "اسم العائلة"
+    email: "البريد الإلكتروني"
+    address: "العنوان"
+    job_title: "المسمى الوظيفي"
+    save: "حفظ"
+
+  # Language Section
+  language:
+    title: "اللغة والمنطقة"
+    label: "اللغة"
+    required: "*"
+    languages:
+      fr: "Français"
+      en: "English"
+      it: "Italiano"
+      ar: "العربية"
+      es: "Español"
+      de: "Deutsch"
+
+# User Management
+users:
+  title: "إدارة المستخدمين"
+  list:
+    title: "قائمة المستخدمين"
+    add_user: "إضافة مستخدم"
+    search: "بحث..."
+    table:
+      name: "الاسم"
+      email: "البريد الإلكتروني"
+      role: "الدور"
+      status: "الحالة"
+      actions: "الإجراءات"
+    status:
+      active: "نشط"
+      inactive: "غير نشط"
+    actions:
+      edit: "تعديل"
+      delete: "حذف"
+      view: "عرض"
+
+# Flash Messages
+flash:
+  success:
+    profile_updated: "تم تحديث ملفك الشخصي بنجاح!"
+    language_updated: "تم تحديث لغتك بنجاح!"
+    user_created: "تم إنشاء المستخدم بنجاح!"
+    user_updated: "تم تعديل المستخدم بنجاح!"
+    user_deleted: "تم حذف المستخدم {name} بنجاح!"
+  error:
+    profile_update_failed: "خطأ في تحديث الملف الشخصي: {error}"
+    language_update_failed: "خطأ في تحديث اللغة: {error}"
+    invalid_csrf: "رمز CSRF غير صالح."
+    invalid_language: "لغة غير صالحة."
+    user_delete_failed: "خطأ في حذف المستخدم: {error}"
+
+# Common
+common:
+  save: "حفظ"
+  cancel: "إلغاء"
+  delete: "حذف"
+  edit: "تعديل"
+  close: "إغلاق"
+  confirm: "تأكيد"
+  yes: "نعم"
+  no: "لا"
+  loading: "جاري التحميل..."
+  search: "بحث"
+  filter: "تصفية"
+  export: "تصدير"
+  import: "استيراد"
+  search_placeholder: "البحث عن مشروع..."
+  create: "إنشاء"
+
+# Navigation
+nav:
+  dashboard: "لوحة التحكم"
+  users: "المستخدمون"
+  projects: "المشاريع"
+  tasks: "المهام"
+  reports: "التقارير"
+  settings: "الإعدادات"
+  profile: "ملفي الشخصي"
+  logout: "تسجيل الخروج"
+  administration: "الإدارة"
+
+create:
+  task: "مهمة"
+  milestone: "معلم (Milestone)"
+  summary_task: "مهمة ملخصة"
+  epic: "ملحمة (Epic)"
+  user_story: "قصة مستخدم"
+  bug: "خطأ (Bug)"
+  new_project: "مشروع جديد"
+
+# Dashboard
+dashboard:
+  page_title: "لوحة التحكم - الإدارة"
+  title: "لوحة التحكم"
+  pending_requests: "الطلبات المعلقة"
+  click_to_manage: "انقر للإدارة"
+
+# Users List
+users.list.title_active: "المستخدمون النشطون"
+users.list.add_button: "إضافة مستخدم"
+users.list.table.department: "القسم"
+users.list.table.team: "الفريق"
+users.list.table.created_at: "تاريخ الإنشاء"
+users.list.empty: "لم يتم العثور على مستخدمين."
+users.list.modal.edit_title: "تعديل المستخدم"
+users.list.modal.general_info: "معلومات عامة"
+users.list.modal.professional_profile: "الملف المهني"
+users.list.modal.technical_details: "تفاصيل تقنية"
+users.list.modal.skills: "المهارات"
+users.list.modal.message: "رسالة / تبرير"
+users.list.modal.cancel: "إلغاء"
+users.list.modal.save: "حفظ"
+users.list.modal.saving: "جاري الحفظ..."
+users.list.modal.delete_title: "تأكيد الحذف"
+users.list.modal.delete_confirm: "هل أنت متأكد أنك تريد حذف المستخدم"
+users.list.modal.delete_irreversible: "هذا الإجراء لا رجعة فيه."
+users.list.modal.delete_button: "حذف"
+users.list.modal.deleting: "جاري الحذف..."
+
+# Users Dashboard
+users.dashboard.title: "إدارة المستخدمين والأدوار"
+users.dashboard.total_users: "إجمالي المستخدمين"
+users.dashboard.pending_requests: "الطلبات المعلقة"
+users.dashboard.roles_permissions: "الأدوار والصلاحيات"
+users.dashboard.view_all: "عرض جميع المستخدمين"
+users.dashboard.manage_directory: "إدارة الدليل"

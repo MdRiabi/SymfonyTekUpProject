@@ -16,6 +16,7 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class AdminUserManagementController extends AbstractController
 {
@@ -27,6 +28,12 @@ class AdminUserManagementController extends AbstractController
         return $this->render('admin/users/list.html.twig', [
             'users' => $users,
         ]);
+    }
+
+    #[Route('/admin/test-translation', name: 'admin_test_translation')]
+    public function testTranslation(): Response
+    {
+        return $this->render('admin/test_translation.html.twig');
     }
 
     #[Route('/admin/users/create', name: 'admin_create_user')]
@@ -211,6 +218,64 @@ class AdminUserManagementController extends AbstractController
             
         } catch (\Exception $e) {
             $this->addFlash('error', 'Erreur lors de la mise à jour du profil : ' . $e->getMessage());
+            return $this->redirectToRoute('admin_profile');
+        }
+    }
+
+    #[Route('/admin/profile/update-language', name: 'admin_user_update_language', methods: ['POST'])]
+    public function updateLanguage(
+        Request $request,
+        EntityManagerInterface $entityManager,
+        \Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface $tokenStorage
+    ): Response {
+        $user = $this->getUser();
+        
+        if (!$user instanceof Utilisateur) {
+            throw $this->createAccessDeniedException();
+        }
+
+        // Verify CSRF token
+        $submittedToken = $request->request->get('_token');
+        if (!$this->isCsrfTokenValid('update_language', $submittedToken)) {
+            $this->addFlash('error', 'flash.error.invalid_csrf');
+            return $this->redirectToRoute('admin_profile');
+        }
+
+        try {
+            $language = $request->request->get('language');
+            
+            // Validate language
+            $allowedLanguages = ['fr', 'en', 'it', 'ar', 'es', 'de'];
+            if (!in_array($language, $allowedLanguages)) {
+                throw new \InvalidArgumentException('flash.error.invalid_language');
+            }
+
+            // Update user language
+            $user->setLanguage($language);
+            $user->setUpdatedAt(new \DateTimeImmutable());
+
+            $entityManager->flush();
+            
+            // Update the session with the new locale
+            // This is the most reliable way to persist locale across requests
+            $request->getSession()->set('_locale', $language);
+            
+            // Also refresh the user in the security token just in case
+            $entityManager->refresh($user);
+            
+            // Update the token with the refreshed user
+            $token = $tokenStorage->getToken();
+            if ($token) {
+                $token->setUser($user);
+                $tokenStorage->setToken($token);
+            }
+
+            $this->addFlash('success', 'flash.success.language_updated');
+
+            return $this->redirectToRoute('admin_profile');
+            
+        } catch (\Exception $e) {
+            $this->addFlash('error', 'flash.error.language_update_failed');
             return $this->redirectToRoute('admin_profile');
         }
     }

@@ -1,0 +1,153 @@
+# Italian translations (Italiano)
+
+# Profile Page
+profile:
+  title: "Impostazioni del Profilo"
+  subtitle: "Gestisci le tue informazioni personali e preferenze"
+
+  # Tabs
+  tabs:
+    profile: "Profilo"
+    language: "Lingua e Regione"
+    interface: "Interfaccia"
+    2fa: "Autenticazione a Due Fattori"
+    tokens: "Token di Accesso"
+    session: "Gestione Sessione"
+    notifications: "Impostazioni Notifiche"
+    email: "Promemoria Email"
+    avatar: "Avatar"
+
+  # Profile Section
+  section:
+    personal_info: "Informazioni Personali"
+    first_name: "Nome"
+    last_name: "Cognome"
+    email: "Email"
+    address: "Indirizzo"
+    job_title: "Titolo di Lavoro"
+    save: "Salva"
+
+  # Language Section
+  language:
+    title: "Lingua e Regione"
+    label: "Lingua"
+    required: "*"
+    languages:
+      fr: "Français"
+      en: "English"
+      it: "Italiano"
+      ar: "العربية"
+      es: "Español"
+      de: "Deutsch"
+
+# User Management
+users:
+  title: "Gestione Utenti"
+  list:
+    title: "Elenco Utenti"
+    add_user: "Aggiungi Utente"
+    search: "Cerca..."
+    table:
+      name: "Nome"
+      email: "Email"
+      role: "Ruolo"
+      status: "Stato"
+      actions: "Azioni"
+    status:
+      active: "Attivo"
+      inactive: "Inattivo"
+    actions:
+      edit: "Modifica"
+      delete: "Elimina"
+      view: "Visualizza"
+
+# Flash Messages
+flash:
+  success:
+    profile_updated: "Il tuo profilo è stato aggiornato con successo!"
+    language_updated: "La tua lingua è stata aggiornata con successo!"
+    user_created: "Utente creato con successo!"
+    user_updated: "Utente modificato con successo!"
+    user_deleted: "L'utente {name} è stato eliminato con successo!"
+  error:
+    profile_update_failed: "Errore durante l'aggiornamento del profilo: {error}"
+    language_update_failed: "Errore durante l'aggiornamento della lingua: {error}"
+    invalid_csrf: "Token CSRF non valido."
+    invalid_language: "Lingua non valida."
+    user_delete_failed: "Errore durante l'eliminazione dell'utente: {error}"
+
+# Common
+common:
+  save: "Salva"
+  cancel: "Annulla"
+  delete: "Elimina"
+  edit: "Modifica"
+  close: "Chiudi"
+  confirm: "Conferma"
+  yes: "Sì"
+  no: "No"
+  loading: "Caricamento..."
+  search: "Cerca"
+  search_placeholder: "Cerca un progetto..."
+  create: Creare
+  filter: "Filtra"
+  export: "Esporta"
+  import: "Importa"
+
+# Navigation
+nav:
+  dashboard: "Dashboard"
+  users: "Utenti"
+  projects: "Progetti"
+  tasks: "Compiti"
+  reports: "Rapporti"
+  settings: "Impostazioni"
+  profile: "Il mio profilo"
+  logout: Disconnettersi
+  administration: Amministrazione
+
+create:
+  task: Compito
+  milestone: Pietra miliare
+  summary_task: "Compito di riepilogo"
+  epic: Epic
+  user_story: "User Story"
+  bug: Bug
+  new_project: "Nuovo Progetto"
+
+# Dashboard
+dashboard:
+  page_title: "Dashboard - Amministrazione"
+  title: "Dashboard"
+  pending_requests: "Richieste in attesa"
+  click_to_manage: "Clicca per gestire"
+
+# Users List
+users.list.title_active: "Utenti Attivi"
+users.list.add_button: "Aggiungi Utente"
+users.list.table.department: "Dipartimento"
+users.list.table.team: "Squadra"
+users.list.table.created_at: "Creato il"
+users.list.empty: "Nessun utente trovato."
+users.list.modal.edit_title: "Modifica Utente"
+users.list.modal.general_info: "Informazioni Generali"
+users.list.modal.professional_profile: "Profilo Professionale"
+users.list.modal.technical_details: "Dettagli Tecnici"
+users.list.modal.skills: "Competenze"
+users.list.modal.message: "Messaggio / Giustificazione"
+users.list.modal.cancel: "Annulla"
+users.list.modal.save: "Salva"
+users.list.modal.saving: "Salvataggio..."
+users.list.modal.delete_title: "Conferma Eliminazione"
+users.list.modal.delete_confirm: "Sei sicuro di voler eliminare l'utente"
+users.list.modal.delete_irreversible: "Questa azione è irreversibile."
+users.list.modal.delete_button: "Elimina"
+users.list.modal.deleting: "Eliminazione..."
+
+# Users Dashboard
+users.dashboard.title: "Gestione Utenti e Ruoli"
+users.dashboard.total_users: "Totale Utenti"
+users.dashboard.pending_requests: "Richieste in Attesa"
+users.dashboard.roles_permissions: "Ruoli e Permessi"
+users.dashboard.view_all: "Vedi Tutti gli Utenti"
+users.dashboard.manage_directory: "Gestisci l'Annuario"

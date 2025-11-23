@@ -1,12 +1,12 @@
 {# templates/admin/users.html.twig #}
 {% extends 'base.html.twig' %}
 
-{% block title %}Gestion des Utilisateurs & Rôles{% endblock %}
+{% block title %}{{ 'users.dashboard.title'|trans }}{% endblock %}
 
 {% block body %}
     <main class="pt-16 overflow-y-auto">
         <div class="p-4 md:p-6 lg:p-8">
-            <h1 class="text-2xl font-semibold text-gray-900 mb-8">Gestion des Utilisateurs & Rôles</h1>
+            <h1 class="text-2xl font-semibold text-gray-900 mb-8">{{ 'users.dashboard.title'|trans }}</h1>
 
             <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4 mb-8">
                 {# Widget : Total Utilisateurs #}
@@ -18,7 +18,7 @@
                             </div>
                             <div class="ml-5 w-0 flex-1">
                                 <dl>
-                                    <dt class="text-sm font-medium text-gray-500 truncate">Total Utilisateurs</dt>
+                                    <dt class="text-sm font-medium text-gray-500 truncate">{{ 'users.dashboard.total_users'|trans }}</dt>
                                     <dd class="text-lg font-medium text-gray-900">{{ total_users_count }}</dd>
                                 </dl>
                             </div>
@@ -36,7 +36,7 @@
                                 </div>
                                 <div class="ml-5 w-0 flex-1">
                                     <dl>
-                                        <dt class="text-sm font-medium text-gray-500 truncate">Demandes en Attente</dt>
+                                        <dt class="text-sm font-medium text-gray-500 truncate">{{ 'users.dashboard.pending_requests'|trans }}</dt>
                                         <dd class="text-lg font-medium text-gray-900">{{ pending_requests_count }}</dd>
                                     </dl>
                                 </div>
@@ -55,7 +55,7 @@
                                 </div>
                                 <div class="ml-5 w-0 flex-1">
                                     <dl>
-                                        <dt class="text-sm font-medium text-gray-500 truncate">Rôles et Permissions</dt>
+                                        <dt class="text-sm font-medium text-gray-500 truncate">{{ 'users.dashboard.roles_permissions'|trans }}</dt>
                                         <dd class="text-lg font-medium text-gray-900">{{ total_roles_count }}</dd>
                                     </dl>
                                 </div>
@@ -74,8 +74,8 @@
                                 </div>
                                 <div class="ml-5 w-0 flex-1">
                                     <dl>
-                                        <dt class="text-sm font-medium text-gray-500 truncate">Voir tous les utilisateurs</dt>
-                                        <dd class="text-sm font-medium text-gray-900">Gérer le annuaire</dd>
+                                        <dt class="text-sm font-medium text-gray-500 truncate">{{ 'users.dashboard.view_all'|trans }}</dt>
+                                        <dd class="text-sm font-medium text-gray-900">{{ 'users.dashboard.manage_directory'|trans }}</dd>
                                     </dl>
                                 </div>
                             </div>

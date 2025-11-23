@@ -1,7 +1,7 @@
 {# templates/admin/users/profile.html.twig #}
 {% extends 'base.html.twig' %}
 
-{% block title %}Mon Profil - Paramètres{% endblock %}
+{% block title %}{{ 'profile.title'|trans }}{% endblock %}
 
 {% block body %}
     <style>
@@ -21,8 +21,8 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             <!-- Header -->
             <div class="mb-8">
-                <h1 class="text-3xl font-bold text-gray-900">Paramètres du Profil</h1>
-                <p class="mt-2 text-sm text-gray-600">Gérez vos informations personnelles et vos préférences</p>
+                <h1 class="text-3xl font-bold text-gray-900">{{ 'profile.title'|trans }}</h1>
+                <p class="mt-2 text-sm text-gray-600">{{ 'profile.subtitle'|trans }}</p>
             </div>
 
             <!-- Horizontal Tab Navigation -->
@@ -30,31 +30,31 @@
                 <div class="border-b border-gray-200">
                     <nav class="flex overflow-x-auto" aria-label="Tabs">
                         <button onclick="switchTab('profil')" id="tab-profil" class="tab-active whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm transition-colors hover:text-blue-600 focus:outline-none">
-                            <i class="fas fa-user mr-2"></i>Profil
+                            <i class="fas fa-user mr-2"></i>{{ 'profile.tabs.profile'|trans }}
                         </button>
                         <button onclick="switchTab('langue')" id="tab-langue" class="whitespace-nowrap py-4 px-6 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-blue-600 transition-colors focus:outline-none">
-                            <i class="fas fa-globe mr-2"></i>Langue et région
+                            <i class="fas fa-globe mr-2"></i>{{ 'profile.tabs.language'|trans }}
                         </button>
                         <button onclick="switchTab('interface')" id="tab-interface" class="whitespace-nowrap py-4 px-6 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-blue-600 transition-colors focus:outline-none">
-                            <i class="fas fa-desktop mr-2"></i>Interface
+                            <i class="fas fa-desktop mr-2"></i>{{ 'profile.tabs.interface'|trans }}
                         </button>
                         <button onclick="switchTab('2fa')" id="tab-2fa" class="whitespace-nowrap py-4 px-6 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-blue-600 transition-colors focus:outline-none">
-                            <i class="fas fa-shield-alt mr-2"></i>Authentification à deux facteurs
+                            <i class="fas fa-shield-alt mr-2"></i>{{ 'profile.tabs.2fa'|trans }}
                         </button>
                         <button onclick="switchTab('tokens')" id="tab-tokens" class="whitespace-nowrap py-4 px-6 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-blue-600 transition-colors focus:outline-none">
-                            <i class="fas fa-key mr-2"></i>Jetons d'accès
+                            <i class="fas fa-key mr-2"></i>{{ 'profile.tabs.tokens'|trans }}
                         </button>
                         <button onclick="switchTab('session')" id="tab-session" class="whitespace-nowrap py-4 px-6 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-blue-600 transition-colors focus:outline-none">
-                            <i class="fas fa-clock mr-2"></i>Gestion de session
+                            <i class="fas fa-clock mr-2"></i>{{ 'profile.tabs.session'|trans }}
                         </button>
                         <button onclick="switchTab('notifications')" id="tab-notifications" class="whitespace-nowrap py-4 px-6 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-blue-600 transition-colors focus:outline-none">
-                            <i class="fas fa-bell mr-2"></i>Paramètres de notification
+                            <i class="fas fa-bell mr-2"></i>{{ 'profile.tabs.notifications'|trans }}
                         </button>
                         <button onclick="switchTab('email')" id="tab-email" class="whitespace-nowrap py-4 px-6 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-blue-600 transition-colors focus:outline-none">
-                            <i class="fas fa-envelope mr-2"></i>Rappels par e-mail
+                            <i class="fas fa-envelope mr-2"></i>{{ 'profile.tabs.email'|trans }}
                         </button>
                         <button onclick="switchTab('avatar')" id="tab-avatar" class="whitespace-nowrap py-4 px-6 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-blue-600 transition-colors focus:outline-none">
-                            <i class="fas fa-image mr-2"></i>Avatar
+                            <i class="fas fa-image mr-2"></i>{{ 'profile.tabs.avatar'|trans }}
                         </button>
                     </nav>
                 </div>

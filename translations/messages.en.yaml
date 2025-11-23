@@ -1,0 +1,154 @@
+# English translations
+
+# Profile Page
+profile:
+  title: "Profile Settings"
+  subtitle: "Manage your personal information and preferences"
+
+  # Tabs
+  tabs:
+    profile: "Profile"
+    language: "Language and Region"
+    interface: "Interface"
+    2fa: "Two-Factor Authentication"
+    tokens: "Access Tokens"
+    session: "Session Management"
+    notifications: "Notification Settings"
+    email: "Email Reminders"
+    avatar: "Avatar"
+
+  # Profile Section
+  section:
+    personal_info: "Personal Information"
+    first_name: "First Name"
+    last_name: "Last Name"
+    email: "Email"
+    address: "Address"
+    job_title: "Job Title"
+    save: "Save"
+
+  # Language Section
+  language:
+    title: "Language and Region"
+    label: "Language"
+    required: "*"
+    languages:
+      fr: "Français"
+      en: "English"
+      it: "Italiano"
+      ar: "العربية"
+      es: "Español"
+      de: "Deutsch"
+
+# User Management
+users:
+  title: "User Management"
+  list:
+    title: "User List"
+    add_user: "Add User"
+    search: "Search..."
+    table:
+      name: "Name"
+      email: "Email"
+      role: "Role"
+      status: "Status"
+      actions: "Actions"
+    status:
+      active: "Active"
+      inactive: "Inactive"
+    actions:
+      edit: "Edit"
+      delete: "Delete"
+      view: "View"
+
+# Flash Messages
+flash:
+  success:
+    profile_updated: "Your profile has been updated successfully!"
+    language_updated: "Your language has been updated successfully!"
+    user_created: "User created successfully!"
+    user_updated: "User updated successfully!"
+    user_deleted: "User {name} has been deleted successfully!"
+  error:
+    profile_update_failed: "Error updating profile: {error}"
+    language_update_failed: "Error updating language: {error}"
+    invalid_csrf: "Invalid CSRF token."
+    invalid_language: "Invalid language."
+    user_delete_failed: "Error deleting user: {error}"
+
+# Common
+common:
+  save: "Save"
+  cancel: "Cancel"
+  delete: "Delete"
+  edit: "Edit"
+  close: "Close"
+  confirm: "Confirm"
+  yes: "Yes"
+  no: "No"
+  loading: "Loading..."
+  search: "Search"
+  filter: "Filter"
+  export: "Export"
+  import: "Import"
+  search_placeholder: "Search for a project..."
+  create: "Create"
+
+# Navigation
+nav:
+  dashboard: "Dashboard"
+  users: "Users"
+  projects: "Projects"
+  tasks: "Tasks"
+  reports: "Reports"
+  settings: "Settings"
+  profile: "My Profile"
+  logout: "Logout"
+  administration: "Administration"
+
+# Create Menu
+create:
+  task: "Task"
+  milestone: "Milestone"
+  summary_task: "Summary Task"
+  epic: "Epic"
+  user_story: "User Story"
+  bug: "Bug"
+  new_project: "New Project"
+
+# Dashboard
+dashboard:
+  page_title: "Dashboard - Administration"
+  title: "Dashboard"
+  pending_requests: "Pending Requests"
+  click_to_manage: "Click to manage"
+
+# Users List
+users.list.title_active: "Active Users"
+users.list.add_button: "Add User"
+users.list.table.department: "Department"
+users.list.table.team: "Team"
+users.list.table.created_at: "Created At"
+users.list.empty: "No users found."
+users.list.modal.edit_title: "Edit User"
+users.list.modal.general_info: "General Information"
+users.list.modal.professional_profile: "Professional Profile"
+users.list.modal.technical_details: "Technical Details"
+users.list.modal.skills: "Skills"
+users.list.modal.message: "Message / Justification"
+users.list.modal.cancel: "Cancel"
+users.list.modal.save: "Save"
+users.list.modal.saving: "Saving..."
+users.list.modal.delete_title: "Confirm Deletion"
+users.list.modal.delete_confirm: "Are you sure you want to delete user"
+users.list.modal.delete_irreversible: "This action is irreversible."
+users.list.modal.delete_button: "Delete"
+users.list.modal.deleting: "Deleting..."
+
+# Users Dashboard
+users.dashboard.title: "User & Role Management"
+users.dashboard.total_users: "Total Users"
+users.dashboard.pending_requests: "Pending Requests"
+users.dashboard.roles_permissions: "Roles & Permissions"
+users.dashboard.view_all: "View All Users"
+users.dashboard.manage_directory: "Manage Directory"

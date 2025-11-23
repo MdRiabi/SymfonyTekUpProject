@@ -1,0 +1,78 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Test Traduction{% endblock %}
+
+{% block body %}
+<div class="p-8">
+    <h1 class="text-3xl font-bold mb-6">Test du Système de Traduction</h1>
+    
+    <div class="bg-gray-900 rounded-lg shadow-lg p-6 mb-8 border border-gray-800">
+        <h2 class="text-xl font-semibold text-white mb-4">Informations</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-300">
+            <div>
+                <p><span class="font-medium text-gray-500">Locale actuelle (Request):</span> <span class="text-white">{{ app.request.locale }}</span></p>
+                <p><span class="font-medium text-gray-500">Locale en Session (_locale):</span> <span class="text-white">{{ app.session.get('_locale', 'NON DÉFINI') }}</span></p>
+                <p><span class="font-medium text-gray-500">Utilisateur:</span> <span class="text-white">{{ app.user ? app.user.email : 'Non connecté' }}</span></p>
+                <p><span class="font-medium text-gray-500">Langue utilisateur (DB):</span> <span class="text-white">{{ app.user ? app.user.language : 'N/A' }}</span></p>
+            </div>
+        </div>
+    </div>
+
+    <div class="bg-white p-6 rounded-lg shadow mb-6">
+        <h2 class="text-xl font-semibold mb-4">Test des Traductions</h2>
+        
+        <table class="w-full border">
+            <thead>
+                <tr class="bg-gray-100">
+                    <th class="border p-2">Clé</th>
+                    <th class="border p-2">Résultat</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="border p-2"><code>profile.title</code></td>
+                    <td class="border p-2">{{ 'profile.title'|trans }}</td>
+                </tr>
+                <tr>
+                    <td class="border p-2"><code>profile.subtitle</code></td>
+                    <td class="border p-2">{{ 'profile.subtitle'|trans }}</td>
+                </tr>
+                <tr>
+                    <td class="border p-2"><code>profile.tabs.profile</code></td>
+                    <td class="border p-2">{{ 'profile.tabs.profile'|trans }}</td>
+                </tr>
+                <tr>
+                    <td class="border p-2"><code>profile.tabs.language</code></td>
+                    <td class="border p-2">{{ 'profile.tabs.language'|trans }}</td>
+                </tr>
+                <tr>
+                    <td class="border p-2"><code>common.save</code></td>
+                    <td class="border p-2">{{ 'common.save'|trans }}</td>
+                </tr>
+                <tr>
+                    <td class="border p-2"><code>common.cancel</code></td>
+                    <td class="border p-2">{{ 'common.cancel'|trans }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="bg-white p-6 rounded-lg shadow">
+        <h2 class="text-xl font-semibold mb-4">Changer la langue</h2>
+        <form method="post" action="{{ path('admin_user_update_language') }}">
+            <select name="language" class="border p-2 rounded">
+                <option value="fr">Français</option>
+                <option value="en">English</option>
+                <option value="it">Italiano</option>
+                <option value="ar">العربية</option>
+                <option value="es">Español</option>
+                <option value="de">Deutsch</option>
+            </select>
+            <input type="hidden" name="_token" value="{{ csrf_token('update_language') }}">
+            <button type="submit" class="ml-2 px-4 py-2 bg-blue-600 text-white rounded">
+                Changer
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}

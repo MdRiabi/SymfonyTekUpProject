@@ -1,0 +1,154 @@
+# German translations (Deutsch)
+
+# Profile Page
+profile:
+  title: "Profileinstellungen"
+  subtitle: "Verwalten Sie Ihre persönlichen Informationen und Einstellungen"
+
+  # Tabs
+  tabs:
+    profile: "Profil"
+    language: "Sprache und Region"
+    interface: "Benutzeroberfläche"
+    2fa: "Zwei-Faktor-Authentifizierung"
+    tokens: "Zugriffstokens"
+    session: "Sitzungsverwaltung"
+    notifications: "Benachrichtigungseinstellungen"
+    email: "E-Mail-Erinnerungen"
+    avatar: "Avatar"
+
+  # Profile Section
+  section:
+    personal_info: "Persönliche Informationen"
+    first_name: "Vorname"
+    last_name: "Nachname"
+    email: "E-Mail"
+    address: "Adresse"
+    job_title: "Berufsbezeichnung"
+    save: "Speichern"
+
+  # Language Section
+  language:
+    title: "Sprache und Region"
+    label: "Sprache"
+    required: "*"
+    languages:
+      fr: "Français"
+      en: "English"
+      it: "Italiano"
+      ar: "العربية"
+      es: "Español"
+      de: "Deutsch"
+
+# User Management
+users:
+  title: "Benutzerverwaltung"
+  list:
+    title: "Benutzerliste"
+    add_user: "Benutzer hinzufügen"
+    search: "Suchen..."
+    table:
+      name: "Name"
+      email: "E-Mail"
+      role: "Rolle"
+      status: "Status"
+      actions: "Aktionen"
+    status:
+      active: "Aktiv"
+      inactive: "Inaktiv"
+    actions:
+      edit: "Bearbeiten"
+      delete: "Löschen"
+      view: "Ansehen"
+
+# Flash Messages
+flash:
+  success:
+    profile_updated: "Ihr Profil wurde erfolgreich aktualisiert!"
+    language_updated: "Ihre Sprache wurde erfolgreich aktualisiert!"
+    user_created: "Benutzer erfolgreich erstellt!"
+    user_updated: "Benutzer erfolgreich geändert!"
+    user_deleted: "Benutzer {name} wurde erfolgreich gelöscht!"
+  error:
+    profile_update_failed: "Fehler beim Aktualisieren des Profils: {error}"
+    language_update_failed: "Fehler beim Aktualisieren der Sprache: {error}"
+    invalid_csrf: "Ungültiges CSRF-Token."
+    invalid_language: "Ungültige Sprache."
+    user_delete_failed: "Fehler beim Löschen des Benutzers: {error}"
+
+# Common
+common:
+  save: "Speichern"
+  cancel: "Abbrechen"
+  delete: "Löschen"
+  edit: "Bearbeiten"
+  close: "Schließen"
+  confirm: "Bestätigen"
+  yes: "Ja"
+  no: "Nein"
+  loading: "Laden..."
+  search: "Suchen"
+  filter: "Filtern"
+  export: "Exportieren"
+  import: "Importieren"
+  search_placeholder: "Projekt suchen..."
+  create: Erstellen
+
+# Navigation
+nav:
+  dashboard: "Dashboard"
+  users: "Benutzer"
+  projects: "Projekte"
+  tasks: "Aufgaben"
+  reports: "Berichte"
+  settings: "Einstellungen"
+  profile: "Mein Profil"
+  logout: "Abmelden"
+  administration: Verwaltung
+
+# Create Menu
+create:
+  task: Aufgabe
+  milestone: Meilenstein
+  summary_task: "Zusammenfassungsaufgabe"
+  epic: Epic
+  user_story: "User Story"
+  bug: Fehler
+  new_project: "Neues Projekt"
+
+# Dashboard
+dashboard:
+  page_title: "Dashboard - Verwaltung"
+  title: "Dashboard"
+  pending_requests: "Ausstehende Anfragen"
+  click_to_manage: "Klicken Sie zum Verwalten"
+
+# Users List
+users.list.title_active: "Aktive Benutzer"
+users.list.add_button: "Benutzer hinzufügen"
+users.list.table.department: "Abteilung"
+users.list.table.team: "Team"
+users.list.table.created_at: "Erstellt am"
+users.list.empty: "Keine Benutzer gefunden."
+users.list.modal.edit_title: "Benutzer bearbeiten"
+users.list.modal.general_info: "Allgemeine Informationen"
+users.list.modal.professional_profile: "Berufliches Profil"
+users.list.modal.technical_details: "Technische Details"
+users.list.modal.skills: "Fähigkeiten"
+users.list.modal.message: "Nachricht / Begründung"
+users.list.modal.cancel: "Abbrechen"
+users.list.modal.save: "Speichern"
+users.list.modal.saving: "Speichern..."
+users.list.modal.delete_title: "Löschen bestätigen"
+users.list.modal.delete_confirm: "Sind Sie sicher, dass Sie den Benutzer löschen möchten"
+users.list.modal.delete_irreversible: "Diese Aktion ist unwiderruflich."
+users.list.modal.delete_button: "Löschen"
+users.list.modal.deleting: "Löschen..."
+
+# Users Dashboard
+users.dashboard.title: "Benutzer- und Rollenverwaltung"
+users.dashboard.total_users: "Gesamtbenutzer"
+users.dashboard.pending_requests: "Ausstehende Anfragen"
+users.dashboard.roles_permissions: "Rollen und Berechtigungen"
+users.dashboard.view_all: "Alle Benutzer anzeigen"
+users.dashboard.manage_directory: "Verzeichnis verwalten"

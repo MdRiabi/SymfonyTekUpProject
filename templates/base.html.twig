@@ -1,6 +1,6 @@
 {# templates/base.html.twig #}
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="{{ app.request.locale }}" {% if app.request.locale == 'ar' %}dir="rtl"{% endif %}>
 <head>
     {# ======================================================= #}
     {# EN-TÊTE COMMUN À TOUTES LES PAGES               #}
@@ -80,6 +80,21 @@
         .hamburger-btn:hover {
             transform: scale(1.05);
         }
+
+        /* RTL Support for Arabic */
+        {% if app.request.locale == 'ar' %}
+        [dir="rtl"] .sidebar-item:hover {
+            transform: translateX(-4px);
+        }
+        [dir="rtl"] .sidebar-hidden {
+            transform: translateX(100%);
+        }
+        [dir="rtl"] .sidebar-overlay-mode {
+            left: auto;
+            right: 0;
+            box-shadow: -4px 0 10px rgba(0, 0, 0, 0.1);
+        }
+        {% endif %}
     </style>
 </head>
 
@@ -109,37 +124,37 @@
                 <li>
                     <a href="{{ path('admin_dashboard') }}" class="sidebar-item flex items-center p-3 rounded-lg text-gray-700 hover:bg-blue-50 hover:text-blue-600">
                         <i class="fas fa-tachometer-alt w-7 h-7 text-xl flex-shrink-0 text-slate-400"></i>
-                        <span class="ml-3">Tableau de Bord</span>
+                        <span class="ml-3">{{ 'nav.dashboard'|trans }}</span>
                     </a>
                 </li>
                 <li>
                     <a href="#" class="sidebar-item flex items-center p-3 rounded-lg text-gray-700 hover:bg-blue-50 hover:text-blue-600">
                         <i class="fas fa-folder-open w-7 h-7 text-xl flex-shrink-0 text-slate-400"></i>
-                        <span class="ml-3">Projets</span>
+                        <span class="ml-3">{{ 'nav.projects'|trans }}</span>
                     </a>
                 </li>
                 <li>
                     <a href="{{ path('admin_manage_users') }}" class="sidebar-item flex items-center p-3 rounded-lg text-gray-700 hover:bg-blue-50 hover:text-blue-600">
                         <i class="fas fa-users w-7 h-7 text-xl flex-shrink-0 text-slate-400"></i>
-                        <span class="ml-3">Utilisateurs & Rôles</span>
+                        <span class="ml-3">{{ 'nav.users'|trans }}</span>
                     </a>
                 </li>
                 <li>
                     <a href="#" class="sidebar-item flex items-center p-3 rounded-lg text-gray-700 hover:bg-blue-50 hover:text-blue-600">
                         <i class="fas fa-cogs w-7 h-7 text-xl flex-shrink-0 text-slate-400"></i>
-                        <span class="ml-3">Administration</span>
+                        <span class="ml-3">{{ 'nav.administration'|trans }}</span>
                     </a>
                 </li>
                 <li>
                     <a href="#" class="sidebar-item flex items-center p-3 rounded-lg text-gray-700 hover:bg-blue-50 hover:text-blue-600">
                         <i class="fas fa-chart-bar w-7 h-7 text-xl flex-shrink-0 text-slate-400"></i>
-                        <span class="ml-3">Rapports</span>
+                        <span class="ml-3">{{ 'nav.reports'|trans }}</span>
                     </a>
                 </li>
                 <li>
                     <a href="#" class="sidebar-item flex items-center p-3 rounded-lg text-gray-700 hover:bg-blue-50 hover:text-blue-600">
                         <i class="fas fa-user-circle w-7 h-7 text-xl flex-shrink-0 text-slate-400"></i>
-                        <span class="ml-3">Mon Profil</span>
+                        <span class="ml-3">{{ 'nav.profile'|trans }}</span>
                     </a>
                 </li>
             </ul>
@@ -168,13 +183,13 @@
                 <div class="flex items-center space-x-3">
                     <!-- Barre de recherche -->
                     <div class="relative">
-                        <input type="text" placeholder="Rechercher un projet..." class="pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 w-90 text-sm">
+                        <input type="text" placeholder="{{ 'common.search_placeholder'|trans }}" class="pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 w-90 text-sm">
                         <i class="fas fa-search absolute left-3 top-2.5 text-gray-400"></i>
                     </div>
                     <!-- Bouton Notification -->
                     <button class="flex items-center px-3 py-2 border rounded-lg hover:bg-gray-50 text-sm">
                         <i class="fas fa-filter mr-2"></i>
-                        <span>Filtrer</span>
+                        <span>{{ 'common.filter'|trans }}</span>
                     </button>
                     
                     <!-- BOUTON "CRÉER" AVEC MENU DÉROULANT -->
@@ -182,7 +197,7 @@
                         <!-- Le bouton principal -->
                         <button id="createDropdownButton" class="flex items-center px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm">
                             <i class="fas fa-plus mr-2"></i>
-                            <span>Créer</span>
+                            <span>{{ 'common.create'|trans }}</span>
                             <!-- La flèche qui déclenche le menu -->
                             <span class="text-white ml-2 text-xs">&#9660;</span>
                         </button>
@@ -191,26 +206,26 @@
                         <div id="createDropdownMenu" class="hidden origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-50">
                             <div class="py-1">
                                 <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                    <i class="fas fa-tasks mr-2 text-gray-400"></i> Tâche
+                                    <i class="fas fa-tasks mr-2 text-gray-400"></i> {{ 'create.task'|trans }}
                                 </a>
                                 <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                    <i class="fas fa-flag mr-2 text-green-500"></i> Jalon (Milestone)
+                                    <i class="fas fa-flag mr-2 text-green-500"></i> {{ 'create.milestone'|trans }}
                                 </a>
                                 <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                    <i class="fas fa-layer-group mr-2 text-orange-500"></i> Tâche Résumé
+                                    <i class="fas fa-layer-group mr-2 text-orange-500"></i> {{ 'create.summary_task'|trans }}
                                 </a>
                                 <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                    <i class="fas fa-exclamation-circle mr-2 text-purple-500"></i> Epic
+                                    <i class="fas fa-exclamation-circle mr-2 text-purple-500"></i> {{ 'create.epic'|trans }}
                                 </a>
                                 <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                    <i class="fas fa-book mr-2 text-blue-500"></i> User Story
+                                    <i class="fas fa-book mr-2 text-blue-500"></i> {{ 'create.user_story'|trans }}
                                 </a>
                                 <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                    <i class="fas fa-bug mr-2 text-red-500"></i> Bug
+                                    <i class="fas fa-bug mr-2 text-red-500"></i> {{ 'create.bug'|trans }}
                                 </a>
                                 <hr class="my-1">
                                 <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                    <i class="fas fa-folder-plus mr-2 text-gray-400"></i> Nouveau Projet
+                                    <i class="fas fa-folder-plus mr-2 text-gray-400"></i> {{ 'create.new_project'|trans }}
                                 </a>
                             </div>
                         </div>
@@ -224,10 +239,10 @@
                         <!-- Menu déroulant (caché par défaut) -->
                         <div id="profileDropdown" class="hidden origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-50">
                             <div class="py-1">
-                                <a href="{{ path('admin_profile') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"><i class="fas fa-user mr-2"></i> Mon Profil</a>
+                                <a href="{{ path('admin_profile') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"><i class="fas fa-user mr-2"></i> {{ 'nav.profile'|trans }}</a>
                                 
                                 <hr class="my-1">
-                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"><i class="fas fa-sign-out-alt mr-2"></i> Déconnexion</a>
+                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"><i class="fas fa-sign-out-alt mr-2"></i> {{ 'nav.logout'|trans }}</a>
                             </div>
                         </div>
                     </div>
