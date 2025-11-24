@@ -33,10 +33,14 @@ class UserSession
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
 
+    #[ORM\Column(options: ['default' => false])]
+    private ?bool $isRevoked = false;
+
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
         $this->lastActiveAt = new \DateTimeImmutable();
+        $this->isRevoked = false;
     }
 
     public function getId(): ?int
@@ -112,6 +116,18 @@ class UserSession
     public function setCreatedAt(\DateTimeImmutable $createdAt): static
     {
         $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function isRevoked(): ?bool
+    {
+        return $this->isRevoked;
+    }
+
+    public function setIsRevoked(bool $isRevoked): static
+    {
+        $this->isRevoked = $isRevoked;
 
         return $this;
     }

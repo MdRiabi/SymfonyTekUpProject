@@ -423,6 +423,35 @@ class AdminUserManagementController extends AbstractController
         ]);
     }
 
-    
+    #[Route('/admin/profile/revoke-session/{id}', name: 'admin_user_revoke_session', methods: ['POST'])]
+    public function revokeSession(
+        UserSession $userSession,
+        EntityManagerInterface $entityManager,
+        Request $request
+    ): Response {
+        $user = $this->getUser();
+        
+        // Security check: ensure the session belongs to the current user
+        if ($userSession->getUser() !== $user) {
+            throw $this->createAccessDeniedException();
+        }
 
+        // Verify CSRF token
+        $submittedToken = $request->request->get('_token');
+        if (!$this->isCsrfTokenValid('revoke_session_' . $userSession->getId(), $submittedToken)) {
+            $this->addFlash('error', 'flash.error.invalid_csrf');
+            return $this->redirectToRoute('admin_profile');
+        }
+
+        try {
+            $userSession->setIsRevoked(true);
+            $entityManager->flush();
+
+            $this->addFlash('success', 'Session révoquée avec succès.');
+        } catch (\Exception $e) {
+            $this->addFlash('error', 'Erreur lors de la révocation de la session.');
+        }
+
+        return $this->redirectToRoute('admin_profile');
+    }
 }
