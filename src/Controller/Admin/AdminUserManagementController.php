@@ -21,6 +21,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 use App\Entity\UserSession;
 use App\Entity\UserNotificationSetting;
 use App\Form\Admin\NotificationSettingType;
+use App\Form\Admin\AvatarType;
 
 class AdminUserManagementController extends AbstractController
 {
@@ -198,9 +199,16 @@ class AdminUserManagementController extends AbstractController
             'method' => 'POST'
         ]);
 
+        // Avatar
+        $avatarForm = $this->createForm(AvatarType::class, $user, [
+            'action' => $this->generateUrl('admin_user_update_avatar'),
+            'method' => 'POST'
+        ]);
+
         return $this->render('admin/users/profile.html.twig', [
             'sessions' => $sessions,
-            'notificationForm' => $notificationForm->createView()
+            'notificationForm' => $notificationForm->createView(),
+            'avatarForm' => $avatarForm->createView()
         ]);
     }
 
@@ -492,6 +500,25 @@ class AdminUserManagementController extends AbstractController
             $this->addFlash('success', 'Paramètres de notification mis à jour avec succès.');
         } else {
             $this->addFlash('error', 'Erreur lors de la mise à jour des paramètres.');
+        }
+
+        return $this->redirectToRoute('admin_profile');
+    }
+    #[Route('/admin/profile/update-avatar', name: 'admin_user_update_avatar', methods: ['POST'])]
+    public function updateAvatar(
+        Request $request,
+        EntityManagerInterface $entityManager
+    ): Response {
+        $user = $this->getUser();
+        $form = $this->createForm(AvatarType::class, $user);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $user->setUpdatedAt(new \DateTimeImmutable());
+            $entityManager->flush();
+            $this->addFlash('success', 'Photo de profil mise à jour avec succès.');
+        } else {
+            $this->addFlash('error', 'Erreur lors de la mise à jour de la photo.');
         }
 
         return $this->redirectToRoute('admin_profile');

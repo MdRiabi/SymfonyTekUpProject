@@ -441,4 +441,25 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
+
+    public function __serialize(): array
+    {
+        return [
+            'id' => $this->id,
+            'email' => $this->email,
+            'password' => $this->password,
+            'nom' => $this->nom,
+            'prenom' => $this->prenom,
+            // Add other necessary properties here if needed, but exclude photoFile
+        ];
+    }
+
+    public function __unserialize(array $data): void
+    {
+        $this->id = $data['id'] ?? null;
+        $this->email = $data['email'] ?? null;
+        $this->password = $data['password'] ?? null;
+        $this->nom = $data['nom'] ?? null;
+        $this->prenom = $data['prenom'] ?? null;
+    }
 }

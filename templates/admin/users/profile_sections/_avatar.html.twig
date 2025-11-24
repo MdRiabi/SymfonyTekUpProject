@@ -1,16 +1,70 @@
 {# templates/admin/users/profile_sections/_avatar.html.twig #}
 <div id="content-avatar" class="tab-content">
-    <h2 class="text-2xl font-semibold text-gray-900 mb-6">Photo de profil</h2>
-    <div class="bg-blue-50 border-l-4 border-blue-400 p-4">
-        <div class="flex">
-            <div class="flex-shrink-0">
-                <i class="fas fa-info-circle text-blue-400"></i>
+    <h2 class="text-2xl font-semibold text-gray-900 dark:text-gray-100 mb-6">Avatar</h2>
+
+    <div class="space-y-6">
+        <div class="border-b border-gray-200 dark:border-gray-700 pb-6">
+            <h3 class="text-lg font-medium leading-6 text-gray-900 dark:text-gray-100 uppercase text-sm tracking-wider mb-4">Avatar personnalisé</h3>
+            
+            <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">
+                Si vous en avez défini un avatar personnalisé, cet avatar sera utilisé à la place du gravatar ci-dessus.
+            </p>
+
+            {{ form_start(avatarForm) }}
+            
+            <div class="grid grid-cols-1 gap-y-6 sm:grid-cols-6 sm:gap-x-6">
+                <div class="sm:col-span-6">
+                    <div class="flex items-center">
+                        <div class="w-full">
+                            {{ form_label(avatarForm.photoFile, 'Choisir un avatar depuis un fichier', {'label_attr': {'class': 'block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2'}}) }}
+                            <div class="flex items-center space-x-4">
+                                {{ form_widget(avatarForm.photoFile, {'attr': {'class': 'block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 dark:file:bg-gray-700 dark:file:text-gray-300', 'onchange': 'previewImage(this)'}}) }}
+                            </div>
+                            <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">
+                                Téléversez votre propre avatar personnalisé de 128 par 128 pixels. Les fichiers plus grands seront redimensionnés et recadrés pour convenir. Un aperçu de votre avatar sera affiché avant le téléversement, une fois que vous aurez sélectionné une image.
+                            </p>
+                            {{ form_errors(avatarForm.photoFile) }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sm:col-span-6">
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Aperçu</label>
+                    <div class="mt-1 flex items-center">
+                        <span class="h-32 w-32 rounded-full overflow-hidden bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
+                            {% if app.user.photoProfil %}
+                                <img id="avatar-preview" src="{{ vich_uploader_asset(app.user, 'photoFile') }}" alt="Avatar" class="h-full w-full object-cover">
+                            {% else %}
+                                <img id="avatar-preview" src="https://ui-avatars.com/api/?name={{ app.user.prenom }}+{{ app.user.nom }}&background=random&size=128" alt="Avatar" class="h-full w-full object-cover">
+                            {% endif %}
+                        </span>
+                    </div>
+                </div>
             </div>
-            <div class="ml-3">
-                <p class="text-sm text-blue-700">
-                    Cette section sera disponible prochainement. Vous pourrez télécharger et modifier votre photo de profil.
-                </p>
+
+            <div class="pt-5">
+                <div class="flex justify-start">
+                    <button type="submit" class="inline-flex justify-center rounded-md border border-transparent bg-green-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900">
+                        <i class="fas fa-check mr-2"></i> Mettre à jour
+                    </button>
+                </div>
             </div>
+
+            {{ form_end(avatarForm) }}
         </div>
     </div>
+
+    <script>
+        function previewImage(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    document.getElementById('avatar-preview').src = e.target.result;
+                }
+                
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+    </script>
 </div>

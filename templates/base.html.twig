@@ -338,7 +338,13 @@
                     <!-- MENU PROFIL UTILISATEUR -->
                     <div class="relative ml-3">
                         <button id="profileMenuButton" class="flex items-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                            <img class="h-8 w-8 rounded-full object-cover" src="https://picsum.photos/seed/user-profile/100/100.jpg" alt="Photo de profil">
+                            {% if app.user and app.user.photoProfil %}
+                                <img class="h-8 w-8 rounded-full object-cover" src="{{ vich_uploader_asset(app.user, 'photoFile') }}" alt="Photo de profil">
+                            {% elseif app.user %}
+                                <img class="h-8 w-8 rounded-full object-cover" src="https://ui-avatars.com/api/?name={{ app.user.prenom }}+{{ app.user.nom }}&background=random&size=128" alt="Photo de profil">
+                            {% else %}
+                                <img class="h-8 w-8 rounded-full object-cover" src="https://ui-avatars.com/api/?name=User&background=random&size=128" alt="Photo de profil">
+                            {% endif %}
                         </button>
                         <!-- Menu déroulant (caché par défaut) -->
                         <div id="profileDropdown" class="hidden origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white dark:bg-gray-800 ring-1 ring-black ring-opacity-5 z-50">
