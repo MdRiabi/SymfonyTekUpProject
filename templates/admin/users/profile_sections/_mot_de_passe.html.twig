@@ -1,0 +1,97 @@
+{# templates/admin/users/profile_sections/_mot_de_passe.html.twig #}
+<div id="content-mot_de_passe" class="tab-content">
+    <h2 class="text-2xl font-semibold text-gray-900 dark:text-gray-100 mb-6">Changer de mot de passe</h2>
+    
+    <form action="{{ path('admin_user_update_password') }}" method="POST" class="max-w-2xl">
+        <input type="hidden" name="_token" value="{{ csrf_token('update_password') }}">
+        
+        <div class="space-y-6">
+            {# Mot de passe actuel #}
+            <div>
+                <label for="current_password" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    Mot de passe actuel <span class="text-red-500">*</span>
+                </label>
+                <input 
+                    type="password" 
+                    id="current_password" 
+                    name="current_password" 
+                    required
+                    class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 transition-colors duration-200"
+                >
+            </div>
+
+            {# Nouveau mot de passe #}
+            <div>
+                <label for="new_password" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    Nouveau mot de passe <span class="text-red-500">*</span>
+                </label>
+                <input 
+                    type="password" 
+                    id="new_password" 
+                    name="new_password" 
+                    required
+                    minlength="10"
+                    class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 transition-colors duration-200"
+                >
+                <p class="mt-2 text-sm italic text-gray-600 dark:text-gray-400">
+                    Doit contenir au moins 10 caractères.
+                </p>
+            </div>
+
+            {# Confirmation #}
+            <div>
+                <label for="confirm_password" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    Confirmation <span class="text-red-500">*</span>
+                </label>
+                <input 
+                    type="password" 
+                    id="confirm_password" 
+                    name="confirm_password" 
+                    required
+                    minlength="10"
+                    class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 transition-colors duration-200"
+                >
+                <p class="mt-2 text-sm italic text-gray-600 dark:text-gray-400">
+                    Confirmez le nouveau mot de passe.<br>
+                    La confirmation du mot de passe doit correspondre à celui saisi dans le champ "Nouveau mot de passe".
+                </p>
+            </div>
+        </div>
+
+        {# Bouton Enregistrer #}
+        <div class="flex items-center gap-4 mt-8">
+            <button 
+                type="submit" 
+                class="px-6 py-2.5 bg-green-600 hover:bg-green-700 text-white font-medium rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
+            >
+                <i class="fas fa-save mr-2"></i>
+                Enregistrer
+            </button>
+        </div>
+    </form>
+</div>
+
+<script>
+    // Validation du formulaire de mot de passe
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.querySelector('#content-mot_de_passe form');
+        if (form) {
+            form.addEventListener('submit', function(e) {
+                const newPassword = document.getElementById('new_password').value;
+                const confirmPassword = document.getElementById('confirm_password').value;
+                
+                if (newPassword !== confirmPassword) {
+                    e.preventDefault();
+                    alert('Le nouveau mot de passe et sa confirmation ne correspondent pas.');
+                    return false;
+                }
+                
+                if (newPassword.length < 10) {
+                    e.preventDefault();
+                    alert('Le mot de passe doit contenir au moins 10 caractères.');
+                    return false;
+                }
+            });
+        }
+    });
+</script>

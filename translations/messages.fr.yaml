@@ -5,11 +5,9 @@ profile.subtitle: "Gérez vos informations personnelles et vos préférences"
 profile.tabs.profile: Profil
 profile.tabs.language: "Langue et région"
 profile.tabs.interface: Interface
-profile.tabs.2fa: "Authentification à deux facteurs"
-profile.tabs.tokens: "Jetons d'accès"
+profile.tabs.password: "Mot de Passe"
 profile.tabs.session: "Gestion de session"
 profile.tabs.notifications: "Paramètres de notification"
-profile.tabs.email: "Rappels par e-mail"
 profile.tabs.avatar: Avatar
 profile.section.personal_info: "Informations personnelles"
 profile.section.first_name: Prénom
@@ -53,6 +51,13 @@ flash.error.invalid_language: "Langue non valide."
 flash.error.user_delete_failed: "Erreur lors de la suppression de l'utilisateur : {error}"
 flash.success.theme_updated: "Votre thème a été mis à jour avec succès !"
 flash.error.theme_update_failed: "Erreur lors de la mise à jour du thème."
+flash.success.password_updated: "Votre mot de passe a été modifié avec succès !"
+flash.error.password_update_failed: "Erreur lors de la modification du mot de passe."
+flash.error.password_fields_required: "Tous les champs sont requis."
+flash.error.current_password_invalid: "Le mot de passe actuel est incorrect."
+flash.error.password_too_short: "Le nouveau mot de passe doit contenir au moins 10 caractères."
+flash.error.passwords_dont_match: "Le nouveau mot de passe et sa confirmation ne correspondent pas."
+flash.error.password_same_as_current: "Le nouveau mot de passe doit être différent du mot de passe actuel."
 common.save: Enregistrer
 common.cancel: Annuler
 common.delete: Supprimer

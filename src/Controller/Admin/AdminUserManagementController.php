@@ -323,6 +323,77 @@ class AdminUserManagementController extends AbstractController
         }
     }
 
+    #[Route('/admin/profile/update-password', name: 'admin_user_update_password', methods: ['POST'])]
+    public function updatePassword(
+        Request $request,
+        EntityManagerInterface $entityManager,
+        UserPasswordHasherInterface $passwordHasher
+    ): Response {
+        $user = $this->getUser();
+        
+        if (!$user instanceof Utilisateur) {
+            throw $this->createAccessDeniedException();
+        }
+
+        // Verify CSRF token
+        $submittedToken = $request->request->get('_token');
+        if (!$this->isCsrfTokenValid('update_password', $submittedToken)) {
+            $this->addFlash('error', 'flash.error.invalid_csrf');
+            return $this->redirectToRoute('admin_profile');
+        }
+
+        try {
+            $currentPassword = $request->request->get('current_password');
+            $newPassword = $request->request->get('new_password');
+            $confirmPassword = $request->request->get('confirm_password');
+            
+            // Validate that all fields are provided
+            if (empty($currentPassword) || empty($newPassword) || empty($confirmPassword)) {
+                $this->addFlash('error', 'flash.error.password_fields_required');
+                return $this->redirectToRoute('admin_profile');
+            }
+            
+            // Verify current password
+            if (!$passwordHasher->isPasswordValid($user, $currentPassword)) {
+                $this->addFlash('error', 'flash.error.current_password_invalid');
+                return $this->redirectToRoute('admin_profile');
+            }
+            
+            // Validate new password length
+            if (strlen($newPassword) < 10) {
+                $this->addFlash('error', 'flash.error.password_too_short');
+                return $this->redirectToRoute('admin_profile');
+            }
+            
+            // Validate that new passwords match
+            if ($newPassword !== $confirmPassword) {
+                $this->addFlash('error', 'flash.error.passwords_dont_match');
+                return $this->redirectToRoute('admin_profile');
+            }
+            
+            // Validate that new password is different from current
+            if ($passwordHasher->isPasswordValid($user, $newPassword)) {
+                $this->addFlash('error', 'flash.error.password_same_as_current');
+                return $this->redirectToRoute('admin_profile');
+            }
+
+            // Hash and update password
+            $hashedPassword = $passwordHasher->hashPassword($user, $newPassword);
+            $user->setPassword($hashedPassword);
+            $user->setUpdatedAt(new \DateTimeImmutable());
+
+            $entityManager->flush();
+
+            $this->addFlash('success', 'flash.success.password_updated');
+
+            return $this->redirectToRoute('admin_profile');
+            
+        } catch (\Exception $e) {
+            $this->addFlash('error', 'flash.error.password_update_failed');
+            return $this->redirectToRoute('admin_profile');
+        }
+    }
+
 
     #[Route('/admin', name: 'app_admin')]
     public function manage(

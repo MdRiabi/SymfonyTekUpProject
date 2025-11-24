@@ -25,6 +25,43 @@
                 <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">{{ 'profile.subtitle'|trans }}</p>
             </div>
 
+            <!-- Flash Messages -->
+            {% for message in app.flashes('success') %}
+                <div class="mb-6 bg-green-50 dark:bg-green-900/20 border-l-4 border-green-400 p-4 rounded-lg" role="alert">
+                    <div class="flex">
+                        <div class="flex-shrink-0">
+                            <i class="fas fa-check-circle text-green-400"></i>
+                        </div>
+                        <div class="ml-3">
+                            <p class="text-sm text-green-700 dark:text-green-300">{{ message|trans }}</p>
+                        </div>
+                        <div class="ml-auto pl-3">
+                            <button type="button" onclick="this.parentElement.parentElement.parentElement.remove()" class="inline-flex text-green-400 hover:text-green-600 focus:outline-none">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+
+            {% for message in app.flashes('error') %}
+                <div class="mb-6 bg-red-50 dark:bg-red-900/20 border-l-4 border-red-400 p-4 rounded-lg" role="alert">
+                    <div class="flex">
+                        <div class="flex-shrink-0">
+                            <i class="fas fa-exclamation-circle text-red-400"></i>
+                        </div>
+                        <div class="ml-3">
+                            <p class="text-sm text-red-700 dark:text-red-300">{{ message|trans }}</p>
+                        </div>
+                        <div class="ml-auto pl-3">
+                            <button type="button" onclick="this.parentElement.parentElement.parentElement.remove()" class="inline-flex text-red-400 hover:text-red-600 focus:outline-none">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+
             <!-- Horizontal Tab Navigation -->
             <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm mb-6">
                 <div class="border-b border-gray-200 dark:border-gray-700">
@@ -38,21 +75,17 @@
                         <button onclick="switchTab('interface')" id="tab-interface" class="whitespace-nowrap py-4 px-6 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-blue-600 transition-colors focus:outline-none">
                             <i class="fas fa-desktop mr-2"></i>{{ 'profile.tabs.interface'|trans }}
                         </button>
-                        <button onclick="switchTab('2fa')" id="tab-2fa" class="whitespace-nowrap py-4 px-6 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-blue-600 transition-colors focus:outline-none">
-                            <i class="fas fa-shield-alt mr-2"></i>{{ 'profile.tabs.2fa'|trans }}
+                        <button onclick="switchTab('mot_de_passe')" id="tab-mot_de_passe" class="whitespace-nowrap py-4 px-6 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-blue-600 transition-colors focus:outline-none">
+                            <i class="fas fa-lock mr-2"></i>{{ 'profile.tabs.password'|trans }}
                         </button>
-                        <button onclick="switchTab('tokens')" id="tab-tokens" class="whitespace-nowrap py-4 px-6 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-blue-600 transition-colors focus:outline-none">
-                            <i class="fas fa-key mr-2"></i>{{ 'profile.tabs.tokens'|trans }}
-                        </button>
+
                         <button onclick="switchTab('session')" id="tab-session" class="whitespace-nowrap py-4 px-6 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-blue-600 transition-colors focus:outline-none">
                             <i class="fas fa-clock mr-2"></i>{{ 'profile.tabs.session'|trans }}
                         </button>
                         <button onclick="switchTab('notifications')" id="tab-notifications" class="whitespace-nowrap py-4 px-6 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-blue-600 transition-colors focus:outline-none">
                             <i class="fas fa-bell mr-2"></i>{{ 'profile.tabs.notifications'|trans }}
                         </button>
-                        <button onclick="switchTab('email')" id="tab-email" class="whitespace-nowrap py-4 px-6 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-blue-600 transition-colors focus:outline-none">
-                            <i class="fas fa-envelope mr-2"></i>{{ 'profile.tabs.email'|trans }}
-                        </button>
+
                         <button onclick="switchTab('avatar')" id="tab-avatar" class="whitespace-nowrap py-4 px-6 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-blue-600 transition-colors focus:outline-none">
                             <i class="fas fa-image mr-2"></i>{{ 'profile.tabs.avatar'|trans }}
                         </button>
@@ -66,11 +99,9 @@
                 {% include 'admin/users/profile_sections/_profil.html.twig' %}
                 {% include 'admin/users/profile_sections/_langue.html.twig' %}
                 {% include 'admin/users/profile_sections/_interface.html.twig' %}
-                {% include 'admin/users/profile_sections/_2fa.html.twig' %}
-                {% include 'admin/users/profile_sections/_tokens.html.twig' %}
+                {% include 'admin/users/profile_sections/_mot_de_passe.html.twig' %}
                 {% include 'admin/users/profile_sections/_session.html.twig' %}
                 {% include 'admin/users/profile_sections/_notifications.html.twig' %}
-                {% include 'admin/users/profile_sections/_email.html.twig' %}
                 {% include 'admin/users/profile_sections/_avatar.html.twig' %}
             </div>
         </div>
@@ -111,5 +142,17 @@
                 activeContent.style.display = 'block';
             }
         });
+
+        // Auto-dismiss flash messages after 5 seconds
+        setTimeout(function() {
+            const flashMessages = document.querySelectorAll('[role="alert"]');
+            flashMessages.forEach(function(message) {
+                message.style.transition = 'opacity 0.5s';
+                message.style.opacity = '0';
+                setTimeout(function() {
+                    message.remove();
+                }, 500);
+            });
+        }, 5000);
     </script>
 {% endblock %}
