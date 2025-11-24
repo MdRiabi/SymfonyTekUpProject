@@ -19,6 +19,8 @@ use Symfony\Component\Security\Http\Attribute\CurrentUser;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 use App\Entity\UserSession;
+use App\Entity\UserNotificationSetting;
+use App\Form\Admin\NotificationSettingType;
 
 class AdminUserManagementController extends AbstractController
 {
@@ -178,13 +180,27 @@ class AdminUserManagementController extends AbstractController
     public function profile(EntityManagerInterface $entityManager): Response
     {
         $user = $this->getUser();
+        
+        // Sessions
         $sessions = $entityManager->getRepository(UserSession::class)->findBy(
             ['user' => $user],
             ['lastActiveAt' => 'DESC']
         );
 
+        // Notifications
+        $notificationSetting = $user->getNotificationSetting();
+        if (!$notificationSetting) {
+            $notificationSetting = new UserNotificationSetting();
+            // Don't persist here, just for form display default values
+        }
+        $notificationForm = $this->createForm(NotificationSettingType::class, $notificationSetting, [
+            'action' => $this->generateUrl('admin_user_update_notifications'),
+            'method' => 'POST'
+        ]);
+
         return $this->render('admin/users/profile.html.twig', [
-            'sessions' => $sessions
+            'sessions' => $sessions,
+            'notificationForm' => $notificationForm->createView()
         ]);
     }
 
@@ -450,6 +466,32 @@ class AdminUserManagementController extends AbstractController
             $this->addFlash('success', 'Session révoquée avec succès.');
         } catch (\Exception $e) {
             $this->addFlash('error', 'Erreur lors de la révocation de la session.');
+        }
+
+        return $this->redirectToRoute('admin_profile');
+    }
+    #[Route('/admin/profile/update-notifications', name: 'admin_user_update_notifications', methods: ['POST'])]
+    public function updateNotifications(
+        Request $request,
+        EntityManagerInterface $entityManager
+    ): Response {
+        $user = $this->getUser();
+        $notificationSetting = $user->getNotificationSetting();
+
+        if (!$notificationSetting) {
+            $notificationSetting = new UserNotificationSetting();
+            $notificationSetting->setUser($user);
+            $entityManager->persist($notificationSetting);
+        }
+
+        $form = $this->createForm(NotificationSettingType::class, $notificationSetting);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->flush();
+            $this->addFlash('success', 'Paramètres de notification mis à jour avec succès.');
+        } else {
+            $this->addFlash('error', 'Erreur lors de la mise à jour des paramètres.');
         }
 
         return $this->redirectToRoute('admin_profile');

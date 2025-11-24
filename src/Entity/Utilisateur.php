@@ -102,6 +102,9 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'assigne', targetEntity: Tache::class)]
     private Collection $tachesAssignees;
 
+    #[ORM\OneToOne(mappedBy: 'user', cascade: ['persist', 'remove'])]
+    private ?UserNotificationSetting $notificationSetting = null;
+
     public function __construct()
     {
         $this->competences = [];
@@ -419,6 +422,23 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     public function setTheme(string $theme): self
     {
         $this->theme = $theme;
+        return $this;
+    }
+
+    public function getNotificationSetting(): ?UserNotificationSetting
+    {
+        return $this->notificationSetting;
+    }
+
+    public function setNotificationSetting(UserNotificationSetting $notificationSetting): static
+    {
+        // set the owning side of the relation if necessary
+        if ($notificationSetting->getUser() !== $this) {
+            $notificationSetting->setUser($this);
+        }
+
+        $this->notificationSetting = $notificationSetting;
+
         return $this;
     }
 }
