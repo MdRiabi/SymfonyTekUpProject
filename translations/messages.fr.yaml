@@ -51,6 +51,8 @@ flash.error.language_update_failed: "Erreur lors de la mise à jour de la langue
 flash.error.invalid_csrf: "Token CSRF invalide."
 flash.error.invalid_language: "Langue non valide."
 flash.error.user_delete_failed: "Erreur lors de la suppression de l'utilisateur : {error}"
+flash.success.theme_updated: "Votre thème a été mis à jour avec succès !"
+flash.error.theme_update_failed: "Erreur lors de la mise à jour du thème."
 common.save: Enregistrer
 common.cancel: Annuler
 common.delete: Supprimer
@@ -119,3 +121,12 @@ users.dashboard.pending_requests: "Demandes en Attente"
 users.dashboard.roles_permissions: "Rôles et Permissions"
 users.dashboard.view_all: "Voir tous les utilisateurs"
 users.dashboard.manage_directory: "Gérer le annuaire"
+
+# Interface Tab
+profile.interface.title: "Interface"
+profile.interface.appearance_title: "Apparence et ergonomie"
+profile.interface.color_mode: "Mode de couleur"
+profile.interface.modes.light: "Clair"
+profile.interface.modes.dark: "Sombre"
+profile.interface.modes.system: "Système"
+profile.interface.help_text: "Certains modes écrasent les couleurs des thèmes personnalisés pour des raisons d'accessibilité et de lisibilité. Veuillez sélectionner le mode Clair pour une prise en charge complète des thèmes personnalisés."

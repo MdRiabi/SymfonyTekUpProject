@@ -1,6 +1,49 @@
 {# templates/base.html.twig #}
 <!DOCTYPE html>
-<html lang="{{ app.request.locale }}" {% if app.request.locale == 'ar' %}dir="rtl"{% endif %}>
+{% set userTheme = app.user ? app.user.theme : 'system' %}
+<html lang="{{ app.request.locale }}" dir="{{ app.request.locale == 'ar' ? 'rtl' : 'ltr' }}" class="{% if userTheme == 'dark' %}dark{% endif %}" data-theme="{{ userTheme }}">
+<!-- DEBUG: Current theme = {{ userTheme }} | Dark class applied: {{ userTheme == 'dark' ? 'YES' : 'NO' }} -->
+{% if userTheme == 'light' %}
+<style id="force-light-mode">
+    /* FORCE light mode colors with !important to override browser dark mode */
+    html:not(.dark), html:not(.dark) body {
+        background-color: #f9fafb !important;
+        color: #111827 !important;
+    }
+    html:not(.dark) header {
+        background-color: white !important;
+        color: #111827 !important;
+    }
+    html:not(.dark) aside {
+        background-color: white !important;
+    }
+    html:not(.dark) main {
+        background-color: #f9fafb !important;
+    }
+    html:not(.dark) .bg-white {
+        background-color: white !important;
+    }
+    html:not(.dark) .bg-gray-50 {
+        background-color: #f9fafb !important;
+    }
+    html:not(.dark) .text-gray-900 {
+        color: #111827 !important;
+    }
+    html:not(.dark) .text-gray-700 {
+        color: #374151 !important;
+    }
+    html:not(.dark) .text-gray-600 {
+        color: #4b5563 !important;
+    }
+    html:not(.dark) .text-gray-500 {
+        color: #6b7280 !important;
+    }
+    html:not(.dark) input, html:not(.dark) select, html:not(.dark) textarea {
+        background-color: white !important;
+        color: #111827 !important;
+    }
+</style>
+{% endif %}
 <head>
     {# ======================================================= #}
     {# EN-TÊTE COMMUN À TOUTES LES PAGES               #}
@@ -13,6 +56,67 @@
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class'
+        }
+    </script>
+    
+    <script>
+        // Apply theme based on user preference
+        (function() {
+            const htmlElement = document.documentElement;
+            const userTheme = htmlElement.getAttribute('data-theme');
+            
+            console.log('🎨 THEME DEBUG: User theme =', userTheme);
+            console.log('🎨 THEME DEBUG: Initial classes =', htmlElement.className);
+            
+            if (userTheme === 'system') {
+                // Detect system preference
+                const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                console.log('🎨 THEME DEBUG: System prefers dark =', prefersDark);
+                if (prefersDark) {
+                    htmlElement.classList.add('dark');
+                } else {
+                    htmlElement.classList.remove('dark');
+                }
+                
+                // Listen for system preference changes
+                window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+                    if (htmlElement.getAttribute('data-theme') === 'system') {
+                        if (e.matches) {
+                            htmlElement.classList.add('dark');
+                        } else {
+                            htmlElement.classList.remove('dark');
+                        }
+                    }
+                });
+            } else if (userTheme === 'light') {
+                console.log('🎨 THEME DEBUG: Applying LIGHT mode - removing dark class');
+                // Remove dark class for light mode (white backgrounds)
+                htmlElement.classList.remove('dark');
+                
+                // Force style recalculation
+                void htmlElement.offsetWidth;
+                
+                // Double-check after a short delay
+                setTimeout(() => {
+                    if (htmlElement.classList.contains('dark')) {
+                        console.log('⚠️ WARNING: Dark class was re-added! Removing it again...');
+                        htmlElement.classList.remove('dark');
+                    }
+                    console.log('🎨 THEME DEBUG: After timeout check, classes =', htmlElement.className);
+                }, 100);
+                
+            } else if (userTheme === 'dark') {
+                console.log('🎨 THEME DEBUG: Applying DARK mode - ensuring dark class');
+                htmlElement.classList.add('dark');
+            }
+            
+            console.log('🎨 THEME DEBUG: Final classes =', htmlElement.className);
+        })();
+    </script>
+    
     <!-- Alpine.js -->
     <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/collapse@3.x.x/dist/cdn.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
@@ -98,7 +202,7 @@
     </style>
 </head>
 
-<body class="bg-gray-50 font-sans h-screen overflow-hidden">
+<body class="bg-gray-50 dark:bg-gray-900 font-sans h-screen overflow-hidden transition-colors duration-200">
 
     {# ======================================================= #}
     {# BARRA LATÉRALE (SIDEBAR)                         #}
@@ -107,53 +211,53 @@
     <div id="sidebarOverlay" class="sidebar-overlay"></div>
 
     <!-- La sidebar elle-même (cachée par défaut) -->
-    <aside id="sidebar" class="sidebar sidebar-hidden sidebar-overlay-mode w-64 bg-white h-full ">
-        <div class="p-6 border-b flex justify-between items-center">
+    <aside id="sidebar" class="sidebar sidebar-hidden sidebar-overlay-mode w-64 bg-white dark:bg-gray-800 h-full shadow-lg transition-colors duration-200">
+        <div class="p-6 border-b dark:border-gray-700 flex justify-between items-center">
             <div class="flex items-center">
-                <i class="fas fa-folder-open text-blue-600 text-2xl"></i>
-                <h1 id="logoText" class="ml-3 text-xl font-bold text-gray-800">Admin Dashboard</h1>
+                <i class="fas fa-folder-open text-blue-600 dark:text-blue-400 text-2xl"></i>
+                <h1 id="logoText" class="ml-3 text-xl font-bold text-gray-800 dark:text-gray-100">Admin Dashboard</h1>
             </div>
             <!-- Bouton pour fermer la sidebar (visible sur mobile) -->
-            <button id="closeSidebarBtn" class="p-2 hover:bg-gray-100 rounded-lg transition-colors">
-                <i class="fas fa-times text-gray-600"></i>
+            <button id="closeSidebarBtn" class="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors">
+                <i class="fas fa-times text-gray-600 dark:text-gray-300"></i>
             </button>
         </div>
         <nav class="p-4">
             <ul class="space-y-2">
                 {# Il serait bien d'utiliser la fonction path() de Twig pour les liens ici #}
                 <li>
-                    <a href="{{ path('admin_dashboard') }}" class="sidebar-item flex items-center p-3 rounded-lg text-gray-700 hover:bg-blue-50 hover:text-blue-600">
-                        <i class="fas fa-tachometer-alt w-7 h-7 text-xl flex-shrink-0 text-slate-400"></i>
+                    <a href="{{ path('admin_dashboard') }}" class="sidebar-item flex items-center p-3 rounded-lg text-gray-700 dark:text-gray-200 hover:bg-blue-50 dark:hover:bg-gray-700 hover:text-blue-600 dark:hover:text-blue-400">
+                        <i class="fas fa-tachometer-alt w-7 h-7 text-xl flex-shrink-0 text-slate-400 dark:text-gray-400"></i>
                         <span class="ml-3">{{ 'nav.dashboard'|trans }}</span>
                     </a>
                 </li>
                 <li>
-                    <a href="#" class="sidebar-item flex items-center p-3 rounded-lg text-gray-700 hover:bg-blue-50 hover:text-blue-600">
-                        <i class="fas fa-folder-open w-7 h-7 text-xl flex-shrink-0 text-slate-400"></i>
+                    <a href="#" class="sidebar-item flex items-center p-3 rounded-lg text-gray-700 dark:text-gray-200 hover:bg-blue-50 dark:hover:bg-gray-700 hover:text-blue-600 dark:hover:text-blue-400">
+                        <i class="fas fa-folder-open w-7 h-7 text-xl flex-shrink-0 text-slate-400 dark:text-gray-400"></i>
                         <span class="ml-3">{{ 'nav.projects'|trans }}</span>
                     </a>
                 </li>
                 <li>
-                    <a href="{{ path('admin_manage_users') }}" class="sidebar-item flex items-center p-3 rounded-lg text-gray-700 hover:bg-blue-50 hover:text-blue-600">
-                        <i class="fas fa-users w-7 h-7 text-xl flex-shrink-0 text-slate-400"></i>
+                    <a href="{{ path('admin_manage_users') }}" class="sidebar-item flex items-center p-3 rounded-lg text-gray-700 dark:text-gray-200 hover:bg-blue-50 dark:hover:bg-gray-700 hover:text-blue-600 dark:hover:text-blue-400">
+                        <i class="fas fa-users w-7 h-7 text-xl flex-shrink-0 text-slate-400 dark:text-gray-400"></i>
                         <span class="ml-3">{{ 'nav.users'|trans }}</span>
                     </a>
                 </li>
                 <li>
-                    <a href="#" class="sidebar-item flex items-center p-3 rounded-lg text-gray-700 hover:bg-blue-50 hover:text-blue-600">
-                        <i class="fas fa-cogs w-7 h-7 text-xl flex-shrink-0 text-slate-400"></i>
+                    <a href="#" class="sidebar-item flex items-center p-3 rounded-lg text-gray-700 dark:text-gray-200 hover:bg-blue-50 dark:hover:bg-gray-700 hover:text-blue-600 dark:hover:text-blue-400">
+                        <i class="fas fa-cogs w-7 h-7 text-xl flex-shrink-0 text-slate-400 dark:text-gray-400"></i>
                         <span class="ml-3">{{ 'nav.administration'|trans }}</span>
                     </a>
                 </li>
                 <li>
-                    <a href="#" class="sidebar-item flex items-center p-3 rounded-lg text-gray-700 hover:bg-blue-50 hover:text-blue-600">
-                        <i class="fas fa-chart-bar w-7 h-7 text-xl flex-shrink-0 text-slate-400"></i>
+                    <a href="#" class="sidebar-item flex items-center p-3 rounded-lg text-gray-700 dark:text-gray-200 hover:bg-blue-50 dark:hover:bg-gray-700 hover:text-blue-600 dark:hover:text-blue-400">
+                        <i class="fas fa-chart-bar w-7 h-7 text-xl flex-shrink-0 text-slate-400 dark:text-gray-400"></i>
                         <span class="ml-3">{{ 'nav.reports'|trans }}</span>
                     </a>
                 </li>
                 <li>
-                    <a href="#" class="sidebar-item flex items-center p-3 rounded-lg text-gray-700 hover:bg-blue-50 hover:text-blue-600">
-                        <i class="fas fa-user-circle w-7 h-7 text-xl flex-shrink-0 text-slate-400"></i>
+                    <a href="#" class="sidebar-item flex items-center p-3 rounded-lg text-gray-700 dark:text-gray-200 hover:bg-blue-50 dark:hover:bg-gray-700 hover:text-blue-600 dark:hover:text-blue-400">
+                        <i class="fas fa-user-circle w-7 h-7 text-xl flex-shrink-0 text-slate-400 dark:text-gray-400"></i>
                         <span class="ml-3">{{ 'nav.profile'|trans }}</span>
                     </a>
                 </li>
@@ -169,13 +273,13 @@
         {# ======================================================= #}
         {# HAUT DE PAGE (TOPBAR / HEADER)                  #}
         {# ======================================================= #}
-        <header class="fixed top-0 left-0 right-0 bg-white shadow-sm border-b px-6 py-3 z-50">
+        <header class="fixed top-0 left-0 right-0 bg-white dark:bg-gray-800 shadow-sm border-b dark:border-gray-700 px-6 py-3 z-50 transition-colors duration-200">
             <div class="flex justify-between items-center">
                 <!-- Section de gauche -->
                 <div class="flex items-center space-x-4">
                     <!-- Bouton hamburger pour ouvrir la sidebar -->
-                    <button id="hamburgerBtn" class="hamburger-btn p-2 hover:bg-gray-100 rounded-lg transition-colors">
-                        <i class="fas fa-bars text-gray-600 text-xl"></i>
+                    <button id="hamburgerBtn" class="hamburger-btn p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors">
+                        <i class="fas fa-bars text-gray-600 dark:text-gray-300 text-xl"></i>
                     </button>
                 </div>
 
@@ -183,11 +287,11 @@
                 <div class="flex items-center space-x-3">
                     <!-- Barre de recherche -->
                     <div class="relative">
-                        <input type="text" placeholder="{{ 'common.search_placeholder'|trans }}" class="pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 w-90 text-sm">
+                        <input type="text" placeholder="{{ 'common.search_placeholder'|trans }}" class="pl-10 pr-4 py-2 border dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 w-90 text-sm">
                         <i class="fas fa-search absolute left-3 top-2.5 text-gray-400"></i>
                     </div>
                     <!-- Bouton Notification -->
-                    <button class="flex items-center px-3 py-2 border rounded-lg hover:bg-gray-50 text-sm">
+                    <button class="flex items-center px-3 py-2 border dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 text-sm">
                         <i class="fas fa-filter mr-2"></i>
                         <span>{{ 'common.filter'|trans }}</span>
                     </button>
@@ -203,9 +307,9 @@
                         </button>
 
                         <!-- La liste déroulante (cachée par défaut) -->
-                        <div id="createDropdownMenu" class="hidden origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-50">
+                        <div id="createDropdownMenu" class="hidden origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white dark:bg-gray-800 ring-1 ring-black ring-opacity-5 focus:outline-none z-50">
                             <div class="py-1">
-                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
                                     <i class="fas fa-tasks mr-2 text-gray-400"></i> {{ 'create.task'|trans }}
                                 </a>
                                 <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
@@ -237,12 +341,12 @@
                             <img class="h-8 w-8 rounded-full object-cover" src="https://picsum.photos/seed/user-profile/100/100.jpg" alt="Photo de profil">
                         </button>
                         <!-- Menu déroulant (caché par défaut) -->
-                        <div id="profileDropdown" class="hidden origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-50">
+                        <div id="profileDropdown" class="hidden origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white dark:bg-gray-800 ring-1 ring-black ring-opacity-5 z-50">
                             <div class="py-1">
-                                <a href="{{ path('admin_profile') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"><i class="fas fa-user mr-2"></i> {{ 'nav.profile'|trans }}</a>
+                                <a href="{{ path('admin_profile') }}" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"><i class="fas fa-user mr-2"></i> {{ 'nav.profile'|trans }}</a>
                                 
                                 <hr class="my-1">
-                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"><i class="fas fa-sign-out-alt mr-2"></i> {{ 'nav.logout'|trans }}</a>
+                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"><i class="fas fa-sign-out-alt mr-2"></i> {{ 'nav.logout'|trans }}</a>
                             </div>
                         </div>
                     </div>

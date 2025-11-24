@@ -1,17 +1,17 @@
 {# templates/admin/users/profile_sections/_langue.html.twig #}
 <div id="content-langue" class="tab-content">
-    <h2 class="text-2xl font-semibold text-gray-900 mb-6">{{ 'profile.language.title'|trans }}</h2>
+    <h2 class="text-2xl font-semibold text-gray-900 dark:text-gray-100 mb-6">{{ 'profile.language.title'|trans }}</h2>
     
     <form method="post" action="{{ path('admin_user_update_language') }}" class="space-y-6">
         <div>
-            <label for="language" class="block text-sm font-medium text-gray-700 mb-2">
+            <label for="language" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 {{ 'profile.language.label'|trans }} <span class="text-red-500">{{ 'profile.language.required'|trans }}</span>
             </label>
             <select 
                 id="language" 
                 name="language" 
                 required
-                class="w-full md:w-96 px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900 transition-colors duration-200"
+                class="w-full md:w-96 px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 transition-colors duration-200"
             >
                 <option value="fr" {% if app.user.language|default('fr') == 'fr' %}selected{% endif %}>{{ 'profile.language.languages.fr'|trans }}</option>
                 <option value="en" {% if app.user.language|default('fr') == 'en' %}selected{% endif %}>{{ 'profile.language.languages.en'|trans }}</option>

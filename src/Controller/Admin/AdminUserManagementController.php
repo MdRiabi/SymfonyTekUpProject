@@ -280,6 +280,49 @@ class AdminUserManagementController extends AbstractController
         }
     }
 
+    #[Route('/admin/profile/update-theme', name: 'admin_user_update_theme', methods: ['POST'])]
+    public function updateTheme(
+        Request $request,
+        EntityManagerInterface $entityManager
+    ): Response {
+        $user = $this->getUser();
+        
+        if (!$user instanceof Utilisateur) {
+            throw $this->createAccessDeniedException();
+        }
+
+        // Verify CSRF token
+        $submittedToken = $request->request->get('_token');
+        if (!$this->isCsrfTokenValid('update_theme', $submittedToken)) {
+            $this->addFlash('error', 'flash.error.invalid_csrf');
+            return $this->redirectToRoute('admin_profile');
+        }
+
+        try {
+            $theme = $request->request->get('theme');
+            
+            // Validate theme
+            $allowedThemes = ['light', 'dark', 'system'];
+            if (!in_array($theme, $allowedThemes)) {
+                throw new \InvalidArgumentException('Invalid theme selected.');
+            }
+
+            // Update user theme
+            $user->setTheme($theme);
+            $user->setUpdatedAt(new \DateTimeImmutable());
+
+            $entityManager->flush();
+
+            $this->addFlash('success', 'flash.success.theme_updated');
+
+            return $this->redirectToRoute('admin_profile');
+            
+        } catch (\Exception $e) {
+            $this->addFlash('error', 'flash.error.theme_update_failed');
+            return $this->redirectToRoute('admin_profile');
+        }
+    }
+
 
     #[Route('/admin', name: 'app_admin')]
     public function manage(

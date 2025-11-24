@@ -74,33 +74,6 @@ flash:
     language_update_failed: "Error updating language: {error}"
     invalid_csrf: "Invalid CSRF token."
     invalid_language: "Invalid language."
-    user_delete_failed: "Error deleting user: {error}"
-
-# Common
-common:
-  save: "Save"
-  cancel: "Cancel"
-  delete: "Delete"
-  edit: "Edit"
-  close: "Close"
-  confirm: "Confirm"
-  yes: "Yes"
-  no: "No"
-  loading: "Loading..."
-  search: "Search"
-  filter: "Filter"
-  export: "Export"
-  import: "Import"
-  search_placeholder: "Search for a project..."
-  create: "Create"
-
-# Navigation
-nav:
-  dashboard: "Dashboard"
-  users: "Users"
-  projects: "Projects"
-  tasks: "Tasks"
-  reports: "Reports"
   settings: "Settings"
   profile: "My Profile"
   logout: "Logout"

@@ -93,6 +93,9 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 2, options: ['default' => 'fr'])]
     private string $language = 'fr';
 
+    #[ORM\Column(length: 10, options: ['default' => 'system'])]
+    private string $theme = 'system';
+
     #[ORM\OneToMany(mappedBy: 'createur', targetEntity: Tache::class)]
     private Collection $tachesCrees;
 
@@ -405,6 +408,17 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function eraseCredentials(): void
     {
-        // Ne pas stocker de données sensibles en mémoire
+        // If you store any temporary, sensitive data on the user, clear it here
+    }
+
+    public function getTheme(): string
+    {
+        return $this->theme;
+    }
+
+    public function setTheme(string $theme): self
+    {
+        $this->theme = $theme;
+        return $this;
     }
 }

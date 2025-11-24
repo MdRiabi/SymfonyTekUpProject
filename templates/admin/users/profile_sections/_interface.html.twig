@@ -1,16 +1,40 @@
 {# templates/admin/users/profile_sections/_interface.html.twig #}
+{# templates/admin/users/profile_sections/_interface.html.twig #}
 <div id="content-interface" class="tab-content">
-    <h2 class="text-2xl font-semibold text-gray-900 mb-6">Préférences d'interface</h2>
-    <div class="bg-blue-50 border-l-4 border-blue-400 p-4">
-        <div class="flex">
-            <div class="flex-shrink-0">
-                <i class="fas fa-info-circle text-blue-400"></i>
-            </div>
-            <div class="ml-3">
-                <p class="text-sm text-blue-700">
-                    Cette section sera disponible prochainement. Vous pourrez personnaliser l'apparence de l'interface (thème sombre/clair, etc.).
-                </p>
+    <h2 class="text-2xl font-semibold text-gray-900 dark:text-gray-100 mb-6">{{ 'profile.interface.title'|trans }}</h2>
+    
+    <form action="{{ path('admin_user_update_theme') }}" method="POST">
+        <input type="hidden" name="_token" value="{{ csrf_token('update_theme') }}">
+        
+        <div class="space-y-6">
+            <div>
+                <h3 class="text-lg font-medium leading-6 text-gray-900 dark:text-gray-100 mb-4">{{ 'profile.interface.appearance_title'|trans }}</h3>
+                <div class="border-t border-gray-200 dark:border-gray-700 pt-4">
+                    <div class="max-w-xl">
+                        <label for="color_mode" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                            {{ 'profile.interface.color_mode'|trans }} <span class="text-red-500">*</span>
+                        </label>
+                        <select id="color_mode" name="theme" class="mt-1 block w-full pl-3 pr-10 py-2 text-base bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md">
+                            <option value="dark" {% if app.user.theme == 'dark' %}selected{% endif %}>{{ 'profile.interface.modes.dark'|trans }}</option>
+                            <option value="light" {% if app.user.theme == 'light' %}selected{% endif %}>{{ 'profile.interface.modes.light'|trans }}</option>
+                            <option value="system" {% if app.user.theme == 'system' %}selected{% endif %}>{{ 'profile.interface.modes.system'|trans }}</option>
+                        </select>
+                        <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">
+                            {{ 'profile.interface.help_text'|trans }}
+                        </p>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
+        
+        <div class="flex items-center gap-4 mt-6">
+            <button 
+                type="submit" 
+                class="px-6 py-2.5 bg-green-600 hover:bg-green-700 text-white font-medium rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
+            >
+                <i class="fas fa-save mr-2"></i>
+                {{ 'common.save'|trans }}
+            </button>
+        </div>
+    </form>
 </div>
