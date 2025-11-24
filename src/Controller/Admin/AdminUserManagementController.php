@@ -18,6 +18,8 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
+use App\Entity\UserSession;
+
 class AdminUserManagementController extends AbstractController
 {
     #[Route('/admin/users', name: 'admin_manage_users')]
@@ -173,9 +175,17 @@ class AdminUserManagementController extends AbstractController
     }
 
     #[Route('/admin/profile', name: 'admin_profile', methods: ['GET'])]
-    public function profile(): Response
+    public function profile(EntityManagerInterface $entityManager): Response
     {
-        return $this->render('admin/users/profile.html.twig');
+        $user = $this->getUser();
+        $sessions = $entityManager->getRepository(UserSession::class)->findBy(
+            ['user' => $user],
+            ['lastActiveAt' => 'DESC']
+        );
+
+        return $this->render('admin/users/profile.html.twig', [
+            'sessions' => $sessions
+        ]);
     }
 
     #[Route('/admin/profile/update', name: 'admin_profile_update', methods: ['POST'])]
@@ -413,5 +423,6 @@ class AdminUserManagementController extends AbstractController
         ]);
     }
 
+    
 
 }
