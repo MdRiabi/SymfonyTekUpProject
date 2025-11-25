@@ -207,6 +207,7 @@
     {# ======================================================= #}
     {# BARRA LATÉRALE (SIDEBAR)                         #}
     {# ======================================================= #}
+    {% block sidebar %}
     <!-- Overlay qui s'affiche quand la sidebar est ouverte -->
     <div id="sidebarOverlay" class="sidebar-overlay"></div>
 
@@ -264,6 +265,7 @@
             </ul>
         </nav>
     </aside>
+    {% endblock %}
 
     {# ======================================================= #}
     {# CONTENU PRINCIPAL DE LA PAGE (MAIN)               #}
@@ -273,6 +275,7 @@
         {# ======================================================= #}
         {# HAUT DE PAGE (TOPBAR / HEADER)                  #}
         {# ======================================================= #}
+        {% block topbar %}
         <header class="fixed top-0 left-0 right-0 bg-white dark:bg-gray-800 shadow-sm border-b dark:border-gray-700 px-6 py-3 z-50 transition-colors duration-200">
             <div class="flex justify-between items-center">
                 <!-- Section de gauche -->
@@ -359,6 +362,7 @@
                 </div>
             </div>
         </header>
+        {% endblock %}
 
         {# ======================================================= #}
         {# BLOC DYNAMIQUE : LE CONTENU SPÉCIFIQUE À CHAQUE PAGE #}
@@ -370,6 +374,7 @@
     {# ======================================================= #}
     {# SCRIPTS JAVASCRIPT COMMUNS                        #}
     {# ======================================================= #}
+    {% block javascripts %}
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // --- Éléments de la Sidebar ---
@@ -385,30 +390,42 @@
 
             // --- Fonctions pour la Sidebar ---
             function openSidebar() {
-                sidebarVisible = true;
-                sidebar.classList.remove('sidebar-hidden');
-                sidebar.classList.add('sidebar-visible');
-                sidebarOverlay.classList.add('sidebar-overlay-active');
+                if (sidebar && sidebarOverlay) {
+                    sidebarVisible = true;
+                    sidebar.classList.remove('sidebar-hidden');
+                    sidebar.classList.add('sidebar-visible');
+                    sidebarOverlay.classList.add('sidebar-overlay-active');
+                }
             }
 
             function closeSidebar() {
-                sidebarVisible = false;
-                sidebar.classList.remove('sidebar-visible');
-                sidebar.classList.add('sidebar-hidden');
-                sidebarOverlay.classList.remove('sidebar-overlay-active');
+                if (sidebar && sidebarOverlay) {
+                    sidebarVisible = false;
+                    sidebar.classList.remove('sidebar-visible');
+                    sidebar.classList.add('sidebar-hidden');
+                    sidebarOverlay.classList.remove('sidebar-overlay-active');
+                }
             }
 
             // --- Fonctions pour le Menu Profil ---
             function toggleProfileDropdown() {
-                profileDropdown.classList.toggle('hidden');
+                if (profileDropdown) {
+                    profileDropdown.classList.toggle('hidden');
+                }
             }
 
             // --- Écouteurs d'événements pour la Sidebar ---
-            hamburgerBtn.addEventListener('click', openSidebar);
-            closeSidebarBtn.addEventListener('click', closeSidebar);
-            sidebarOverlay.addEventListener('click', closeSidebar);
+            if (hamburgerBtn && sidebar) {
+                hamburgerBtn.addEventListener('click', openSidebar);
+            }
+            if (closeSidebarBtn && sidebar) {
+                closeSidebarBtn.addEventListener('click', closeSidebar);
+            }
+            if (sidebarOverlay && sidebar) {
+                sidebarOverlay.addEventListener('click', closeSidebar);
+            }
             document.addEventListener('keydown', function(e) {
-                if (e.key === 'Escape' && sidebarVisible) {
+                if (e.key === 'Escape' && sidebarVisible && sidebar) {
                     closeSidebar();
                 }
             });
@@ -472,5 +489,6 @@
             }
         });
     </script>
+    {% endblock %}
 </body>
 </html>

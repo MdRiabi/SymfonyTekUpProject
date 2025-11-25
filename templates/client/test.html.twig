@@ -1,0 +1,15 @@
+{# Test simple pour vérifier si base_client.html.twig fonctionne #}
+{% extends 'client/base_client.html.twig' %}
+
+{% block title %}TEST - Client Dashboard{% endblock %}
+{% block page_title %}PAGE DE TEST{% endblock %}
+
+{% block body %}
+<div class="p-6">
+    <div class="bg-red-500 text-white p-8 rounded-lg text-center">
+        <h1 class="text-4xl font-bold">🧪 PAGE DE TEST</h1>
+        <p class="mt-4">Si vous voyez cette page, base_client.html.twig fonctionne !</p>
+        <p class="mt-2">Vérifiez la console pour les messages [TEST] et [CLIENT]</p>
+    </div>
+</div>
+{% endblock %}

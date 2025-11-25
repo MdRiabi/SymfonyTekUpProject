@@ -1,0 +1,619 @@
+{# templates/client/base_client.html.twig #}
+{% extends 'base.html.twig' %}
+
+{# Surcharge du titre par défaut #}
+{% block title %}Client Dashboard{% endblock %}
+
+{# ======================================================= #}
+{# SIDEBAR PERSONNALISÉE POUR CLIENT                      #}
+{# ======================================================= #}
+{% block sidebar %}
+    {# Overlay pour mobile #}
+    <div id="sidebarOverlay" class="sidebar-overlay"></div>
+    
+    {# Sidebar Client #}
+    <aside id="clientSidebar" class="sidebar-expanded bg-white dark:bg-gray-800 h-full shadow-lg transition-all duration-300 fixed top-16 left-0 z-60">
+        {# Header de la sidebar #}
+        <div class="p-6 border-b dark:border-gray-700 flex justify-between items-center">
+            <div class="flex items-center overflow-hidden">
+               {#<i class="fas fa-briefcase text-blue-600 dark:text-blue-400 text-2xl flex-shrink-0"></i> #} 
+               {# Bouton hamburger pour toggle sidebar #}
+            <button id="hamburgerBtn" class="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors flex-shrink-0" title="Toggle Sidebar">
+                <i class="fas fa-bars text-gray-600 dark:text-gray-300 text-xl"></i>
+            </button>
+                <h1 class="sidebar-text ml-3 text-xl font-bold text-gray-800 dark:text-gray-100 whitespace-nowrap">Client Portal</h1>
+            </div>
+            
+        </div>
+        
+        {# Navigation #}
+        <nav class="p-4">
+            <ul class="space-y-2">
+                {# Vue d'ensemble #}
+                <li>
+                    <a href="{{ path('client_dashboard') }}" class="sidebar-item flex items-center p-3 rounded-lg text-gray-700 dark:text-gray-200 hover:bg-blue-50 dark:hover:bg-gray-700 hover:text-blue-600 dark:hover:text-blue-400">
+                        <i class="fas fa-chart-line w-6 h-6 text-xl flex-shrink-0"></i>
+                        <span class="sidebar-text ml-3 whitespace-nowrap">Vue d'ensemble</span>
+                    </a>
+                </li>
+                
+                {# Mes Projets avec sous-menu #}
+                <li>
+                    <button id="projectsMenuBtn" class="sidebar-item flex items-center p-3 rounded-lg text-gray-700 dark:text-gray-200 hover:bg-blue-50 dark:hover:bg-gray-700 hover:text-blue-600 dark:hover:text-blue-400 w-full">
+                        <div class="relative flex-shrink-0">
+                            <i class="fas fa-folder-open w-6 h-6 text-xl"></i>
+                            {# Badge pour projets en attente #}
+                            <span class="notification-badge">3</span>
+                        </div>
+                        <span class="sidebar-text ml-3 flex-1 text-left whitespace-nowrap">Mes Projets</span>
+                        <i class="sidebar-text fas fa-chevron-down chevron-icon text-sm"></i>
+                    </button>
+                    {# Sous-menu #}
+                    <ul id="projectsSubmenu" class="submenu mt-1">
+                        <li>
+                            <a href="{{ path('client_projects') }}" class="submenu-item sidebar-item flex items-center p-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-gray-700 hover:text-blue-600">
+                                <i class="fas fa-list w-5 h-5 text-sm"></i>
+                                <span class="sidebar-text ml-2">Tous les projets</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ path('client_projects', {status: 'in_progress'}) }}" class="submenu-item sidebar-item flex items-center p-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-gray-700 hover:text-blue-600">
+                                <i class="fas fa-spinner w-5 h-5 text-sm text-yellow-500"></i>
+                                <span class="sidebar-text ml-2">En cours</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ path('client_projects', {status: 'completed'}) }}" class="submenu-item sidebar-item flex items-center p-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-gray-700 hover:text-blue-600">
+                                <i class="fas fa-check-circle w-5 h-5 text-sm text-green-500"></i>
+                                <span class="sidebar-text ml-2">Terminés</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                
+                {# Nouveau Projet #}
+                <li>
+                    <a href="{{ path('client_submit_project') }}" class="sidebar-item flex items-center p-3 rounded-lg text-gray-700 dark:text-gray-200 hover:bg-blue-50 dark:hover:bg-gray-700 hover:text-blue-600 dark:hover:text-blue-400">
+                        <i class="fas fa-plus-circle w-6 h-6 text-xl flex-shrink-0 text-green-500"></i>
+                        <span class="sidebar-text ml-3 whitespace-nowrap">Nouveau Projet</span>
+                    </a>
+                </li>
+                
+                {# Messagerie #}
+                <li>
+                    <a href="{{ path('client_messages') }}" class="sidebar-item flex items-center p-3 rounded-lg text-gray-700 dark:text-gray-200 hover:bg-blue-50 dark:hover:bg-gray-700 hover:text-blue-600 dark:hover:text-blue-400">
+                        <div class="relative flex-shrink-0">
+                            <i class="fas fa-comments w-6 h-6 text-xl"></i>
+                            {# Badge pour messages non lus #}
+                            <span class="notification-badge">5</span>
+                        </div>
+                        <span class="sidebar-text ml-3 whitespace-nowrap">Messagerie</span>
+                    </a>
+                </li>
+                
+                {# Divider #}
+                <li class="sidebar-text">
+                    <hr class="my-4 border-gray-200 dark:border-gray-700">
+                </li>
+                
+                {# Mon Profil #}
+                <li>
+                    <a href="{{ path('client_profile') }}" class="sidebar-item flex items-center p-3 rounded-lg text-gray-700 dark:text-gray-200 hover:bg-blue-50 dark:hover:bg-gray-700 hover:text-blue-600 dark:hover:text-blue-400">
+                        <i class="fas fa-user-circle w-6 h-6 text-xl flex-shrink-0"></i>
+                        <span class="sidebar-text ml-3 whitespace-nowrap">Mon Profil</span>
+                    </a>
+                </li>
+                
+                {# Aide & Support #}
+                <li>
+                    <a href="#" class="sidebar-item flex items-center p-3 rounded-lg text-gray-700 dark:text-gray-200 hover:bg-blue-50 dark:hover:bg-gray-700 hover:text-blue-600 dark:hover:text-blue-400">
+                        <i class="fas fa-question-circle w-6 h-6 text-xl flex-shrink-0"></i>
+                        <span class="sidebar-text ml-3 whitespace-nowrap">Aide & Support</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </aside>
+{% endblock %}
+
+{# ======================================================= #}
+{# TOPBAR PERSONNALISÉ POUR CLIENT                        #}
+{# ======================================================= #}
+{% block topbar %}
+    <style>
+        /* Sidebar overlay for mobile */
+        .sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 50;
+            display: none;
+        }
+
+        .sidebar-overlay:not(.hidden) {
+            display: block;
+        }
+
+        @media (min-width: 769px) {
+            .sidebar-overlay {
+                display: none !important;
+            }
+        }
+
+        /* Sidebar Collapsible Styles - Using ID for maximum specificity */
+        #clientSidebar.sidebar-expanded {
+            width: 256px !important;
+            min-width: 256px !important;
+            max-width: 256px !important;
+        }
+        
+        #clientSidebar.sidebar-collapsed {
+            width: 64px !important;
+            min-width: 64px !important;
+            max-width: 64px !important;
+            overflow: hidden;
+        }
+
+        /* Transition pour la largeur */
+        #clientSidebar {
+            transition: width 0.3s ease, min-width 0.3s ease, max-width 0.3s ease;
+        }
+
+        @media (max-width: 768px) {
+            #clientSidebar.sidebar-collapsed {
+                transform: translateX(-100%);
+                width: 256px !important;
+            }
+            #clientSidebar.sidebar-expanded {
+                transform: translateX(0);
+            }
+        }
+        
+        .sidebar-expanded .sidebar-text {
+            opacity: 1;
+            width: auto;
+            transition: opacity 0.3s ease 0.1s;
+        }
+        
+        .sidebar-collapsed .sidebar-text {
+            opacity: 0;
+            width: 0;
+            overflow: hidden;
+            display: none;
+        }
+        
+        /* Ajustement du header de la sidebar en mode collapsed */
+        .sidebar-collapsed .p-6 {
+            padding: 1rem !important;
+            justify-content: center !important;
+        }
+        
+        .sidebar-collapsed #hamburgerBtn {
+            margin: 0 auto;
+        }
+        
+        /* Bouton toggle toujours visible */
+        .toggle-btn {
+            opacity: 1 !important;
+            display: flex !important;
+            width: auto !important;
+        }
+        
+        .sidebar-collapsed .toggle-btn {
+            justify-content: center;
+            width: 100%;
+        }
+        
+        /* Ajustement des icônes en mode collapsed */
+        .sidebar-collapsed .sidebar-item {
+            justify-content: center;
+            padding: 0.75rem !important;
+        }
+        
+        .sidebar-collapsed nav {
+            padding: 0.5rem !important;
+        }
+        
+        .sidebar-collapsed .sidebar-item i {
+            margin: 0 !important;
+        }
+        
+        /* Badge de notification */
+        .notification-badge {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            color: white;
+            font-size: 0.65rem;
+            font-weight: 700;
+            padding: 2px 6px;
+            border-radius: 9999px;
+            min-width: 18px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(239, 68, 68, 0.4);
+            animation: pulse-badge 2s infinite;
+        }
+        
+        @keyframes pulse-badge {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        
+        /* Tooltip pour mode collapsed */
+        .sidebar-tooltip {
+            position: absolute;
+            left: 70px;
+            background: #1f2937;
+            color: white;
+            padding: 0.5rem 0.75rem;
+            border-radius: 0.375rem;
+            font-size: 0.875rem;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease;
+            z-index: 100;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .sidebar-collapsed .sidebar-item:hover .sidebar-tooltip {
+            opacity: 1;
+        }
+        
+        /* Sous-menu styles */
+        .submenu {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+        
+        .submenu.open {
+            max-height: 500px;
+            transition: max-height 0.4s ease-in;
+        }
+        
+        .submenu-item {
+            padding-left: 3rem;
+            font-size: 0.875rem;
+        }
+        
+        .sidebar-collapsed .submenu {
+            display: none;
+        }
+        
+        /* Masquer les dividers et badges en mode collapsed */
+        .sidebar-collapsed hr,
+        .sidebar-collapsed .notification-badge {
+            display: none !important;
+        }
+        
+        /* Chevron rotation */
+        .chevron-icon {
+            transition: transform 0.3s ease;
+        }
+        
+        .chevron-icon.rotated {
+            transform: rotate(180deg);
+        }
+        
+        /* Notification dropdown styles */
+        .notification-dropdown {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .notification-item:hover {
+            background-color: rgba(59, 130, 246, 0.05);
+        }
+        
+        .notification-item.unread {
+            background-color: rgba(59, 130, 246, 0.08);
+            border-left: 3px solid #3b82f6;
+        }
+        
+        /* Masquer le bouton hamburger du template parent dans le header */
+        header .hamburger-btn,
+        header #hamburgerBtn:not(#clientSidebar #hamburgerBtn) {
+            display: none !important;
+        }
+        
+        /* Ajustement du contenu principal selon l'état de la sidebar */
+        body:has(#clientSidebar.sidebar-expanded) main {
+            margin-left: 256px;
+            transition: margin-left 0.3s ease;
+        }
+        
+        body:has(#clientSidebar.sidebar-collapsed) main {
+            margin-left: 64px;
+            transition: margin-left 0.3s ease;
+        }
+        
+        /* Ajustement du header selon l'état de la sidebar */
+        body:has(#clientSidebar.sidebar-expanded) header {
+            left: 256px;
+            transition: left 0.3s ease;
+        }
+        
+        body:has(#clientSidebar.sidebar-collapsed) header {
+            left: 64px;
+            transition: left 0.3s ease;
+        }
+        
+        /* Sur mobile, pas de marge car la sidebar est en overlay */
+        @media (max-width: 768px) {
+            body:has(#clientSidebar.sidebar-expanded) main,
+            body:has(#clientSidebar.sidebar-collapsed) main {
+                margin-left: 0 !important;
+            }
+            
+            body:has(#clientSidebar.sidebar-expanded) header,
+            body:has(#clientSidebar.sidebar-collapsed) header {
+                left: 0 !important;
+            }
+        }
+
+    </style>
+    <header class="fixed top-0 left-0 right-0 bg-white dark:bg-gray-800 shadow-sm border-b dark:border-gray-700 px-6 py-3 z-20 transition-colors duration-200">
+        <div class="flex justify-between items-center">
+            {# Section gauche #}
+            <div class="flex items-center space-x-4">
+                {# Bouton hamburger pour mobile #}
+                
+                
+
+                {# Breadcrumb ou titre de page #}
+                <div class="hidden md:block">
+                    <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-100">
+                        {% block page_title %}Dashboard{% endblock %}
+                    </h2>
+                </div>
+            </div>
+            
+            {# Section droite #}
+            <div class="flex items-center space-x-3">
+                {# Barre de recherche #}
+                <div class="relative hidden md:block">
+                    <input type="text" placeholder="Rechercher un projet..." class="pl-10 pr-4 py-2 border dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 w-64 text-sm">
+                    <i class="fas fa-search absolute left-3 top-2.5 text-gray-400"></i>
+                </div>
+                
+                {# Bouton Nouveau Projet (version mobile) #}
+                <a href="{{ path('client_submit_project') }}" class="md:hidden flex items-center px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm">
+                    <i class="fas fa-plus"></i>
+                </a>
+                
+                {# Bouton Nouveau Projet (version desktop) #}
+                <a href="{{ path('client_submit_project') }}" class="hidden md:flex items-center px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg hover:from-blue-700 hover:to-blue-800 text-sm shadow-md transition-all duration-200 hover:shadow-lg">
+                    <i class="fas fa-plus mr-2"></i>
+                    <span>Nouveau Projet</span>
+                </a>
+                
+                {# Centre de Notifications #}
+                <div class="relative">
+                    <button id="notificationBtn" class="relative p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors">
+                        <i class="fas fa-bell text-gray-600 dark:text-gray-300 text-xl"></i>
+                        {# Badge de notification #}
+                        <span class="notification-badge">8</span>
+                    </button>
+                    
+                    {# Dropdown des notifications #}
+                    <div id="notificationDropdown" class="hidden origin-top-right absolute right-0 mt-2 w-80 rounded-lg shadow-xl bg-white dark:bg-gray-800 ring-1 ring-black ring-opacity-5 z-70">
+                        {# Header #}
+                        <div class="px-4 py-3 border-b dark:border-gray-700 flex justify-between items-center">
+                            <h3 class="text-sm font-semibold text-gray-900 dark:text-gray-100">Notifications</h3>
+                            <button class="text-xs text-blue-600 hover:text-blue-700">Tout marquer comme lu</button>
+                        </div>
+                        
+                        {# Liste des notifications #}
+                        <div class="notification-dropdown">
+                            {# Notification non lue #}
+                            <a href="#" class="notification-item unread block px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                                <div class="flex items-start">
+                                    <div class="flex-shrink-0">
+                                        <i class="fas fa-check-circle text-green-500 text-lg"></i>
+                                    </div>
+                                    <div class="ml-3 flex-1">
+                                        <p class="text-sm font-medium text-gray-900 dark:text-gray-100">Projet approuvé</p>
+                                        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Votre projet "Site E-commerce" a été approuvé</p>
+                                        <p class="text-xs text-gray-400 dark:text-gray-500 mt-1">Il y a 5 minutes</p>
+                                    </div>
+                                </div>
+                            </a>
+                            
+                            {# Notification lue #}
+                            <a href="#" class="notification-item block px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                                <div class="flex items-start">
+                                    <div class="flex-shrink-0">
+                                        <i class="fas fa-comment text-blue-500 text-lg"></i>
+                                    </div>
+                                    <div class="ml-3 flex-1">
+                                        <p class="text-sm font-medium text-gray-900 dark:text-gray-100">Nouveau message</p>
+                                        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Le chef de projet a répondu à votre question</p>
+                                        <p class="text-xs text-gray-400 dark:text-gray-500 mt-1">Il y a 2 heures</p>
+                                    </div>
+                                </div>
+                            </a>
+                            
+                            <a href="#" class="notification-item block px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                                <div class="flex items-start">
+                                    <div class="flex-shrink-0">
+                                        <i class="fas fa-tasks text-orange-500 text-lg"></i>
+                                    </div>
+                                    <div class="ml-3 flex-1">
+                                        <p class="text-sm font-medium text-gray-900 dark:text-gray-100">Mise à jour du projet</p>
+                                        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Le statut de "Application Mobile" a changé</p>
+                                        <p class="text-xs text-gray-400 dark:text-gray-500 mt-1">Hier</p>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        
+                        {# Footer #}
+                        <div class="px-4 py-3 border-t dark:border-gray-700 text-center">
+                            <a href="#" class="text-sm text-blue-600 hover:text-blue-700 font-medium">Voir toutes les notifications</a>
+                        </div>
+                    </div>
+                </div>
+                
+                {# Menu Profil #}
+                <div class="relative ml-3">
+                    <button id="profileMenuButton" class="flex items-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                        {% if app.user and app.user.photoProfil %}
+                            <img class="h-9 w-9 rounded-full object-cover ring-2 ring-blue-500" src="{{ vich_uploader_asset(app.user, 'photoFile') }}" alt="Photo de profil">
+                        {% elseif app.user %}
+                            <img class="h-9 w-9 rounded-full object-cover ring-2 ring-blue-500" src="https://ui-avatars.com/api/?name={{ app.user.prenom }}+{{ app.user.nom }}&background=3b82f6&color=fff&size=128" alt="Photo de profil">
+                        {% endif %}
+                    </button>
+                    
+                    {# Dropdown profil #}
+                    <div id="profileDropdown" class="hidden origin-top-right absolute right-0 mt-2 w-56 rounded-lg shadow-xl bg-white dark:bg-gray-800 ring-1 ring-black ring-opacity-5 z-70">
+                        {# Info utilisateur #}
+                        <div class="px-4 py-3 border-b dark:border-gray-700">
+                            <p class="text-sm font-medium text-gray-900 dark:text-gray-100">{{ app.user.prenom }} {{ app.user.nom }}</p>
+                            <p class="text-xs text-gray-500 dark:text-gray-400 truncate">{{ app.user.email }}</p>
+                        </div>
+                        
+                        <div class="py-1">
+                            <a href="{{ path('client_profile') }}" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
+                                <i class="fas fa-user mr-2"></i> Mon Profil
+                            </a>
+                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
+                                <i class="fas fa-cog mr-2"></i> Paramètres
+                            </a>
+                            <hr class="my-1 dark:border-gray-700">
+                            <a href="{{ path('app_logout') }}" class="block px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-700">
+                                <i class="fas fa-sign-out-alt mr-2"></i> Déconnexion
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+{% endblock %}
+
+{# ======================================================= #}
+{# SCRIPTS JAVASCRIPT POUR INTERACTIVITÉ                  #}
+{# ======================================================= #}
+{% block javascripts %}
+    {# Ne PAS appeler parent() pour éviter les conflits avec le script de base.html.twig #}
+    {# qui cherche getElementById('sidebar') alors que nous utilisons getElementById('clientSidebar') #}
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            
+            // ===== SIDEBAR COLLAPSIBLE =====
+            const clientSidebar = document.getElementById('clientSidebar');
+            const hamburgerBtn = document.getElementById('hamburgerBtn');
+            const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+            if (!clientSidebar) {
+                return;
+            }
+
+            // Charger l'état de la sidebar depuis localStorage
+            const sidebarState = localStorage.getItem('clientSidebarState') || 'expanded';
+
+            if (sidebarState === 'collapsed') {
+                clientSidebar.classList.remove('sidebar-expanded');
+                clientSidebar.classList.add('sidebar-collapsed');
+                if (sidebarOverlay) sidebarOverlay.classList.add('hidden');
+            } else {
+                if (sidebarOverlay) sidebarOverlay.classList.remove('hidden');
+            }
+
+            // Fonction pour toggle la sidebar
+            function toggleSidebar(e) {
+                e.preventDefault();
+                e.stopPropagation();
+
+                const isExpanded = clientSidebar.classList.contains('sidebar-expanded');
+
+                if (isExpanded) {
+                    // Réduire la sidebar
+                    clientSidebar.classList.remove('sidebar-expanded');
+                    clientSidebar.classList.add('sidebar-collapsed');
+                    if (sidebarOverlay) sidebarOverlay.classList.add('hidden');
+                    localStorage.setItem('clientSidebarState', 'collapsed');
+                } else {
+                    // Agrandir la sidebar
+                    clientSidebar.classList.remove('sidebar-collapsed');
+                    clientSidebar.classList.add('sidebar-expanded');
+                    if (sidebarOverlay) sidebarOverlay.classList.remove('hidden');
+                    localStorage.setItem('clientSidebarState', 'expanded');
+                }
+            }
+
+            // Ajouter event listener au bouton hamburger
+            if (hamburgerBtn) {
+                hamburgerBtn.addEventListener('click', toggleSidebar);
+            }
+
+            // Fermer la sidebar en cliquant sur l'overlay
+            if (sidebarOverlay) {
+                sidebarOverlay.addEventListener('click', toggleSidebar);
+            }
+            
+            // ===== SOUS-MENU PROJETS =====
+            const projectsMenuBtn = document.getElementById('projectsMenuBtn');
+            const projectsSubmenu = document.getElementById('projectsSubmenu');
+            
+            if (projectsMenuBtn && projectsSubmenu) {
+                projectsMenuBtn.addEventListener('click', function() {
+                    const chevron = this.querySelector('.chevron-icon');
+                    projectsSubmenu.classList.toggle('open');
+                    if (chevron) {
+                        chevron.classList.toggle('rotated');
+                    }
+                });
+            }
+            
+            // ===== NOTIFICATIONS DROPDOWN =====
+            const notificationBtn = document.getElementById('notificationBtn');
+            const notificationDropdown = document.getElementById('notificationDropdown');
+            
+            if (notificationBtn && notificationDropdown) {
+                notificationBtn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    notificationDropdown.classList.toggle('hidden');
+                    // Fermer le menu profil si ouvert
+                    const profileDropdown = document.getElementById('profileDropdown');
+                    if (profileDropdown) {
+                        profileDropdown.classList.add('hidden');
+                    }
+                });
+            }
+            
+            // ===== PROFILE DROPDOWN =====
+            const profileMenuButton = document.getElementById('profileMenuButton');
+            const profileDropdown = document.getElementById('profileDropdown');
+            
+            if (profileMenuButton && profileDropdown) {
+                profileMenuButton.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    profileDropdown.classList.toggle('hidden');
+                    // Fermer les notifications si ouvertes
+                    if (notificationDropdown) {
+                        notificationDropdown.classList.add('hidden');
+                    }
+                });
+            }
+            
+            // Fermer les dropdowns en cliquant ailleurs
+            document.addEventListener('click', function(e) {
+                if (notificationBtn && notificationDropdown && 
+                    !notificationBtn.contains(e.target) && !notificationDropdown.contains(e.target)) {
+                    notificationDropdown.classList.add('hidden');
+                }
+                if (profileMenuButton && profileDropdown && 
+                    !profileMenuButton.contains(e.target) && !profileDropdown.contains(e.target)) {
+                    profileDropdown.classList.add('hidden');
+                }
+            });
+        });
+    </script>
+{% endblock %}

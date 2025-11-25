@@ -19,8 +19,7 @@ security:
         login_path: app_signin
         check_path: app_signin
         enable_csrf: true
-        target_path_parameter: _target_path
-        default_target_path: /admin
+        success_handler: App\Security\LoginSuccessHandler
       logout:
         path: app_logout
         target: app_signin
@@ -35,6 +34,7 @@ security:
 
   access_control:
     - { path: ^/admin, roles: ROLE_ADMIN }
+    - { path: ^/client, roles: ROLE_CLIENT }
     - { path: ^/request-account, roles: [] }
     - { path: ^/signin, roles: [] }
     - { path: ^/logout, roles: PUBLIC_ACCESS }

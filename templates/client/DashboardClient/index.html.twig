@@ -1,0 +1,259 @@
+{# templates/client/DashboardClient/index.html.twig #}
+{% extends 'client/base_client.html.twig' %}
+
+{% block title %}Vue d'ensemble - Client Dashboard{% endblock %}
+{% block page_title %}Vue d'ensemble{% endblock %}
+
+{% block body %}
+<div class="p-6 space-y-6">
+    {# Statistiques en cartes #}
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {# Projets actifs #}
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 border-l-4 border-blue-500 hover:shadow-lg transition-shadow">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm text-gray-600 dark:text-gray-400 font-medium">Projets Actifs</p>
+                    <p class="text-3xl font-bold text-gray-900 dark:text-gray-100 mt-2">12</p>
+                    <p class="text-xs text-green-600 dark:text-green-400 mt-2">
+                        <i class="fas fa-arrow-up"></i> +2 ce mois
+                    </p>
+                </div>
+                <div class="bg-blue-100 dark:bg-blue-900 p-4 rounded-full">
+                    <i class="fas fa-folder-open text-blue-600 dark:text-blue-400 text-2xl"></i>
+                </div>
+            </div>
+        </div>
+
+        {# Projets terminés #}
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 border-l-4 border-green-500 hover:shadow-lg transition-shadow">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm text-gray-600 dark:text-gray-400 font-medium">Projets Terminés</p>
+                    <p class="text-3xl font-bold text-gray-900 dark:text-gray-100 mt-2">28</p>
+                    <p class="text-xs text-green-600 dark:text-green-400 mt-2">
+                        <i class="fas fa-check"></i> 100% réussite
+                    </p>
+                </div>
+                <div class="bg-green-100 dark:bg-green-900 p-4 rounded-full">
+                    <i class="fas fa-check-circle text-green-600 dark:text-green-400 text-2xl"></i>
+                </div>
+            </div>
+        </div>
+
+        {# Messages non lus #}
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 border-l-4 border-orange-500 hover:shadow-lg transition-shadow">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm text-gray-600 dark:text-gray-400 font-medium">Messages Non Lus</p>
+                    <p class="text-3xl font-bold text-gray-900 dark:text-gray-100 mt-2">5</p>
+                    <p class="text-xs text-orange-600 dark:text-orange-400 mt-2">
+                        <i class="fas fa-clock"></i> Derniers 24h
+                    </p>
+                </div>
+                <div class="bg-orange-100 dark:bg-orange-900 p-4 rounded-full">
+                    <i class="fas fa-envelope text-orange-600 dark:text-orange-400 text-2xl"></i>
+                </div>
+            </div>
+        </div>
+
+        {# En attente de validation #}
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 border-l-4 border-purple-500 hover:shadow-lg transition-shadow">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm text-gray-600 dark:text-gray-400 font-medium">En Attente</p>
+                    <p class="text-3xl font-bold text-gray-900 dark:text-gray-100 mt-2">3</p>
+                    <p class="text-xs text-purple-600 dark:text-purple-400 mt-2">
+                        <i class="fas fa-hourglass-half"></i> Validation requise
+                    </p>
+                </div>
+                <div class="bg-purple-100 dark:bg-purple-900 p-4 rounded-full">
+                    <i class="fas fa-clock text-purple-600 dark:text-purple-400 text-2xl"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {# Grille principale : Projets récents + Activités #}
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {# Projets récents (2/3) #}
+        <div class="lg:col-span-2 bg-white dark:bg-gray-800 rounded-xl shadow-md p-6">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100">
+                    <i class="fas fa-folder-open text-blue-600 mr-2"></i>
+                    Projets Récents
+                </h3>
+                <a href="{{ path('client_projects') }}" class="text-sm text-blue-600 hover:text-blue-700 font-medium">
+                    Voir tout <i class="fas fa-arrow-right ml-1"></i>
+                </a>
+            </div>
+
+            <div class="space-y-4">
+                {# Projet 1 #}
+                <div class="border dark:border-gray-700 rounded-lg p-4 hover:shadow-md transition-shadow cursor-pointer">
+                    <div class="flex items-start justify-between">
+                        <div class="flex-1">
+                            <h4 class="font-semibold text-gray-900 dark:text-gray-100">Site E-commerce</h4>
+                            <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Développement d'une plateforme de vente en ligne</p>
+                            <div class="flex items-center mt-3 space-x-4">
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
+                                    <i class="fas fa-circle text-xs mr-1"></i> En cours
+                                </span>
+                                <span class="text-xs text-gray-500 dark:text-gray-400">
+                                    <i class="fas fa-calendar mr-1"></i> Échéance: 15 Déc 2025
+                                </span>
+                            </div>
+                        </div>
+                        <div class="ml-4">
+                            <div class="text-right">
+                                <p class="text-sm font-semibold text-gray-900 dark:text-gray-100">75%</p>
+                                <div class="w-20 bg-gray-200 dark:bg-gray-700 rounded-full h-2 mt-2">
+                                    <div class="bg-blue-600 h-2 rounded-full" style="width: 75%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {# Projet 2 #}
+                <div class="border dark:border-gray-700 rounded-lg p-4 hover:shadow-md transition-shadow cursor-pointer">
+                    <div class="flex items-start justify-between">
+                        <div class="flex-1">
+                            <h4 class="font-semibold text-gray-900 dark:text-gray-100">Application Mobile</h4>
+                            <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">App de gestion de tâches collaborative</p>
+                            <div class="flex items-center mt-3 space-x-4">
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200">
+                                    <i class="fas fa-circle text-xs mr-1"></i> En révision
+                                </span>
+                                <span class="text-xs text-gray-500 dark:text-gray-400">
+                                    <i class="fas fa-calendar mr-1"></i> Échéance: 20 Déc 2025
+                                </span>
+                            </div>
+                        </div>
+                        <div class="ml-4">
+                            <div class="text-right">
+                                <p class="text-sm font-semibold text-gray-900 dark:text-gray-100">45%</p>
+                                <div class="w-20 bg-gray-200 dark:bg-gray-700 rounded-full h-2 mt-2">
+                                    <div class="bg-yellow-500 h-2 rounded-full" style="width: 45%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {# Projet 3 #}
+                <div class="border dark:border-gray-700 rounded-lg p-4 hover:shadow-md transition-shadow cursor-pointer">
+                    <div class="flex items-start justify-between">
+                        <div class="flex-1">
+                            <h4 class="font-semibold text-gray-900 dark:text-gray-100">Refonte Site Vitrine</h4>
+                            <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Modernisation du site corporate</p>
+                            <div class="flex items-center mt-3 space-x-4">
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
+                                    <i class="fas fa-circle text-xs mr-1"></i> Planifié
+                                </span>
+                                <span class="text-xs text-gray-500 dark:text-gray-400">
+                                    <i class="fas fa-calendar mr-1"></i> Début: 01 Jan 2026
+                                </span>
+                            </div>
+                        </div>
+                        <div class="ml-4">
+                            <div class="text-right">
+                                <p class="text-sm font-semibold text-gray-900 dark:text-gray-100">10%</p>
+                                <div class="w-20 bg-gray-200 dark:bg-gray-700 rounded-full h-2 mt-2">
+                                    <div class="bg-blue-600 h-2 rounded-full" style="width: 10%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {# Activités récentes (1/3) #}
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6">
+            <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-6">
+                <i class="fas fa-history text-purple-600 mr-2"></i>
+                Activités Récentes
+            </h3>
+
+            <div class="space-y-4">
+                {# Activité 1 #}
+                <div class="flex items-start space-x-3">
+                    <div class="flex-shrink-0">
+                        <div class="w-8 h-8 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center">
+                            <i class="fas fa-check text-green-600 dark:text-green-400 text-sm"></i>
+                        </div>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <p class="text-sm text-gray-900 dark:text-gray-100 font-medium">Projet approuvé</p>
+                        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Site E-commerce validé par l'équipe</p>
+                        <p class="text-xs text-gray-400 dark:text-gray-500 mt-1">Il y a 2 heures</p>
+                    </div>
+                </div>
+
+                {# Activité 2 #}
+                <div class="flex items-start space-x-3">
+                    <div class="flex-shrink-0">
+                        <div class="w-8 h-8 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center">
+                            <i class="fas fa-comment text-blue-600 dark:text-blue-400 text-sm"></i>
+                        </div>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <p class="text-sm text-gray-900 dark:text-gray-100 font-medium">Nouveau message</p>
+                        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Réponse du chef de projet</p>
+                        <p class="text-xs text-gray-400 dark:text-gray-500 mt-1">Il y a 5 heures</p>
+                    </div>
+                </div>
+
+                {# Activité 3 #}
+                <div class="flex items-start space-x-3">
+                    <div class="flex-shrink-0">
+                        <div class="w-8 h-8 bg-orange-100 dark:bg-orange-900 rounded-full flex items-center justify-center">
+                            <i class="fas fa-tasks text-orange-600 dark:text-orange-400 text-sm"></i>
+                        </div>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <p class="text-sm text-gray-900 dark:text-gray-100 font-medium">Mise à jour</p>
+                        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Progression: 70% → 75%</p>
+                        <p class="text-xs text-gray-400 dark:text-gray-500 mt-1">Hier</p>
+                    </div>
+                </div>
+
+                {# Activité 4 #}
+                <div class="flex items-start space-x-3">
+                    <div class="flex-shrink-0">
+                        <div class="w-8 h-8 bg-purple-100 dark:bg-purple-900 rounded-full flex items-center justify-center">
+                            <i class="fas fa-file-alt text-purple-600 dark:text-purple-400 text-sm"></i>
+                        </div>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <p class="text-sm text-gray-900 dark:text-gray-100 font-medium">Document ajouté</p>
+                        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Cahier des charges v2.pdf</p>
+                        <p class="text-xs text-gray-400 dark:text-gray-500 mt-1">Il y a 2 jours</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-6 pt-4 border-t dark:border-gray-700">
+                <a href="#" class="text-sm text-blue-600 hover:text-blue-700 font-medium flex items-center justify-center">
+                    Voir toutes les activités
+                    <i class="fas fa-arrow-right ml-2"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    {# Actions rapides #}
+    <div class="bg-gradient-to-r from-blue-600 to-blue-700 rounded-xl shadow-lg p-6 text-white">
+        <div class="flex items-center justify-between">
+            <div>
+                <h3 class="text-xl font-bold">Prêt à démarrer un nouveau projet ?</h3>
+                <p class="text-blue-100 mt-2">Soumettez votre demande en quelques clics</p>
+            </div>
+            <a href="{{ path('client_submit_project') }}" class="bg-white text-blue-600 px-6 py-3 rounded-lg font-semibold hover:bg-blue-50 transition-colors shadow-md">
+                <i class="fas fa-plus mr-2"></i>
+                Nouveau Projet
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

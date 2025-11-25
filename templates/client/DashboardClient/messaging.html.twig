@@ -1,0 +1,204 @@
+{# templates/client/DashboardClient/messaging.html.twig #}
+{% extends 'client/base_client.html.twig' %}
+
+{% block title %}Messagerie - Client Dashboard{% endblock %}
+{% block page_title %}Messagerie{% endblock %}
+
+{% block body %}
+<div class="p-6 h-[calc(100vh-8rem)]">
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md h-full flex overflow-hidden">
+        {# Liste des conversations (1/3) #}
+        <div class="w-1/3 border-r dark:border-gray-700 flex flex-col">
+            {# Header #}
+            <div class="p-4 border-b dark:border-gray-700">
+                <div class="relative">
+                    <input type="text" placeholder="Rechercher une conversation..." class="w-full pl-10 pr-4 py-2 border dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
+                    <i class="fas fa-search absolute left-3 top-2.5 text-gray-400"></i>
+                </div>
+            </div>
+
+            {# Liste des conversations #}
+            <div class="flex-1 overflow-y-auto">
+                {# Conversation 1 - Active #}
+                <div class="p-4 border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer bg-blue-50 dark:bg-blue-900/20 border-l-4 border-blue-600">
+                    <div class="flex items-start space-x-3">
+                        <img class="w-12 h-12 rounded-full" src="https://ui-avatars.com/api/?name=Marie+Dubois&background=3b82f6&color=fff" alt="Marie Dubois">
+                        <div class="flex-1 min-w-0">
+                            <div class="flex items-center justify-between mb-1">
+                                <p class="text-sm font-semibold text-gray-900 dark:text-gray-100">Marie Dubois</p>
+                                <span class="text-xs text-gray-500 dark:text-gray-400">10:30</span>
+                            </div>
+                            <p class="text-xs text-gray-600 dark:text-gray-400 mb-1">Site E-commerce</p>
+                            <p class="text-sm text-gray-700 dark:text-gray-300 truncate">Les maquettes sont prêtes pour validation</p>
+                            <span class="inline-block mt-2 px-2 py-0.5 bg-blue-600 text-white text-xs rounded-full">2 nouveaux</span>
+                        </div>
+                    </div>
+                </div>
+
+                {# Conversation 2 #}
+                <div class="p-4 border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer">
+                    <div class="flex items-start space-x-3">
+                        <img class="w-12 h-12 rounded-full" src="https://ui-avatars.com/api/?name=Jean+Martin&background=10b981&color=fff" alt="Jean Martin">
+                        <div class="flex-1 min-w-0">
+                            <div class="flex items-center justify-between mb-1">
+                                <p class="text-sm font-semibold text-gray-900 dark:text-gray-100">Jean Martin</p>
+                                <span class="text-xs text-gray-500 dark:text-gray-400">Hier</span>
+                            </div>
+                            <p class="text-xs text-gray-600 dark:text-gray-400 mb-1">Application Mobile</p>
+                            <p class="text-sm text-gray-600 dark:text-gray-400 truncate">Parfait, je vous tiens au courant</p>
+                        </div>
+                    </div>
+                </div>
+
+                {# Conversation 3 #}
+                <div class="p-4 border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer">
+                    <div class="flex items-start space-x-3">
+                        <img class="w-12 h-12 rounded-full" src="https://ui-avatars.com/api/?name=Sophie+Laurent&background=f59e0b&color=fff" alt="Sophie Laurent">
+                        <div class="flex-1 min-w-0">
+                            <div class="flex items-center justify-between mb-1">
+                                <p class="text-sm font-semibold text-gray-900 dark:text-gray-100">Sophie Laurent</p>
+                                <span class="text-xs text-gray-500 dark:text-gray-400">2j</span>
+                            </div>
+                            <p class="text-xs text-gray-600 dark:text-gray-400 mb-1">Refonte Site Vitrine</p>
+                            <p class="text-sm text-gray-600 dark:text-gray-400 truncate">Le planning est validé</p>
+                            <span class="inline-block mt-2 px-2 py-0.5 bg-orange-600 text-white text-xs rounded-full">1 nouveau</span>
+                        </div>
+                    </div>
+                </div>
+
+                {# Conversation 4 #}
+                <div class="p-4 border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer">
+                    <div class="flex items-start space-x-3">
+                        <img class="w-12 h-12 rounded-full" src="https://ui-avatars.com/api/?name=Pierre+Durand&background=8b5cf6&color=fff" alt="Pierre Durand">
+                        <div class="flex-1 min-w-0">
+                            <div class="flex items-center justify-between mb-1">
+                                <p class="text-sm font-semibold text-gray-900 dark:text-gray-100">Pierre Durand</p>
+                                <span class="text-xs text-gray-500 dark:text-gray-400">3j</span>
+                            </div>
+                            <p class="text-xs text-gray-600 dark:text-gray-400 mb-1">Système CRM</p>
+                            <p class="text-sm text-gray-600 dark:text-gray-400 truncate">Le projet est terminé avec succès!</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {# Zone de conversation (2/3) #}
+        <div class="flex-1 flex flex-col">
+            {# Header de la conversation #}
+            <div class="p-4 border-b dark:border-gray-700 bg-gray-50 dark:bg-gray-900">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-3">
+                        <img class="w-10 h-10 rounded-full" src="https://ui-avatars.com/api/?name=Marie+Dubois&background=3b82f6&color=fff" alt="Marie Dubois">
+                        <div>
+                            <p class="text-sm font-semibold text-gray-900 dark:text-gray-100">Marie Dubois</p>
+                            <p class="text-xs text-gray-500 dark:text-gray-400">Chef de Projet - Site E-commerce</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <button class="p-2 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg transition-colors">
+                            <i class="fas fa-phone text-gray-600 dark:text-gray-300"></i>
+                        </button>
+                        <button class="p-2 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg transition-colors">
+                            <i class="fas fa-video text-gray-600 dark:text-gray-300"></i>
+                        </button>
+                        <button class="p-2 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg transition-colors">
+                            <i class="fas fa-ellipsis-v text-gray-600 dark:text-gray-300"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            {# Messages #}
+            <div class="flex-1 overflow-y-auto p-6 space-y-4 bg-gray-50 dark:bg-gray-900">
+                {# Message reçu #}
+                <div class="flex items-start space-x-3">
+                    <img class="w-8 h-8 rounded-full" src="https://ui-avatars.com/api/?name=Marie+Dubois&background=3b82f6&color=fff" alt="Marie Dubois">
+                    <div class="flex-1">
+                        <div class="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-sm max-w-lg">
+                            <p class="text-sm text-gray-900 dark:text-gray-100">Bonjour ! J'ai terminé les maquettes pour la page d'accueil. Pouvez-vous les consulter et me donner votre avis ?</p>
+                        </div>
+                        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1 ml-2">10:25</p>
+                    </div>
+                </div>
+
+                {# Message envoyé #}
+                <div class="flex items-start space-x-3 justify-end">
+                    <div class="flex-1 flex flex-col items-end">
+                        <div class="bg-blue-600 rounded-lg p-4 shadow-sm max-w-lg">
+                            <p class="text-sm text-white">Parfait ! Je vais les consulter dans la journée et vous faire un retour détaillé.</p>
+                        </div>
+                        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1 mr-2">10:27</p>
+                    </div>
+                    <img class="w-8 h-8 rounded-full" src="https://ui-avatars.com/api/?name=Client&background=10b981&color=fff" alt="Vous">
+                </div>
+
+                {# Message reçu avec fichier #}
+                <div class="flex items-start space-x-3">
+                    <img class="w-8 h-8 rounded-full" src="https://ui-avatars.com/api/?name=Marie+Dubois&background=3b82f6&color=fff" alt="Marie Dubois">
+                    <div class="flex-1">
+                        <div class="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-sm max-w-lg">
+                            <p class="text-sm text-gray-900 dark:text-gray-100 mb-3">Voici les fichiers des maquettes :</p>
+                            <div class="border dark:border-gray-700 rounded-lg p-3 flex items-center space-x-3 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer">
+                                <i class="fas fa-file-image text-purple-500 text-2xl"></i>
+                                <div class="flex-1">
+                                    <p class="text-sm font-medium text-gray-900 dark:text-gray-100">Maquettes_Homepage.zip</p>
+                                    <p class="text-xs text-gray-500 dark:text-gray-400">8.5 MB</p>
+                                </div>
+                                <button class="text-blue-600 hover:text-blue-700">
+                                    <i class="fas fa-download"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1 ml-2">10:30</p>
+                    </div>
+                </div>
+
+                {# Message envoyé #}
+                <div class="flex items-start space-x-3 justify-end">
+                    <div class="flex-1 flex flex-col items-end">
+                        <div class="bg-blue-600 rounded-lg p-4 shadow-sm max-w-lg">
+                            <p class="text-sm text-white">Merci beaucoup ! Je télécharge et je reviens vers vous rapidement.</p>
+                        </div>
+                        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1 mr-2">10:32</p>
+                    </div>
+                    <img class="w-8 h-8 rounded-full" src="https://ui-avatars.com/api/?name=Client&background=10b981&color=fff" alt="Vous">
+                </div>
+
+                {# Indicateur de frappe #}
+                <div class="flex items-start space-x-3">
+                    <img class="w-8 h-8 rounded-full" src="https://ui-avatars.com/api/?name=Marie+Dubois&background=3b82f6&color=fff" alt="Marie Dubois">
+                    <div class="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-sm">
+                        <div class="flex space-x-1">
+                            <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
+                            <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0.1s"></div>
+                            <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0.2s"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {# Zone de saisie #}
+            <div class="p-4 border-t dark:border-gray-700 bg-white dark:bg-gray-800">
+                <div class="flex items-end space-x-3">
+                    <button class="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors">
+                        <i class="fas fa-paperclip text-gray-600 dark:text-gray-300 text-xl"></i>
+                    </button>
+                    <button class="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors">
+                        <i class="fas fa-image text-gray-600 dark:text-gray-300 text-xl"></i>
+                    </button>
+                    <div class="flex-1">
+                        <textarea rows="1" placeholder="Tapez votre message..." class="w-full px-4 py-2 border dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"></textarea>
+                    </div>
+                    <button class="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors">
+                        <i class="fas fa-smile text-gray-600 dark:text-gray-300 text-xl"></i>
+                    </button>
+                    <button class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
