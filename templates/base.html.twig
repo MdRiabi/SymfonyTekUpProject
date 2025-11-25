@@ -338,6 +338,73 @@
                         </div>
                     </div>
 
+                    <!-- Centre de Notifications -->
+                    <div class="relative">
+                        <button id="notificationBtn" class="relative p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors">
+                            <i class="fas fa-bell text-gray-600 dark:text-gray-300 text-xl"></i>
+                            <!-- Badge de notification -->
+                            <span class="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white transform translate-x-1/2 -translate-y-1/2 bg-red-600 rounded-full">3</span>
+                        </button>
+                        
+                        <!-- Dropdown des notifications -->
+                        <div id="notificationDropdown" class="hidden origin-top-right absolute right-0 mt-2 w-80 rounded-lg shadow-xl bg-white dark:bg-gray-800 ring-1 ring-black ring-opacity-5 z-50">
+                            <!-- Header -->
+                            <div class="px-4 py-3 border-b dark:border-gray-700 flex justify-between items-center">
+                                <h3 class="text-sm font-semibold text-gray-900 dark:text-gray-100">Notifications</h3>
+                                <button class="text-xs text-blue-600 hover:text-blue-700">Tout marquer comme lu</button>
+                            </div>
+                            
+                            <!-- Liste des notifications -->
+                            <div class="max-h-96 overflow-y-auto">
+                                <!-- Notification non lue -->
+                                <a href="#" class="block px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors bg-blue-50 dark:bg-blue-900/20 border-l-3 border-blue-500">
+                                    <div class="flex items-start">
+                                        <div class="flex-shrink-0">
+                                            <i class="fas fa-check-circle text-green-500 text-lg"></i>
+                                        </div>
+                                        <div class="ml-3 flex-1">
+                                            <p class="text-sm font-medium text-gray-900 dark:text-gray-100">Projet approuvé</p>
+                                            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Votre projet "Site E-commerce" a été approuvé</p>
+                                            <p class="text-xs text-gray-400 dark:text-gray-500 mt-1">Il y a 5 minutes</p>
+                                        </div>
+                                    </div>
+                                </a>
+                                
+                                <!-- Notification lue -->
+                                <a href="#" class="block px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                                    <div class="flex items-start">
+                                        <div class="flex-shrink-0">
+                                            <i class="fas fa-comment text-blue-500 text-lg"></i>
+                                        </div>
+                                        <div class="ml-3 flex-1">
+                                            <p class="text-sm font-medium text-gray-900 dark:text-gray-100">Nouveau message</p>
+                                            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Le chef de projet a répondu à votre question</p>
+                                            <p class="text-xs text-gray-400 dark:text-gray-500 mt-1">Il y a 2 heures</p>
+                                        </div>
+                                    </div>
+                                </a>
+                                
+                                <a href="#" class="block px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                                    <div class="flex items-start">
+                                        <div class="flex-shrink-0">
+                                            <i class="fas fa-tasks text-orange-500 text-lg"></i>
+                                        </div>
+                                        <div class="ml-3 flex-1">
+                                            <p class="text-sm font-medium text-gray-900 dark:text-gray-100">Mise à jour du projet</p>
+                                            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Le statut de "Application Mobile" a changé</p>
+                                            <p class="text-xs text-gray-400 dark:text-gray-500 mt-1">Hier</p>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                            
+                            <!-- Footer -->
+                            <div class="px-4 py-3 border-t dark:border-gray-700 text-center">
+                                <a href="#" class="text-sm text-blue-600 hover:text-blue-700 font-medium">Voir toutes les notifications</a>
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- MENU PROFIL UTILISATEUR -->
                     <div class="relative ml-3">
                         <button id="profileMenuButton" class="flex items-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
@@ -435,6 +502,26 @@
                 profileMenuButton.addEventListener('click', function (event) {
                     event.stopPropagation(); 
                     toggleProfileDropdown();
+                    // Fermer les notifications si ouvertes
+                    const notificationDropdown = document.getElementById('notificationDropdown');
+                    if (notificationDropdown) {
+                        notificationDropdown.classList.add('hidden');
+                    }
+                });
+            }
+
+            // --- Écouteurs d'événements pour les Notifications ---
+            const notificationBtn = document.getElementById('notificationBtn');
+            const notificationDropdown = document.getElementById('notificationDropdown');
+            
+            if (notificationBtn && notificationDropdown) {
+                notificationBtn.addEventListener('click', function(event) {
+                    event.stopPropagation();
+                    notificationDropdown.classList.toggle('hidden');
+                    // Fermer le menu profil si ouvert
+                    if (profileDropdown) {
+                        profileDropdown.classList.add('hidden');
+                    }
                 });
             }
 
@@ -442,6 +529,12 @@
                 if (profileDropdown && !profileDropdown.classList.contains('hidden')) {
                     if (!profileMenuButton.contains(event.target) && !profileDropdown.contains(event.target)) {
                         profileDropdown.classList.add('hidden');
+                    }
+                }
+                
+                if (notificationDropdown && !notificationDropdown.classList.contains('hidden')) {
+                    if (!notificationBtn.contains(event.target) && !notificationDropdown.contains(event.target)) {
+                        notificationDropdown.classList.add('hidden');
                     }
                 }
             });
