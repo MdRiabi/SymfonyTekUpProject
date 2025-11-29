@@ -105,11 +105,16 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToOne(mappedBy: 'user', cascade: ['persist', 'remove'])]
     private ?UserNotificationSetting $notificationSetting = null;
 
+    #[ORM\OneToMany(mappedBy: 'utilisateur', targetEntity: Notification::class, orphanRemoval: true)]
+    #[ORM\OrderBy(['dateCreation' => 'DESC'])]
+    private Collection $notifications;
+
     public function __construct()
     {
         $this->competences = [];
         $this->tachesCrees = new ArrayCollection();
         $this->tachesAssignees = new ArrayCollection();
+        $this->notifications = new ArrayCollection();
         $this->dateCreation = new \DateTimeImmutable();
         $this->updatedAt = new \DateTimeImmutable();
     }
@@ -438,6 +443,36 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         }
 
         $this->notificationSetting = $notificationSetting;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Notification>
+     */
+    public function getNotifications(): Collection
+    {
+        return $this->notifications;
+    }
+
+    public function addNotification(Notification $notification): self
+    {
+        if (!$this->notifications->contains($notification)) {
+            $this->notifications->add($notification);
+            $notification->setUtilisateur($this);
+        }
+
+        return $this;
+    }
+
+    public function removeNotification(Notification $notification): self
+    {
+        if ($this->notifications->removeElement($notification)) {
+            // set the owning side to null (unless already changed)
+            if ($notification->getUtilisateur() === $this) {
+                $notification->setUtilisateur(null);
+            }
+        }
 
         return $this;
     }

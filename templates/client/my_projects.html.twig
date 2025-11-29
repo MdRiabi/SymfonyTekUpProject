@@ -1,0 +1,66 @@
+{% extends 'client/base_client.html.twig' %}
+
+{% block title %}Mes Projets{% endblock %}
+
+{% block body %}
+<div class="container mx-auto px-4 py-8">
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-2xl font-bold text-gray-800">Mes Projets</h1>
+        <a href="{{ path('client_submit_project') }}" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors shadow-sm">
+            <i class="fas fa-plus mr-2"></i>Nouveau Projet
+        </a>
+    </div>
+
+    {% if projets is empty %}
+        <div class="bg-white rounded-lg shadow-sm p-8 text-center border border-gray-100">
+            <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <i class="fas fa-folder-open text-gray-400 text-2xl"></i>
+            </div>
+            <h3 class="text-lg font-medium text-gray-900 mb-2">Aucun projet pour le moment</h3>
+            <p class="text-gray-500 mb-6">Commencez par soumettre votre première idée de projet.</p>
+            <a href="{{ path('client_submit_project') }}" class="text-blue-600 hover:text-blue-800 font-medium">
+                Soumettre un projet &rarr;
+            </a>
+        </div>
+    {% else %}
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {% for projet in projets %}
+                <div class="bg-white rounded-lg shadow-sm border border-gray-100 hover:shadow-md transition-shadow overflow-hidden group">
+                    <div class="p-6">
+                        <div class="flex justify-between items-start mb-4">
+                            <span class="px-2.5 py-0.5 rounded-full text-xs font-medium
+                                {% if projet.statut == 'EN_COURS' %}bg-green-100 text-green-800
+                                {% elseif projet.statut == 'REJETE' %}bg-red-100 text-red-800
+                                {% elseif projet.statut == 'EN_REVISION' %}bg-orange-100 text-orange-800
+                                {% elseif projet.statut == 'EN_ATTENTE' %}bg-yellow-100 text-yellow-800
+                                {% else %}bg-gray-100 text-gray-800{% endif %}">
+                                {{ projet.statut|replace({'_': ' '}) }}
+                            </span>
+                            <span class="text-xs text-gray-400">{{ projet.dateCreation|date('d/m/Y') }}</span>
+                        </div>
+                        
+                        <h3 class="text-lg font-bold text-gray-800 mb-2 group-hover:text-blue-600 transition-colors">
+                            <a href="{{ path('client_project_detail', {'id': projet.id}) }}">
+                                {{ projet.nom }}
+                            </a>
+                        </h3>
+                        
+                        <p class="text-gray-600 text-sm mb-4 line-clamp-2">
+                            {{ projet.description }}
+                        </p>
+                        
+                        <div class="flex items-center justify-between mt-4 pt-4 border-t border-gray-50">
+                            <div class="text-xs text-gray-500">
+                                <i class="fas fa-tag mr-1"></i> {{ projet.categorie }}
+                            </div>
+                            <a href="{{ path('client_project_detail', {'id': projet.id}) }}" class="text-sm font-medium text-blue-600 hover:text-blue-800">
+                                Voir détails &rarr;
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -41,6 +41,21 @@ class Tache
     #[ORM\ManyToOne(targetEntity: Projet::class, inversedBy: 'taches')]
     private ?Projet $projet = null;
 
+    #[ORM\ManyToOne(inversedBy: 'taches')]
+    private ?Phase $phase = null;
+
+    #[ORM\Column(length: 20, nullable: true)]
+    private ?string $priorite = 'MEDIUM';
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $deadline = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $estimatedHours = null;
+
+    #[ORM\Column(type: 'integer', options: ['default' => 0])]
+    private int $progress = 0;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -131,6 +146,61 @@ class Tache
     public function setProjet(?Projet $projet): self
     {
         $this->projet = $projet;
+        return $this;
+    }
+
+    public function getPhase(): ?Phase
+    {
+        return $this->phase;
+    }
+
+    public function setPhase(?Phase $phase): self
+    {
+        $this->phase = $phase;
+        return $this;
+    }
+
+    public function getPriorite(): ?string
+    {
+        return $this->priorite;
+    }
+
+    public function setPriorite(?string $priorite): self
+    {
+        $this->priorite = $priorite;
+        return $this;
+    }
+
+    public function getDeadline(): ?\DateTimeImmutable
+    {
+        return $this->deadline;
+    }
+
+    public function setDeadline(?\DateTimeImmutable $deadline): self
+    {
+        $this->deadline = $deadline;
+        return $this;
+    }
+
+    public function getEstimatedHours(): ?int
+    {
+        return $this->estimatedHours;
+    }
+
+    public function setEstimatedHours(?int $estimatedHours): self
+    {
+        $this->estimatedHours = $estimatedHours;
+        return $this;
+    }
+
+    public function getProgress(): int
+    {
+        return $this->progress;
+    }
+
+    public function setProgress(int $progress): self
+    {
+        $this->progress = $progress;
         return $this;
     }
 }

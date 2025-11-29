@@ -9,277 +9,115 @@
     {# Filtres et recherche #}
     <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6">
         <div class="flex flex-col md:flex-row md:items-center md:justify-between space-y-4 md:space-y-0">
-            {# Recherche #}
-            <div class="flex-1 max-w-md">
-                <div class="relative">
-                    <input type="text" placeholder="Rechercher un projet..." class="w-full pl-10 pr-4 py-2 border dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
-                </div>
-            </div>
-
-            {# Filtres #}
+            {# Filtres par statut #}
             <div class="flex items-center space-x-3">
-                <select class="px-4 py-2 border dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    <option>Tous les statuts</option>
-                    <option>En cours</option>
-                    <option>En révision</option>
-                    <option>Terminé</option>
-                    <option>En attente</option>
-                </select>
-
-                <select class="px-4 py-2 border dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    <option>Trier par date</option>
-                    <option>Plus récents</option>
-                    <option>Plus anciens</option>
-                    <option>Échéance proche</option>
-                </select>
-
-                <button class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
-                    <i class="fas fa-filter"></i>
-                </button>
+                <a href="{{ path('client_projects') }}" 
+                   class="px-4 py-2 rounded-lg transition-colors {% if not currentFilter %}bg-blue-600 text-white{% else %}border dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700{% endif %}">
+                    Tous
+                </a>
+                <a href="{{ path('client_projects', {status: 'en_attente'}) }}" 
+                   class="px-4 py-2 rounded-lg transition-colors {% if currentFilter == 'en_attente' %}bg-orange-600 text-white{% else %}border dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700{% endif %}">
+                    <i class="fas fa-clock mr-2"></i>En attente
+                </a>
+                <a href="{{ path('client_projects', {status: 'en_cours'}) }}" 
+                   class="px-4 py-2 rounded-lg transition-colors {% if currentFilter == 'en_cours' %}bg-green-600 text-white{% else %}border dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700{% endif %}">
+                    <i class="fas fa-spinner mr-2"></i>En cours
+                </a>
+                <a href="{{ path('client_projects', {status: 'termine'}) }}" 
+                   class="px-4 py-2 rounded-lg transition-colors {% if currentFilter == 'termine' %}bg-purple-600 text-white{% else %}border dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700{% endif %}">
+                    <i class="fas fa-check-circle mr-2"></i>Terminés
+                </a>
             </div>
         </div>
     </div>
 
     {# Liste des projets en grille #}
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {# Projet 1 - En cours #}
-        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-shadow cursor-pointer group">
-            <div class="h-2 bg-gradient-to-r from-green-500 to-green-600"></div>
-            <div class="p-6">
-                <div class="flex items-start justify-between mb-4">
-                    <div class="flex-1">
-                        <h3 class="text-lg font-bold text-gray-900 dark:text-gray-100 group-hover:text-blue-600 transition-colors">
-                            Site E-commerce
-                        </h3>
-                        <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Réf: PRJ-2025-001</p>
-                    </div>
-                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
-                        En cours
-                    </span>
-                </div>
-
-                <p class="text-sm text-gray-600 dark:text-gray-400 mb-4 line-clamp-2">
-                    Développement d'une plateforme de vente en ligne complète avec système de paiement intégré
-                </p>
-
-                {# Progression #}
-                <div class="mb-4">
-                    <div class="flex items-center justify-between mb-2">
-                        <span class="text-xs font-medium text-gray-700 dark:text-gray-300">Progression</span>
-                        <span class="text-xs font-bold text-blue-600">75%</span>
-                    </div>
-                    <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-                        <div class="bg-gradient-to-r from-blue-500 to-blue-600 h-2 rounded-full transition-all duration-300" style="width: 75%"></div>
-                    </div>
-                </div>
-
-                {# Informations #}
-                <div class="space-y-2 mb-4">
-                    <div class="flex items-center text-xs text-gray-600 dark:text-gray-400">
-                        <i class="fas fa-calendar w-4 mr-2"></i>
-                        <span>Échéance: 15 Déc 2025</span>
-                    </div>
-                    <div class="flex items-center text-xs text-gray-600 dark:text-gray-400">
-                        <i class="fas fa-user w-4 mr-2"></i>
-                        <span>Chef de projet: Marie Dubois</span>
-                    </div>
-                </div>
-
-                {# Actions #}
-                <div class="flex items-center space-x-2 pt-4 border-t dark:border-gray-700">
-                    <a href="{{ path('client_project_detail', {id: 1}) }}" class="flex-1 text-center px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm font-medium transition-colors">
-                        Voir détails
-                    </a>
-                    <a href="{{ path('client_messages') }}" class="px-3 py-2 border dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-                        <i class="fas fa-comment"></i>
-                    </a>
-                </div>
-            </div>
+    {% if projects is empty %}
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-12 text-center">
+            <i class="fas fa-folder-open text-gray-300 dark:text-gray-600 text-6xl mb-4"></i>
+            <h3 class="text-xl font-semibold text-gray-700 dark:text-gray-300 mb-2">Aucun projet trouvé</h3>
+            <p class="text-gray-500 dark:text-gray-400 mb-6">
+                {% if currentFilter %}
+                    Aucun projet avec le statut sélectionné.
+                {% else %}
+                    Vous n'avez pas encore de projet.
+                {% endif %}
+            </p>
+            <a href="{{ path('client_submit_project') }}" class="inline-block px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                <i class="fas fa-plus mr-2"></i>Créer votre premier projet
+            </a>
         </div>
+    {% else %}
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {% for projet in projects %}
+                {% set statusConfig = {
+                    'EN_ATTENTE': {
+                        'label': 'En attente',
+                        'color': 'orange',
+                        'gradient': 'from-orange-500 to-orange-600',
+                        'badge': 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200'
+                    },
+                    'EN_COURS': {
+                        'label': 'En cours',
+                        'color': 'green',
+                        'gradient': 'from-green-500 to-green-600',
+                        'badge': 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
+                    },
+                    'TERMINE': {
+                        'label': 'Terminé',
+                        'color': 'purple',
+                        'gradient': 'from-purple-500 to-purple-600',
+                        'badge': 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200'
+                    }
+                } %}
+                {% set config = statusConfig[projet.statut] ?? statusConfig['EN_ATTENTE'] %}
+                
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-shadow cursor-pointer group">
+                    <div class="h-2 bg-gradient-to-r {{ config.gradient }}"></div>
+                    <div class="p-6">
+                        <div class="flex items-start justify-between mb-4">
+                            <div class="flex-1">
+                                <h3 class="text-lg font-bold text-gray-900 dark:text-gray-100 group-hover:text-blue-600 transition-colors">
+                                    {{ projet.nom }}
+                                </h3>
+                                <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Créé le {{ projet.dateCreation|date('d/m/Y') }}</p>
+                            </div>
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ config.badge }}">
+                                {{ config.label }}
+                            </span>
+                        </div>
 
-        {# Projet 2 - En révision #}
-        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-shadow cursor-pointer group">
-            <div class="h-2 bg-gradient-to-r from-yellow-500 to-yellow-600"></div>
-            <div class="p-6">
-                <div class="flex items-start justify-between mb-4">
-                    <div class="flex-1">
-                        <h3 class="text-lg font-bold text-gray-900 dark:text-gray-100 group-hover:text-blue-600 transition-colors">
-                            Application Mobile
-                        </h3>
-                        <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Réf: PRJ-2025-002</p>
+                        <p class="text-sm text-gray-600 dark:text-gray-400 mb-4 line-clamp-2">
+                            {{ projet.description }}
+                        </p>
+
+                        {# Informations #}
+                        <div class="space-y-2 mb-4">
+                            <div class="flex items-center text-xs text-gray-600 dark:text-gray-400">
+                                <i class="fas fa-calendar w-4 mr-2"></i>
+                                <span>Créé le {{ projet.dateCreation|date('d M Y') }}</span>
+                            </div>
+                            {% if projet.budget %}
+                                <div class="flex items-center text-xs text-gray-600 dark:text-gray-400">
+                                    <i class="fas fa-euro-sign w-4 mr-2"></i>
+                                    <span>Budget: {{ projet.budget }} €</span>
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        {# Actions #}
+                        <div class="flex items-center space-x-2 pt-4 border-t dark:border-gray-700">
+                            <a href="{{ path('client_project_detail', {id: projet.id}) }}" class="flex-1 text-center px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm font-medium transition-colors">
+                                Voir détails
+                            </a>
+                            <a href="{{ path('client_messages') }}" class="px-3 py-2 border dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                                <i class="fas fa-comment"></i>
+                            </a>
+                        </div>
                     </div>
-                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200">
-                        En révision
-                    </span>
                 </div>
-
-                <p class="text-sm text-gray-600 dark:text-gray-400 mb-4 line-clamp-2">
-                    Application de gestion de tâches collaborative pour iOS et Android
-                </p>
-
-                {# Progression #}
-                <div class="mb-4">
-                    <div class="flex items-center justify-between mb-2">
-                        <span class="text-xs font-medium text-gray-700 dark:text-gray-300">Progression</span>
-                        <span class="text-xs font-bold text-yellow-600">45%</span>
-                    </div>
-                    <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-                        <div class="bg-gradient-to-r from-yellow-500 to-yellow-600 h-2 rounded-full transition-all duration-300" style="width: 45%"></div>
-                    </div>
-                </div>
-
-                {# Informations #}
-                <div class="space-y-2 mb-4">
-                    <div class="flex items-center text-xs text-gray-600 dark:text-gray-400">
-                        <i class="fas fa-calendar w-4 mr-2"></i>
-                        <span>Échéance: 20 Déc 2025</span>
-                    </div>
-                    <div class="flex items-center text-xs text-gray-600 dark:text-gray-400">
-                        <i class="fas fa-user w-4 mr-2"></i>
-                        <span>Chef de projet: Jean Martin</span>
-                    </div>
-                </div>
-
-                {# Actions #}
-                <div class="flex items-center space-x-2 pt-4 border-t dark:border-gray-700">
-                    <a href="{{ path('client_project_detail', {id: 2}) }}" class="flex-1 text-center px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm font-medium transition-colors">
-                        Voir détails
-                    </a>
-                    <a href="{{ path('client_messages') }}" class="px-3 py-2 border dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-                        <i class="fas fa-comment"></i>
-                    </a>
-                </div>
-            </div>
+            {% endfor %}
         </div>
-
-        {# Projet 3 - Planifié #}
-        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-shadow cursor-pointer group">
-            <div class="h-2 bg-gradient-to-r from-blue-500 to-blue-600"></div>
-            <div class="p-6">
-                <div class="flex items-start justify-between mb-4">
-                    <div class="flex-1">
-                        <h3 class="text-lg font-bold text-gray-900 dark:text-gray-100 group-hover:text-blue-600 transition-colors">
-                            Refonte Site Vitrine
-                        </h3>
-                        <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Réf: PRJ-2025-003</p>
-                    </div>
-                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
-                        Planifié
-                    </span>
-                </div>
-
-                <p class="text-sm text-gray-600 dark:text-gray-400 mb-4 line-clamp-2">
-                    Modernisation complète du site corporate avec nouveau design
-                </p>
-
-                {# Progression #}
-                <div class="mb-4">
-                    <div class="flex items-center justify-between mb-2">
-                        <span class="text-xs font-medium text-gray-700 dark:text-gray-300">Progression</span>
-                        <span class="text-xs font-bold text-blue-600">10%</span>
-                    </div>
-                    <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-                        <div class="bg-gradient-to-r from-blue-500 to-blue-600 h-2 rounded-full transition-all duration-300" style="width: 10%"></div>
-                    </div>
-                </div>
-
-                {# Informations #}
-                <div class="space-y-2 mb-4">
-                    <div class="flex items-center text-xs text-gray-600 dark:text-gray-400">
-                        <i class="fas fa-calendar w-4 mr-2"></i>
-                        <span>Début: 01 Jan 2026</span>
-                    </div>
-                    <div class="flex items-center text-xs text-gray-600 dark:text-gray-400">
-                        <i class="fas fa-user w-4 mr-2"></i>
-                        <span>Chef de projet: Sophie Laurent</span>
-                    </div>
-                </div>
-
-                {# Actions #}
-                <div class="flex items-center space-x-2 pt-4 border-t dark:border-gray-700">
-                    <a href="{{ path('client_project_detail', {id: 3}) }}" class="flex-1 text-center px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm font-medium transition-colors">
-                        Voir détails
-                    </a>
-                    <a href="{{ path('client_messages') }}" class="px-3 py-2 border dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-                        <i class="fas fa-comment"></i>
-                    </a>
-                </div>
-            </div>
-        </div>
-
-        {# Projet 4 - Terminé #}
-        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-shadow cursor-pointer group opacity-75">
-            <div class="h-2 bg-gradient-to-r from-gray-400 to-gray-500"></div>
-            <div class="p-6">
-                <div class="flex items-start justify-between mb-4">
-                    <div class="flex-1">
-                        <h3 class="text-lg font-bold text-gray-900 dark:text-gray-100 group-hover:text-blue-600 transition-colors">
-                            Système CRM
-                        </h3>
-                        <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Réf: PRJ-2024-045</p>
-                    </div>
-                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200">
-                        Terminé
-                    </span>
-                </div>
-
-                <p class="text-sm text-gray-600 dark:text-gray-400 mb-4 line-clamp-2">
-                    Développement d'un système de gestion de la relation client
-                </p>
-
-                {# Progression #}
-                <div class="mb-4">
-                    <div class="flex items-center justify-between mb-2">
-                        <span class="text-xs font-medium text-gray-700 dark:text-gray-300">Progression</span>
-                        <span class="text-xs font-bold text-green-600">100%</span>
-                    </div>
-                    <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-                        <div class="bg-gradient-to-r from-green-500 to-green-600 h-2 rounded-full transition-all duration-300" style="width: 100%"></div>
-                    </div>
-                </div>
-
-                {# Informations #}
-                <div class="space-y-2 mb-4">
-                    <div class="flex items-center text-xs text-gray-600 dark:text-gray-400">
-                        <i class="fas fa-check-circle w-4 mr-2 text-green-500"></i>
-                        <span>Terminé le: 10 Nov 2025</span>
-                    </div>
-                    <div class="flex items-center text-xs text-gray-600 dark:text-gray-400">
-                        <i class="fas fa-user w-4 mr-2"></i>
-                        <span>Chef de projet: Pierre Durand</span>
-                    </div>
-                </div>
-
-                {# Actions #}
-                <div class="flex items-center space-x-2 pt-4 border-t dark:border-gray-700">
-                    <a href="{{ path('client_project_detail', {id: 4}) }}" class="flex-1 text-center px-3 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 text-sm font-medium transition-colors">
-                        Voir détails
-                    </a>
-                    <button class="px-3 py-2 border dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-                        <i class="fas fa-download"></i>
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    {# Pagination #}
-    <div class="flex items-center justify-between bg-white dark:bg-gray-800 rounded-xl shadow-md p-4">
-        <div class="text-sm text-gray-600 dark:text-gray-400">
-            Affichage de <span class="font-medium">1-4</span> sur <span class="font-medium">12</span> projets
-        </div>
-        <div class="flex items-center space-x-2">
-            <button class="px-3 py-2 border dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50" disabled>
-                <i class="fas fa-chevron-left"></i>
-            </button>
-            <button class="px-3 py-2 bg-blue-600 text-white rounded-lg">1</button>
-            <button class="px-3 py-2 border dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700">2</button>
-            <button class="px-3 py-2 border dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700">3</button>
-            <button class="px-3 py-2 border dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700">
-                <i class="fas fa-chevron-right"></i>
-            </button>
-        </div>
-    </div>
+    {% endif %}
 </div>
 {% endblock %}

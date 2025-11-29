@@ -1,0 +1,85 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Gérer les Tâches - {{ projet.nom }}{% endblock %}
+
+{% block body %}
+<div class="container mx-auto px-4 py-8">
+    <div class="flex justify-between items-center mb-6">
+        <div>
+            <h1 class="text-2xl font-bold text-gray-800">Gérer les Tâches</h1>
+            <p class="text-gray-600 text-sm">Projet : {{ projet.nom }}</p>
+        </div>
+        <a href="{{ path('admin_project_configuration_dashboard', {'id': projet.id}) }}" class="text-gray-500 hover:text-gray-700">
+            <i class="fas fa-arrow-left mr-2"></i>Retour
+        </a>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        {# Form Section #}
+        <div class="lg:col-span-1">
+            <div class="bg-white rounded-lg shadow-sm p-6 border border-gray-100 sticky top-6">
+                <h2 class="text-lg font-semibold text-gray-800 mb-4">Nouvelle Tâche</h2>
+                <form method="post">
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Nom de la tâche</label>
+                        <input type="text" name="nom" required class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Phase</label>
+                        <select name="phase_id" required class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                            <option value="">Sélectionner une phase...</option>
+                            {% for phase in phases %}
+                                <option value="{{ phase.id }}">{{ phase.nom }}</option>
+                            {% endfor %}
+                        </select>
+                        {% if phases is empty %}
+                            <p class="text-xs text-red-500 mt-1">Veuillez d'abord créer des phases.</p>
+                        {% endif %}
+                    </div>
+                    <button type="submit" class="w-full py-2 px-4 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors" {% if phases is empty %}disabled{% endif %}>
+                        Ajouter la Tâche
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        {# List Section #}
+        <div class="lg:col-span-2 space-y-6">
+            {% for phase in phases %}
+                <div class="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden">
+                    <div class="bg-gray-50 px-4 py-3 border-b border-gray-100 flex justify-between items-center">
+                        <h3 class="font-semibold text-gray-800">{{ phase.nom }}</h3>
+                        <span class="text-xs text-gray-500">{{ phase.taches|length }} tâches</span>
+                    </div>
+                    <div class="divide-y divide-gray-100">
+                        {% for tache in phase.taches %}
+                            <div class="p-4 flex justify-between items-center hover:bg-gray-50 transition-colors">
+                                <div>
+                                    <p class="font-medium text-gray-800">{{ tache.nom }}</p>
+                                    <div class="flex items-center gap-3 mt-1">
+                                        <span class="text-xs px-2 py-0.5 rounded-full bg-yellow-100 text-yellow-800">{{ tache.statut }}</span>
+                                        <span class="text-xs text-gray-400">Créé par {{ tache.createur.nom }}</span>
+                                    </div>
+                                </div>
+                                <div class="flex gap-2">
+                                    {# Future actions: Edit, Assign, Delete #}
+                                    <button class="text-gray-400 hover:text-blue-600"><i class="fas fa-edit"></i></button>
+                                </div>
+                            </div>
+                        {% else %}
+                            <div class="p-4 text-center text-gray-400 text-sm italic">
+                                Aucune tâche dans cette phase.
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% else %}
+                <div class="text-center py-12 bg-gray-50 rounded-lg border-2 border-dashed border-gray-200">
+                    <p class="text-gray-500">Commencez par créer des phases pour organiser vos tâches.</p>
+                    <a href="{{ path('admin_project_configuration_phases', {'id': projet.id}) }}" class="text-blue-600 hover:underline mt-2 inline-block">Créer une phase</a>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,314 +1,256 @@
 {# templates/client/DashboardClient/project_detail.html.twig #}
 {% extends 'client/base_client.html.twig' %}
 
-{% block title %}Détail du Projet - Client Dashboard{% endblock %}
-{% block page_title %}Site E-commerce{% endblock %}
+{% block title %}{{ project.nom }} - Détails du Projet{% endblock %}
+{% block page_title %}{{ project.nom }}{% endblock %}
 
 {% block body %}
 <div class="p-6 space-y-6">
-    {# En-tête du projet #}
+    {# Header avec titre et statut #}
     <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6">
-        <div class="flex items-start justify-between">
+        <div class="flex items-start justify-between mb-4">
             <div class="flex-1">
                 <div class="flex items-center space-x-3 mb-2">
-                    <h2 class="text-2xl font-bold text-gray-900 dark:text-gray-100">Site E-commerce</h2>
-                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
-                        <i class="fas fa-circle text-xs mr-2"></i> En cours
+                    <h1 class="text-3xl font-bold text-gray-900 dark:text-gray-100">{{ project.nom }}</h1>
+                    {% set statusConfig = {
+                        'EN_ATTENTE': {'label': 'En attente', 'class': 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200'},
+                        'EN_COURS': {'label': 'En cours', 'class': 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'},
+                        'TERMINE': {'label': 'Terminé', 'class': 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200'}
+                    } %}
+                    {% set config = statusConfig[project.statut] ?? statusConfig['EN_ATTENTE'] %}
+                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium {{ config.class }}">
+                        {{ config.label }}
                     </span>
                 </div>
-                <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">Réf: PRJ-2025-001 | Créé le 15 Nov 2025</p>
-                <p class="text-gray-700 dark:text-gray-300">Développement d'une plateforme de vente en ligne complète avec système de paiement intégré, gestion des stocks et tableau de bord administrateur.</p>
+                <p class="text-sm text-gray-500 dark:text-gray-400">
+                    Réf: PRJ-{{ project.dateCreation|date('Y') }}-{{ '%03d'|format(project.id) }} | Créé le {{ project.dateCreation|date('d M Y') }}
+                </p>
             </div>
-            <div class="flex items-center space-x-2 ml-6">
-                <button class="px-4 py-2 border dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-                    <i class="fas fa-download mr-2"></i>
-                    Exporter
-                </button>
-                <a href="{{ path('client_messages') }}" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
-                    <i class="fas fa-comment mr-2"></i>
-                    Contacter
+            <div class="flex items-center space-x-2">
+                <a href="{{ path('client_projects') }}" class="px-4 py-2 border dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                    <i class="fas fa-arrow-left mr-2"></i>Retour
+                </a>
+                <a href="{{ path('client_edit_project', {id: project.id}) }}" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                    <i class="fas fa-edit mr-2"></i>Modifier
                 </a>
             </div>
         </div>
-
-        {# Progression globale #}
-        <div class="mt-6 pt-6 border-t dark:border-gray-700">
-            <div class="flex items-center justify-between mb-2">
-                <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Progression Globale</span>
-                <span class="text-lg font-bold text-blue-600">75%</span>
-            </div>
-            <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3">
-                <div class="bg-gradient-to-r from-blue-500 to-blue-600 h-3 rounded-full transition-all duration-300" style="width: 75%"></div>
-            </div>
-        </div>
+        
+        <p class="text-gray-700 dark:text-gray-300 leading-relaxed">
+            {{ project.description }}
+        </p>
     </div>
 
-    {# Grille principale #}
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {# Colonne principale (2/3) #}
         <div class="lg:col-span-2 space-y-6">
-            {# Informations du projet #}
+            {# Progression Globale #}
             <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6">
-                <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
-                    <i class="fas fa-info-circle text-blue-600 mr-2"></i>
-                    Informations du Projet
-                </h3>
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-xl font-semibold text-gray-900 dark:text-gray-100">
+                        <i class="fas fa-chart-line text-blue-600 mr-2"></i>Progression Globale
+                    </h2>
+                    <span class="text-3xl font-bold text-blue-600">
+                        {% if project.statut == 'TERMINE' %}100{% elseif project.statut == 'EN_COURS' %}75{% else %}0{% endif %}%
+                    </span>
+                </div>
+                <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-4">
+                    <div class="bg-gradient-to-r from-blue-500 to-blue-600 h-4 rounded-full transition-all duration-500" 
+                         style="width: {% if project.statut == 'TERMINE' %}100{% elseif project.statut == 'EN_COURS' %}75{% else %}0{% endif %}%"></div>
+                </div>
+            </div>
+
+            {# Informations du Projet #}
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6">
+                <h2 class="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-4">
+                    <i class="fas fa-info-circle text-blue-600 mr-2"></i>Informations du Projet
+                </h2>
                 <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <p class="text-sm text-gray-500 dark:text-gray-400">Chef de Projet</p>
-                        <p class="text-sm font-medium text-gray-900 dark:text-gray-100 mt-1">Marie Dubois</p>
+                    <div class="p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                        <p class="text-sm text-gray-500 dark:text-gray-400 mb-1">Type de Projet</p>
+                        <p class="font-semibold text-gray-900 dark:text-gray-100">{{ project.type }}</p>
                     </div>
-                    <div>
-                        <p class="text-sm text-gray-500 dark:text-gray-400">Date de Début</p>
-                        <p class="text-sm font-medium text-gray-900 dark:text-gray-100 mt-1">01 Nov 2025</p>
+                    <div class="p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                        <p class="text-sm text-gray-500 dark:text-gray-400 mb-1">Catégorie</p>
+                        <p class="font-semibold text-gray-900 dark:text-gray-100">{{ project.categorie }}</p>
                     </div>
-                    <div>
-                        <p class="text-sm text-gray-500 dark:text-gray-400">Échéance</p>
-                        <p class="text-sm font-medium text-gray-900 dark:text-gray-100 mt-1">15 Déc 2025</p>
-                    </div>
-                    <div>
-                        <p class="text-sm text-gray-500 dark:text-gray-400">Budget</p>
-                        <p class="text-sm font-medium text-gray-900 dark:text-gray-100 mt-1">25 000 € - 50 000 €</p>
-                    </div>
-                    <div>
-                        <p class="text-sm text-gray-500 dark:text-gray-400">Priorité</p>
-                        <p class="text-sm font-medium text-orange-600 dark:text-orange-400 mt-1">
-                            <i class="fas fa-exclamation-circle mr-1"></i> Haute
+                    <div class="p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                        <p class="text-sm text-gray-500 dark:text-gray-400 mb-1">Date de Début</p>
+                        <p class="font-semibold text-gray-900 dark:text-gray-100">
+                            {% if project.dateDebut %}{{ project.dateDebut|date('d M Y') }}{% else %}Non définie{% endif %}
                         </p>
                     </div>
-                    <div>
-                        <p class="text-sm text-gray-500 dark:text-gray-400">Équipe</p>
-                        <p class="text-sm font-medium text-gray-900 dark:text-gray-100 mt-1">5 membres</p>
+                    <div class="p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                        <p class="text-sm text-gray-500 dark:text-gray-400 mb-1">Échéance</p>
+                        <p class="font-semibold text-gray-900 dark:text-gray-100">
+                            {% if project.dateFin %}{{ project.dateFin|date('d M Y') }}{% else %}Non définie{% endif %}
+                        </p>
+                    </div>
+                    <div class="p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                        <p class="text-sm text-gray-500 dark:text-gray-400 mb-1">Budget</p>
+                        <p class="font-semibold text-gray-900 dark:text-gray-100">
+                            {% if project.budget %}{{ project.budget }} €{% else %}Non défini{% endif %}
+                        </p>
+                    </div>
+                    <div class="p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                        <p class="text-sm text-gray-500 dark:text-gray-400 mb-1">Priorité</p>
+                        <p class="font-semibold text-gray-900 dark:text-gray-100">
+                            {% if project.priorite == 'high' %}
+                                <span class="text-red-600"><i class="fas fa-arrow-up mr-1"></i>Haute</span>
+                            {% elseif project.priorite == 'medium' %}
+                                <span class="text-yellow-600"><i class="fas fa-minus mr-1"></i>Moyenne</span>
+                            {% else %}
+                                <span class="text-green-600"><i class="fas fa-arrow-down mr-1"></i>Basse</span>
+                            {% endif %}
+                        </p>
                     </div>
                 </div>
             </div>
 
-            {# Phases du projet #}
+            {# Objectifs #}
             <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6">
-                <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
-                    <i class="fas fa-tasks text-purple-600 mr-2"></i>
-                    Phases du Projet
-                </h3>
-                <div class="space-y-4">
-                    {# Phase 1 - Terminée #}
-                    <div class="border-l-4 border-green-500 pl-4">
-                        <div class="flex items-center justify-between mb-2">
-                            <h4 class="font-semibold text-gray-900 dark:text-gray-100">Phase 1: Analyse et Conception</h4>
-                            <span class="text-xs font-medium text-green-600 dark:text-green-400">
-                                <i class="fas fa-check-circle mr-1"></i> Terminée
-                            </span>
-                        </div>
-                        <p class="text-sm text-gray-600 dark:text-gray-400 mb-2">Analyse des besoins, wireframes et maquettes</p>
-                        <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-                            <div class="bg-green-500 h-2 rounded-full" style="width: 100%"></div>
-                        </div>
-                    </div>
-
-                    {# Phase 2 - En cours #}
-                    <div class="border-l-4 border-blue-500 pl-4">
-                        <div class="flex items-center justify-between mb-2">
-                            <h4 class="font-semibold text-gray-900 dark:text-gray-100">Phase 2: Développement Frontend</h4>
-                            <span class="text-xs font-medium text-blue-600 dark:text-blue-400">
-                                <i class="fas fa-spinner fa-spin mr-1"></i> En cours
-                            </span>
-                        </div>
-                        <p class="text-sm text-gray-600 dark:text-gray-400 mb-2">Intégration des maquettes et développement des interfaces</p>
-                        <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-                            <div class="bg-blue-500 h-2 rounded-full" style="width: 75%"></div>
-                        </div>
-                    </div>
-
-                    {# Phase 3 - En cours #}
-                    <div class="border-l-4 border-yellow-500 pl-4">
-                        <div class="flex items-center justify-between mb-2">
-                            <h4 class="font-semibold text-gray-900 dark:text-gray-100">Phase 3: Développement Backend</h4>
-                            <span class="text-xs font-medium text-yellow-600 dark:text-yellow-400">
-                                <i class="fas fa-clock mr-1"></i> En cours
-                            </span>
-                        </div>
-                        <p class="text-sm text-gray-600 dark:text-gray-400 mb-2">API, base de données et logique métier</p>
-                        <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-                            <div class="bg-yellow-500 h-2 rounded-full" style="width: 60%"></div>
-                        </div>
-                    </div>
-
-                    {# Phase 4 - À venir #}
-                    <div class="border-l-4 border-gray-300 dark:border-gray-600 pl-4 opacity-60">
-                        <div class="flex items-center justify-between mb-2">
-                            <h4 class="font-semibold text-gray-900 dark:text-gray-100">Phase 4: Tests et Déploiement</h4>
-                            <span class="text-xs font-medium text-gray-500 dark:text-gray-400">
-                                <i class="fas fa-hourglass mr-1"></i> À venir
-                            </span>
-                        </div>
-                        <p class="text-sm text-gray-600 dark:text-gray-400 mb-2">Tests qualité et mise en production</p>
-                        <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-                            <div class="bg-gray-400 h-2 rounded-full" style="width: 0%"></div>
-                        </div>
-                    </div>
+                <h2 class="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-4">
+                    <i class="fas fa-bullseye text-blue-600 mr-2"></i>Objectifs
+                </h2>
+                <div class="prose dark:prose-invert max-w-none">
+                    <p class="text-gray-700 dark:text-gray-300 leading-relaxed">{{ project.objectifs }}</p>
                 </div>
             </div>
 
-            {# Documents et fichiers #}
+            {# Fonctionnalités #}
+            {% if project.fonctionnalites is not empty %}
             <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6">
-                <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
-                    <i class="fas fa-folder text-orange-600 mr-2"></i>
-                    Documents et Fichiers
-                </h3>
-                <div class="space-y-2">
-                    <div class="flex items-center justify-between p-3 border dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors cursor-pointer">
-                        <div class="flex items-center">
-                            <i class="fas fa-file-pdf text-red-500 text-xl mr-3"></i>
+                <h2 class="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-4">
+                    <i class="fas fa-list-check text-blue-600 mr-2"></i>Fonctionnalités
+                </h2>
+                <ul class="space-y-2">
+                    {% for fonctionnalite in project.fonctionnalites %}
+                        <li class="flex items-start space-x-3 p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                            <i class="fas fa-check-circle text-green-500 mt-1"></i>
+                            <span class="text-gray-700 dark:text-gray-300">{{ fonctionnalite }}</span>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+
+            {# Documents et Fichiers #}
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6">
+                <h2 class="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-4">
+                    <i class="fas fa-paperclip text-blue-600 mr-2"></i>Documents et Fichiers
+                </h2>
+                {% if project.fichierJoint %}
+                    <div class="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors cursor-pointer">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 bg-blue-100 dark:bg-blue-900 rounded-lg flex items-center justify-center">
+                                <i class="fas fa-file-pdf text-blue-600 dark:text-blue-400"></i>
+                            </div>
                             <div>
-                                <p class="text-sm font-medium text-gray-900 dark:text-gray-100">Cahier des charges.pdf</p>
-                                <p class="text-xs text-gray-500 dark:text-gray-400">2.5 MB • Ajouté le 15 Nov 2025</p>
+                                <p class="font-medium text-gray-900 dark:text-gray-100">{{ project.fichierJoint }}</p>
+                                <p class="text-sm text-gray-500 dark:text-gray-400">Document joint</p>
                             </div>
                         </div>
-                        <button class="text-blue-600 hover:text-blue-700">
+                        <button class="px-3 py-2 text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900 rounded-lg transition-colors">
                             <i class="fas fa-download"></i>
                         </button>
                     </div>
-
-                    <div class="flex items-center justify-between p-3 border dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors cursor-pointer">
-                        <div class="flex items-center">
-                            <i class="fas fa-file-image text-purple-500 text-xl mr-3"></i>
-                            <div>
-                                <p class="text-sm font-medium text-gray-900 dark:text-gray-100">Maquettes_UI.zip</p>
-                                <p class="text-xs text-gray-500 dark:text-gray-400">15.8 MB • Ajouté le 18 Nov 2025</p>
-                            </div>
-                        </div>
-                        <button class="text-blue-600 hover:text-blue-700">
-                            <i class="fas fa-download"></i>
-                        </button>
-                    </div>
-
-                    <div class="flex items-center justify-between p-3 border dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors cursor-pointer">
-                        <div class="flex items-center">
-                            <i class="fas fa-file-excel text-green-500 text-xl mr-3"></i>
-                            <div>
-                                <p class="text-sm font-medium text-gray-900 dark:text-gray-100">Planning_projet.xlsx</p>
-                                <p class="text-xs text-gray-500 dark:text-gray-400">1.2 MB • Ajouté le 20 Nov 2025</p>
-                            </div>
-                        </div>
-                        <button class="text-blue-600 hover:text-blue-700">
-                            <i class="fas fa-download"></i>
-                        </button>
-                    </div>
-                </div>
-
-                <button class="mt-4 w-full py-2 border-2 border-dashed dark:border-gray-600 rounded-lg text-sm text-gray-600 dark:text-gray-400 hover:border-blue-500 hover:text-blue-600 transition-colors">
-                    <i class="fas fa-plus mr-2"></i>
-                    Ajouter un fichier
-                </button>
+                {% else %}
+                    <p class="text-center text-gray-500 dark:text-gray-400 py-8">Aucun document joint</p>
+                {% endif %}
             </div>
         </div>
 
         {# Colonne latérale (1/3) #}
         <div class="space-y-6">
-            {# Timeline des activités #}
+            {# Activités Récentes #}
             <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6">
-                <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
-                    <i class="fas fa-history text-blue-600 mr-2"></i>
-                    Activités Récentes
-                </h3>
-                <div class="space-y-4">
-                    <div class="flex items-start space-x-3">
-                        <div class="flex-shrink-0 w-2 h-2 bg-green-500 rounded-full mt-2"></div>
-                        <div class="flex-1">
-                            <p class="text-sm font-medium text-gray-900 dark:text-gray-100">Phase 1 terminée</p>
-                            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Il y a 2 jours</p>
+                <h2 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
+                    <i class="fas fa-history text-purple-600 mr-2"></i>Activités Récentes
+                </h2>
+                <div class="space-y-3">
+                    {% if project.dateApprobation %}
+                        <div class="flex items-start space-x-3 pb-3 border-b dark:border-gray-700">
+                            <div class="w-8 h-8 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center flex-shrink-0">
+                                <i class="fas fa-check text-green-600 dark:text-green-400 text-sm"></i>
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <p class="text-sm font-medium text-gray-900 dark:text-gray-100">Projet approuvé</p>
+                                <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                                    {{ project.dateApprobation|date('d M Y à H:i') }}
+                                </p>
+                            </div>
+                        </div>
+                    {% endif %}
+                    <div class="flex items-start space-x-3 pb-3 border-b dark:border-gray-700">
+                        <div class="w-8 h-8 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center flex-shrink-0">
+                            <i class="fas fa-plus text-blue-600 dark:text-blue-400 text-sm"></i>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <p class="text-sm font-medium text-gray-900 dark:text-gray-100">Projet créé</p>
+                            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                                {{ project.dateCreation|date('d M Y à H:i') }}
+                            </p>
                         </div>
                     </div>
-
-                    <div class="flex items-start space-x-3">
-                        <div class="flex-shrink-0 w-2 h-2 bg-blue-500 rounded-full mt-2"></div>
-                        <div class="flex-1">
-                            <p class="text-sm font-medium text-gray-900 dark:text-gray-100">Maquettes validées</p>
-                            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Il y a 3 jours</p>
-                        </div>
-                    </div>
-
-                    <div class="flex items-start space-x-3">
-                        <div class="flex-shrink-0 w-2 h-2 bg-purple-500 rounded-full mt-2"></div>
-                        <div class="flex-1">
-                            <p class="text-sm font-medium text-gray-900 dark:text-gray-100">Document ajouté</p>
-                            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Il y a 5 jours</p>
-                        </div>
-                    </div>
-
-                    <div class="flex items-start space-x-3">
-                        <div class="flex-shrink-0 w-2 h-2 bg-orange-500 rounded-full mt-2"></div>
-                        <div class="flex-1">
-                            <p class="text-sm font-medium text-gray-900 dark:text-gray-100">Réunion de lancement</p>
-                            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Il y a 1 semaine</p>
-                        </div>
+                    <div class="text-center pt-2">
+                        <button class="text-sm text-blue-600 hover:text-blue-700 font-medium">
+                            Voir toutes les activités <i class="fas fa-arrow-right ml-1"></i>
+                        </button>
                     </div>
                 </div>
             </div>
 
-            {# Équipe #}
+            {# Équipe Projet #}
             <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6">
-                <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
-                    <i class="fas fa-users text-green-600 mr-2"></i>
-                    Équipe Projet
-                </h3>
+                <h2 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
+                    <i class="fas fa-users text-purple-600 mr-2"></i>Équipe Projet
+                </h2>
                 <div class="space-y-3">
-                    <div class="flex items-center space-x-3">
-                        <img class="w-10 h-10 rounded-full" src="https://ui-avatars.com/api/?name=Marie+Dubois&background=3b82f6&color=fff" alt="Marie Dubois">
+                    <div class="flex items-center space-x-3 p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                        <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center text-white font-semibold">
+                            {{ project.client.nom[:1]|upper }}{{ project.client.prenom[:1]|upper }}
+                        </div>
                         <div class="flex-1">
-                            <p class="text-sm font-medium text-gray-900 dark:text-gray-100">Marie Dubois</p>
-                            <p class="text-xs text-gray-500 dark:text-gray-400">Chef de Projet</p>
+                            <p class="font-medium text-gray-900 dark:text-gray-100">{{ project.client.prenom }} {{ project.client.nom }}</p>
+                            <p class="text-xs text-gray-500 dark:text-gray-400">Client</p>
                         </div>
                     </div>
-
-                    <div class="flex items-center space-x-3">
-                        <img class="w-10 h-10 rounded-full" src="https://ui-avatars.com/api/?name=Jean+Martin&background=10b981&color=fff" alt="Jean Martin">
-                        <div class="flex-1">
-                            <p class="text-sm font-medium text-gray-900 dark:text-gray-100">Jean Martin</p>
-                            <p class="text-xs text-gray-500 dark:text-gray-400">Développeur Frontend</p>
+                    {% if project.responsable %}
+                        <div class="flex items-center space-x-3 p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                            <div class="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center text-white font-semibold">
+                                {{ project.responsable.nom[:1]|upper }}{{ project.responsable.prenom[:1]|upper }}
+                            </div>
+                            <div class="flex-1">
+                                <p class="font-medium text-gray-900 dark:text-gray-100">{{ project.responsable.prenom }} {{ project.responsable.nom }}</p>
+                                <p class="text-xs text-gray-500 dark:text-gray-400">Chef de projet</p>
+                            </div>
                         </div>
-                    </div>
-
-                    <div class="flex items-center space-x-3">
-                        <img class="w-10 h-10 rounded-full" src="https://ui-avatars.com/api/?name=Sophie+Laurent&background=f59e0b&color=fff" alt="Sophie Laurent">
-                        <div class="flex-1">
-                            <p class="text-sm font-medium text-gray-900 dark:text-gray-100">Sophie Laurent</p>
-                            <p class="text-xs text-gray-500 dark:text-gray-400">Développeur Backend</p>
-                        </div>
-                    </div>
-
-                    <div class="flex items-center space-x-3">
-                        <img class="w-10 h-10 rounded-full" src="https://ui-avatars.com/api/?name=Pierre+Durand&background=8b5cf6&color=fff" alt="Pierre Durand">
-                        <div class="flex-1">
-                            <p class="text-sm font-medium text-gray-900 dark:text-gray-100">Pierre Durand</p>
-                            <p class="text-xs text-gray-500 dark:text-gray-400">Designer UI/UX</p>
-                        </div>
-                    </div>
+                    {% endif %}
                 </div>
             </div>
 
             {# Statistiques #}
             <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6">
-                <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
-                    <i class="fas fa-chart-bar text-purple-600 mr-2"></i>
-                    Statistiques
-                </h3>
+                <h2 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
+                    <i class="fas fa-chart-bar text-purple-600 mr-2"></i>Statistiques
+                </h2>
                 <div class="space-y-3">
-                    <div class="flex items-center justify-between">
-                        <span class="text-sm text-gray-600 dark:text-gray-400">Tâches terminées</span>
-                        <span class="text-sm font-bold text-gray-900 dark:text-gray-100">24/32</span>
+                    <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                        <span class="text-sm text-gray-600 dark:text-gray-400">Tâches totales</span>
+                        <span class="font-bold text-gray-900 dark:text-gray-100">{{ project.taches|length }}</span>
                     </div>
-                    <div class="flex items-center justify-between">
-                        <span class="text-sm text-gray-600 dark:text-gray-400">Heures travaillées</span>
-                        <span class="text-sm font-bold text-gray-900 dark:text-gray-100">156h</span>
+                    <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                        <span class="text-sm text-gray-600 dark:text-gray-400">Fonctionnalités</span>
+                        <span class="font-bold text-gray-900 dark:text-gray-100">{{ project.fonctionnalites|length }}</span>
                     </div>
-                    <div class="flex items-center justify-between">
-                        <span class="text-sm text-gray-600 dark:text-gray-400">Jours restants</span>
-                        <span class="text-sm font-bold text-orange-600 dark:text-orange-400">21 jours</span>
-                    </div>
-                    <div class="flex items-center justify-between">
-                        <span class="text-sm text-gray-600 dark:text-gray-400">Messages échangés</span>
-                        <span class="text-sm font-bold text-gray-900 dark:text-gray-100">47</span>
-                    </div>
+                    {% if project.dateDebut and project.dateFin %}
+                        <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                            <span class="text-sm text-gray-600 dark:text-gray-400">Durée estimée</span>
+                            <span class="font-bold text-gray-900 dark:text-gray-100">
+                                {{ project.dateDebut.diff(project.dateFin).days }} jours
+                            </span>
+                        </div>
+                    {% endif %}
                 </div>
             </div>
         </div>

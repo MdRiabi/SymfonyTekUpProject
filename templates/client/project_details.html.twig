@@ -1,0 +1,172 @@
+{% extends 'client/base_client.html.twig' %}
+
+{% block title %}Détails du Projet - {{ projet.nom }}{% endblock %}
+
+{% block body %}
+<div class="container mx-auto px-4 py-8">
+    {# Header Section #}
+    <div class="bg-white rounded-lg shadow-sm p-6 mb-6 border border-gray-100">
+        <div class="flex justify-between items-start">
+            <div>
+                <div class="flex items-center gap-3 mb-2">
+                    <h1 class="text-3xl font-bold text-gray-800">{{ projet.nom }}</h1>
+                    <span class="px-3 py-1 rounded-full text-sm font-medium
+                        {% if projet.statut == 'EN_COURS' %}bg-green-100 text-green-800
+                        {% elseif projet.statut == 'REJETE' %}bg-red-100 text-red-800
+                        {% elseif projet.statut == 'EN_REVISION' %}bg-orange-100 text-orange-800
+                        {% else %}bg-gray-100 text-gray-800{% endif %}">
+                        {{ projet.statut|replace({'_': ' '}) }}
+                    </span>
+                </div>
+                <p class="text-gray-600 max-w-2xl">{{ projet.description }}</p>
+            </div>
+            <div class="flex gap-3">
+                <a href="{{ path('client_projects') }}" class="px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors">
+                    <i class="fas fa-arrow-left mr-2"></i>Retour
+                </a>
+                {% if projet.statut == 'EN_REVISION' %}
+                    <a href="{{ path('client_edit_project', {'id': projet.id}) }}" class="px-4 py-2 text-white bg-orange-500 rounded-lg hover:bg-orange-600 transition-colors shadow-sm">
+                        <i class="fas fa-edit mr-2"></i>Réviser le projet
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {# Left Column: Main Content #}
+        <div class="lg:col-span-2 space-y-6">
+            
+            {# Charter Summary (Visible only if approved or in revision) #}
+            {% if projet.charterStep >= 4 or projet.statut == 'EN_COURS' or projet.statut == 'EN_REVISION' %}
+            <div class="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden">
+                <div class="px-6 py-4 border-b border-gray-100 bg-gray-50 flex justify-between items-center">
+                    <h2 class="text-lg font-semibold text-gray-800">Project Charter</h2>
+                    <span class="text-xs font-medium px-2 py-1 bg-blue-50 text-blue-600 rounded">Validé par Admin</span>
+                </div>
+                
+                <div class="p-6 space-y-6">
+                    {# Business Case #}
+                    <div>
+                        <h3 class="text-sm font-bold text-gray-500 uppercase tracking-wider mb-2">Business Case</h3>
+                        <div class="bg-gray-50 rounded p-4 text-sm text-gray-700">
+                            {% if projet.businessCaseData %}
+                                <p><strong>Problème :</strong> {{ projet.businessCaseData.problem_statement|default('-') }}</p>
+                                <p class="mt-2"><strong>Bénéfices :</strong> {{ projet.businessCaseData.expected_benefits|default('-') }}</p>
+                            {% else %}
+                                <span class="text-gray-400 italic">Non défini</span>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    {# Scope #}
+                    <div>
+                        <h3 class="text-sm font-bold text-gray-500 uppercase tracking-wider mb-2">Périmètre</h3>
+                        <div class="bg-gray-50 rounded p-4 text-sm text-gray-700">
+                            {% if projet.scopeDefinitionData %}
+                                <p><strong>Inclus :</strong> {{ projet.scopeDefinitionData.in_scope|default('-') }}</p>
+                                <p class="mt-2"><strong>Exclus :</strong> {{ projet.scopeDefinitionData.out_scope|default('-') }}</p>
+                            {% else %}
+                                <span class="text-gray-400 italic">Non défini</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            {# Project History Timeline #}
+            <div class="bg-white rounded-lg shadow-sm border border-gray-100">
+                <div class="px-6 py-4 border-b border-gray-100 bg-gray-50">
+                    <h2 class="text-lg font-semibold text-gray-800">Historique du Projet</h2>
+                </div>
+                <div class="p-6">
+                    <div class="relative pl-4 border-l-2 border-gray-200 space-y-8">
+                        {% for event in history %}
+                            <div class="relative">
+                                <div class="absolute -left-[21px] top-1 w-4 h-4 rounded-full border-2 border-white 
+                                    {% if event.action == 'charter_approved' %}bg-green-500
+                                    {% elseif event.action == 'charter_rejected' %}bg-red-500
+                                    {% elseif event.action == 'revision_requested' %}bg-orange-500
+                                    {% else %}bg-blue-400{% endif %}">
+                                </div>
+                                <div>
+                                    <div class="flex items-center gap-2 mb-1">
+                                        <span class="text-sm font-semibold text-gray-800">
+                                            {% if event.action == 'charter_approved' %}Projet Lancé (GO)
+                                            {% elseif event.action == 'charter_rejected' %}Projet Rejeté (NO-GO)
+                                            {% elseif event.action == 'revision_requested' %}Révision Demandée
+                                            {% else %}{{ event.action }}{% endif %}
+                                        </span>
+                                        <span class="text-xs text-gray-500">{{ event.createdAt|date('d/m/Y H:i') }}</span>
+                                    </div>
+                                    <p class="text-sm text-gray-600">
+                                        {% if event.performedBy and event.performedBy != app.user %}
+                                            Par Admin
+                                        {% else %}
+                                            Par Vous
+                                        {% endif %}
+                                    </p>
+                                    {% if event.remarks %}
+                                        <div class="mt-2 p-3 bg-gray-50 rounded text-sm text-gray-700 italic border-l-4 
+                                            {% if event.action == 'charter_rejected' %}border-red-300
+                                            {% elseif event.action == 'revision_requested' %}border-orange-300
+                                            {% else %}border-gray-300{% endif %}">
+                                            "{{ event.remarks }}"
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        {% else %}
+                            <p class="text-gray-500 italic text-sm">Aucun historique disponible.</p>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        {# Right Column: Info #}
+        <div class="space-y-6">
+            <div class="bg-white rounded-lg shadow-sm border border-gray-100 p-6">
+                <h3 class="text-sm font-bold text-gray-500 uppercase tracking-wider mb-4">Informations Clés</h3>
+                
+                <div class="space-y-4">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <span class="text-xs text-gray-400 block">Début</span>
+                            <span class="text-sm font-medium text-gray-700">{{ projet.dateDebut ? projet.dateDebut|date('d/m/Y') : '-' }}</span>
+                        </div>
+                        <div>
+                            <span class="text-xs text-gray-400 block">Fin (estimée)</span>
+                            <span class="text-sm font-medium text-gray-700">{{ projet.dateFin ? projet.dateFin|date('d/m/Y') : '-' }}</span>
+                        </div>
+                    </div>
+
+                    <div>
+                        <span class="text-xs text-gray-400 block">Budget</span>
+                        <span class="text-sm font-medium text-gray-700">{{ projet.budget|default('Non défini') }}</span>
+                    </div>
+
+                    <div>
+                        <span class="text-xs text-gray-400 block">Priorité</span>
+                        <span class="px-2 py-1 rounded text-xs font-medium inline-block mt-1
+                            {% if projet.priorite == 'high' %}bg-red-50 text-red-700
+                            {% elseif projet.priorite == 'medium' %}bg-yellow-50 text-yellow-700
+                            {% else %}bg-green-50 text-green-700{% endif %}">
+                            {{ projet.priorite|upper }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+            
+            {% if projet.statut == 'REJETE' and projet.raisonRefus %}
+                <div class="bg-red-50 rounded-lg border border-red-100 p-6">
+                    <h3 class="text-sm font-bold text-red-800 uppercase tracking-wider mb-2">Motif du Refus</h3>
+                    <p class="text-sm text-red-700">{{ projet.raisonRefus }}</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,74 @@
+<div x-data="{ open: false }" class="relative">
+    {% set unreadNotificationsCount = 0 %}
+    {% for notif in notifications %}
+        {% if not notif.lu %}
+            {% set unreadNotificationsCount = unreadNotificationsCount + 1 %}
+        {% endif %}
+    {% endfor %}
+
+    <button @click="open = !open" @click.away="open = false" class="relative p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors" title="Notifications" aria-label="Notifications">
+        <i class="fas fa-bell text-gray-600 dark:text-gray-300 text-xl"></i>
+        <!-- Badge de notification -->
+        {% if unreadNotificationsCount > 0 %}
+            <span class="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white transform translate-x-1/2 -translate-y-1/2 bg-red-600 rounded-full">{{ unreadNotificationsCount }}</span>
+        {% endif %}
+    </button>
+    
+    <!-- Dropdown des notifications -->
+    <div x-show="open" 
+         x-transition:enter="transition ease-out duration-100"
+         x-transition:enter-start="transform opacity-0 scale-95"
+         x-transition:enter-end="transform opacity-100 scale-100"
+         x-transition:leave="transition ease-in duration-75"
+         x-transition:leave-start="transform opacity-100 scale-100"
+         x-transition:leave-end="transform opacity-0 scale-95"
+         class="absolute right-0 mt-2 w-80 rounded-lg shadow-xl bg-white dark:bg-gray-800 ring-1 ring-black ring-opacity-5 z-50"
+         style="display: none;">
+        
+        <!-- Header -->
+        <div class="px-4 py-3 border-b dark:border-gray-700 flex justify-between items-center">
+            <h3 class="text-sm font-semibold text-gray-900 dark:text-gray-100">Notifications</h3>
+            <a href="{{ path('admin_notifications_mark_all_read') }}" class="text-xs text-blue-600 hover:text-blue-700">Tout marquer comme lu</a>
+        </div>
+        
+        <!-- Liste des notifications -->
+        <div class="max-h-96 overflow-y-auto">
+            {% if notifications is empty %}
+                <div class="px-4 py-3 text-sm text-gray-500 text-center">Aucune notification</div>
+            {% else %}
+                {% for notification in notifications %}
+                    {% set notifUrl = '#' %}
+                    {% if notification.type == 'new_project' and notification.relatedId %}
+                        {% set notifUrl = path('admin_project_charter_step1', {'id': notification.relatedId}) %}
+                    {% endif %}
+                    
+                    <a href="{{ notifUrl }}" class="block px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors {% if not notification.lu %}bg-blue-50 dark:bg-blue-900/20 border-l-3 border-blue-500{% endif %}">
+                        <div class="flex items-start">
+                            <div class="flex-shrink-0">
+                                {% if notification.type == 'new_project' %}
+                                    <i class="fas fa-folder-plus text-blue-500 text-lg"></i>
+                                {% elseif notification.type == 'success' %}
+                                    <i class="fas fa-check-circle text-green-500 text-lg"></i>
+                                {% elseif notification.type == 'warning' %}
+                                    <i class="fas fa-exclamation-triangle text-orange-500 text-lg"></i>
+                                {% else %}
+                                    <i class="fas fa-info-circle text-gray-500 text-lg"></i>
+                                {% endif %}
+                            </div>
+                            <div class="ml-3 flex-1">
+                                <p class="text-sm font-medium text-gray-900 dark:text-gray-100">{{ notification.titre }}</p>
+                                <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">{{ notification.message|u.truncate(60, '...') }}</p>
+                                <p class="text-xs text-gray-400 dark:text-gray-500 mt-1">{{ notification.dateCreation|date('d/m/Y H:i') }}</p>
+                            </div>
+                        </div>
+                    </a>
+                {% endfor %}
+            {% endif %}
+        </div>
+        
+        <!-- Footer -->
+        <div class="px-4 py-3 border-t dark:border-gray-700 text-center">
+            <a href="#" class="text-sm text-blue-600 hover:text-blue-700 font-medium">Voir toutes les notifications</a>
+        </div>
+    </div>
+</div>

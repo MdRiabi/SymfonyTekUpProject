@@ -1,0 +1,354 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ projet.nom }} - Dashboard 360°{% endblock %}
+
+{% block body %}
+<div class="container mx-auto px-4 py-8">
+    
+    {# ========================================= #}
+    {# HEADER DU PROJET                         #}
+    {# ========================================= #}
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 mb-6 border border-gray-100 dark:border-gray-700">
+        <div class="flex justify-between items-start">
+            <div class="flex-1">
+                <div class="flex items-center gap-3 mb-2">
+                    <h1 class="text-3xl font-bold text-gray-800 dark:text-white">{{ projet.nom }}</h1>
+                    {% if projet.statut == 'CONFIGURE' or projet.statut == 'ACTIF' %}
+                        <span class="px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
+                            <i class="fas fa-circle mr-1"></i>Actif
+                        </span>
+                    {% elseif projet.statut == 'TERMINE' %}
+                        <span class="px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
+                            <i class="fas fa-check-circle mr-1"></i>Terminé
+                        </span>
+                    {% endif %}
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4 text-sm text-gray-600 dark:text-gray-300">
+                    <div class="flex items-center gap-2">
+                        <i class="fas fa-user text-indigo-600"></i>
+                        <span><strong>Client:</strong> {{ projet.client.nom }} {{ projet.client.prenom }}</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <i class="fas fa-calendar text-indigo-600"></i>
+                        <span><strong>Créé le:</strong> {{ projet.dateCreation ? projet.dateCreation|date('d/m/Y') : 'N/A' }}</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <i class="fas fa-calendar-check text-indigo-600"></i>
+                        <span><strong>Dernière MAJ:</strong> {{ projet.dateModification ? projet.dateModification|date('d/m/Y') : 'N/A' }}</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="flex gap-2">
+                <a href="{{ path('admin_project_configuration_dashboard', {'id': projet.id}) }}" 
+                   class="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors">
+                    <i class="fas fa-cog mr-2"></i>Configuration
+                </a>
+            </div>
+        </div>
+    </div>
+
+    {# ========================================= #}
+    {# GRID DE KPIs (4 CARTES)                  #}
+    {# ========================================= #}
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+        {# KPI 1: Progression #}
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700 p-6">
+            <div class="flex items-center justify-between mb-4">
+                <div>
+                    <p class="text-gray-600 dark:text-gray-400 text-sm mb-1">Progression</p>
+                    <p class="text-3xl font-bold text-indigo-600">{{ kpis.progression }}%</p>
+                </div>
+                <div class="w-12 h-12 rounded-full bg-indigo-100 dark:bg-indigo-900 flex items-center justify-center">
+                    <i class="fas fa-chart-line text-indigo-600 dark:text-indigo-300 text-xl"></i>
+                </div>
+            </div>
+            <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                <div class="bg-indigo-600 h-2 rounded-full transition-all duration-500" style="width: {{ kpis.progression }}%"></div>
+            </div>
+        </div>
+
+        {# KPI 2: Membres #}
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700 p-6">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-gray-600 dark:text-gray-400 text-sm mb-1">Membres de l'équipe</p>
+                    <p class="text-3xl font-bold text-green-600">{{ kpis.membres }}</p>
+                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">membres assignés</p>
+                </div>
+                <div class="w-12 h-12 rounded-full bg-green-100 dark:bg-green-900 flex items-center justify-center">
+                    <i class="fas fa-users text-green-600 dark:text-green-300 text-xl"></i>
+                </div>
+            </div>
+        </div>
+
+        {# KPI 3: Tâches #}
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700 p-6">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-gray-600 dark:text-gray-400 text-sm mb-1">Tâches complétées</p>
+                    <p class="text-3xl font-bold text-blue-600">{{ kpis.taches_terminees }}/{{ kpis.taches_total }}</p>
+                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                        {{ kpis.taches_en_cours }} en cours, {{ kpis.taches_a_faire }} à faire
+                    </p>
+                </div>
+                <div class="w-12 h-12 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center">
+                    <i class="fas fa-tasks text-blue-600 dark:text-blue-300 text-xl"></i>
+                </div>
+            </div>
+        </div>
+
+        {# KPI 4: Temps restant #}
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700 p-6">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-gray-600 dark:text-gray-400 text-sm mb-1">Temps restant</p>
+                    {% if kpis.jours_restants is not null %}
+                        {% if kpis.jours_restants >= 0 %}
+                            <p class="text-3xl font-bold text-orange-600">{{ kpis.jours_restants }}</p>
+                            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">jours</p>
+                        {% else %}
+                            <p class="text-3xl font-bold text-red-600">{{ kpis.jours_restants|abs }}</p>
+                            <p class="text-xs text-red-500 mt-1">jours de retard</p>
+                        {% endif %}
+                    {% else %}
+                        <p class="text-2xl font-bold text-gray-400">N/A</p>
+                        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">pas de deadline</p>
+                    {% endif %}
+                </div>
+                <div class="w-12 h-12 rounded-full bg-orange-100 dark:bg-orange-900 flex items-center justify-center">
+                    <i class="fas fa-clock text-orange-600 dark:text-orange-300 text-xl"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {# ========================================= #}
+    {# GRAPHIQUES (2 COLONNES)                  #}
+    {# ========================================= #}
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+        {# Graphique 1: Distribution des tâches (Donut) #}
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700 p-6">
+            <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-4 flex items-center gap-2">
+                <i class="fas fa-chart-pie text-indigo-600"></i>
+                Répartition des Tâches
+            </h3>
+            <div style="height: 250px; position: relative;">
+                <canvas id="tasksDistributionChart"></canvas>
+            </div>
+        </div>
+
+        {# Graphique 2: Progression par phase (Barres) #}
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700 p-6">
+            <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-4 flex items-center gap-2">
+                <i class="fas fa-chart-bar text-green-600"></i>
+                Progression par Phase
+            </h3>
+            <div style="height: 250px; position: relative;">
+                <canvas id="phaseProgressionChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    {# ========================================= #}
+    {# TIMELINE & ÉQUIPE (2 COLONNES)           #}
+    {# ========================================= #}
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+        {# Timeline des phases (2/3) #}
+        <div class="lg:col-span-2 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700 p-6">
+            <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-4 flex items-center gap-2">
+                <i class="fas fa-stream text-purple-600"></i>
+                Timeline du Projet
+            </h3>
+            
+            <div class="space-y-4">
+                {% for phase in timeline.phases %}
+                    <div class="relative pl-8 pb-4 border-l-2 {{ loop.last ? '' : 'border-gray-300 dark:border-gray-600' }}">
+                        <div class="absolute left-0 top-0 w-4 h-4 rounded-full bg-indigo-600 -ml-2 border-4 border-white dark:border-gray-800"></div>
+                        <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
+                            <h4 class="font-semibold text-gray-800 dark:text-white mb-2">{{ phase.nom }}</h4>
+                            <div class="text-sm text-gray-600 dark:text-gray-300 mb-3">
+                                {% if phase.dateDebut and phase.dateFin %}
+                                    <i class="fas fa-calendar mr-1"></i>
+                                    {{ phase.dateDebut|date('d/m/Y') }} - {{ phase.dateFin|date('d/m/Y') }}
+                                {% endif %}
+                            </div>
+                            
+                            {% if timeline.taches_par_phase[phase.id]|length > 0 %}
+                                <div class="space-y-2">
+                                    {% for tache in timeline.taches_par_phase[phase.id]|slice(0, 3) %}
+                                        <div class="flex items-center justify-between text-sm">
+                                            <span class="flex items-center gap-2">
+                                                {% if tache.statut == 'TERMINE' %}
+                                                    <i class="fas fa-check-circle text-green-600"></i>
+                                                {% elseif tache.statut == 'EN_COURS' %}
+                                                    <i class="fas fa-spinner text-orange-600"></i>
+                                                {% else %}
+                                                    <i class="fas fa-circle text-gray-400"></i>
+                                                {% endif %}
+                                                <span class="text-gray-700 dark:text-gray-300">{{ tache.nom }}</span>
+                                            </span>
+                                            {% if tache.assigne %}
+                                                <span class="text-xs text-gray-500 dark:text-gray-400">
+                                                    {{ tache.assigne.prenom }} {{ tache.assigne.nom|slice(0, 1) }}.
+                                                </span>
+                                            {% endif %}
+                                        </div>
+                                    {% endfor %}
+                                    {% if timeline.taches_par_phase[phase.id]|length > 3 %}
+                                        <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">
+                                            +{{ timeline.taches_par_phase[phase.id]|length - 3 }} autre(s) tâche(s)
+                                        </p>
+                                    {% endif %}
+                                </div>
+                            {% else %}
+                                <p class="text-sm text-gray-500 dark:text-gray-400 italic">Aucune tâche dans cette phase</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        {# Équipe du projet (1/3) #}
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700 p-6">
+            <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-4 flex items-center gap-2">
+                <i class="fas fa-users text-green-600"></i>
+                Équipe ({{ performance_equipe|length }})
+            </h3>
+            
+            <div class="space-y-3">
+                {% for perf in performance_equipe %}
+                    <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-3">
+                        <div class="flex items-center gap-3 mb-2">
+                            <div class="w-10 h-10 rounded-full bg-indigo-600 flex items-center justify-center text-white font-semibold">
+                                {{ perf.membre.prenom|slice(0, 1) }}{{ perf.membre.nom|slice(0, 1) }}
+                            </div>
+                            <div class="flex-1">
+                                <p class="font-medium text-gray-800 dark:text-white text-sm">
+                                    {{ perf.membre.prenom }} {{ perf.membre.nom }}
+                                </p>
+                                <p class="text-xs text-gray-500 dark:text-gray-400">
+                                    {{ perf.taches }} tâche(s)
+                                </p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <div class="flex-1 bg-gray-200 dark:bg-gray-600 rounded-full h-2">
+                                <div class="bg-green-600 h-2 rounded-full" style="width: {{ perf.progression }}%"></div>
+                            </div>
+                            <span class="text-xs font-medium text-gray-600 dark:text-gray-300">{{ perf.progression }}%</span>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    {# ========================================= #}
+    {# ACTIVITÉ RÉCENTE                         #}
+    {# ========================================= #}
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700 p-6">
+        <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-4 flex items-center gap-2">
+            <i class="fas fa-history text-blue-600"></i>
+            Activité Récente
+        </h3>
+        
+        <div class="space-y-3">
+            {% for activity in recent_activity %}
+                <div class="flex items-start gap-3 pb-3 border-b border-gray-100 dark:border-gray-700 last:border-0">
+                    <div class="w-8 h-8 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center flex-shrink-0">
+                        <i class="fas fa-circle text-xs text-gray-400"></i>
+                    </div>
+                    <div class="flex-1">
+                        <p class="text-sm text-gray-800 dark:text-white">
+                            <strong>{{ activity.performedBy ? activity.performedBy.prenom ~ ' ' ~ activity.performedBy.nom : 'Système' }}</strong>
+                            - {{ activity.action }}
+                        </p>
+                        {% if activity.remarks %}
+                            <p class="text-xs text-gray-600 dark:text-gray-400 mt-1">{{ activity.remarks }}</p>
+                        {% endif %}
+                        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                            <i class="fas fa-clock mr-1"></i>
+                            {{ activity.createdAt|date('d/m/Y H:i') }}
+                        </p>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+</div>
+
+{# ========================================= #}
+{# SCRIPTS POUR LES GRAPHIQUES              #}
+{# ========================================= #}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Graphique 1: Distribution des tâches (Donut)
+    const tasksCtx = document.getElementById('tasksDistributionChart');
+    if (tasksCtx) {
+        new Chart(tasksCtx, {
+            type: 'doughnut',
+            data: {
+                labels: {{ distribution_taches.labels|json_encode|raw }},
+                datasets: [{
+                    data: {{ distribution_taches.data|json_encode|raw }},
+                    backgroundColor: {{ distribution_taches.colors|json_encode|raw }},
+                    borderWidth: 2,
+                    borderColor: '#fff'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }
+        });
+    }
+
+    // Graphique 2: Progression par phase (Barres)
+    const phasesCtx = document.getElementById('phaseProgressionChart');
+    if (phasesCtx) {
+        new Chart(phasesCtx, {
+            type: 'bar',
+            data: {
+                labels: [{% for phase in progression_phases %}'{{ phase.nom }}'{% if not loop.last %},{% endif %}{% endfor %}],
+                datasets: [{
+                    label: 'Progression (%)',
+                    data: [{% for phase in progression_phases %}{{ phase.progression }}{% if not loop.last %},{% endif %}{% endfor %}],
+                    backgroundColor: '#10b981',
+                    borderRadius: 5
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100,
+                        ticks: {
+                            callback: function(value) {
+                                return value + '%';
+                            }
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                }
+            }
+        });
+    }
+});
+</script>
+{% endblock %}

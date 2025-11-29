@@ -1,0 +1,189 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Project Charter - Planification des Ressources{% endblock %}
+
+{% block body %}
+<div class="min-h-screen bg-gray-50 dark:bg-gray-900 pb-20">
+    <div class="container mx-auto px-4 py-8 max-w-7xl">
+        {# Header du Projet #}
+        <div class="mb-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4 border-b border-gray-200 dark:border-gray-800 pb-6">
+            <div>
+                <div class="flex items-center gap-3 mb-2">
+                    <a href="{{ path('admin_dashboard') }}" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors">
+                        <i class="fas fa-arrow-left"></i>
+                    </a>
+                    <h1 class="text-2xl font-bold text-gray-900 dark:text-white tracking-tight">{{ projet.nom }}</h1>
+                    <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold uppercase tracking-wide border
+                        {% if projet.statut == 'EN_ATTENTE' %}bg-yellow-50 text-yellow-700 border-yellow-200 dark:bg-yellow-900/20 dark:text-yellow-400 dark:border-yellow-800
+                        {% elseif projet.statut == 'EN_COURS' %}bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-900/20 dark:text-blue-400 dark:border-blue-800
+                        {% elseif projet.statut == 'TERMINE' %}bg-green-50 text-green-700 border-green-200 dark:bg-green-900/20 dark:text-green-400 dark:border-green-800
+                        {% else %}bg-gray-50 text-gray-700 border-gray-200 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-700{% endif %}">
+                        {{ projet.statut }}
+                    </span>
+                </div>
+                <div class="flex items-center space-x-6 text-sm text-gray-500 dark:text-gray-400">
+                    <span class="flex items-center"><i class="fas fa-user-circle mr-2"></i> {{ projet.client.nom }} {{ projet.client.prenom }}</span>
+                    <span class="flex items-center"><i class="far fa-calendar-alt mr-2"></i> Créé le {{ projet.dateCreation|date('d/m/Y') }}</span>
+                </div>
+            </div>
+            
+            <div class="flex items-center gap-3">
+                <button class="px-4 py-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all shadow-sm">
+                    <i class="fas fa-history mr-2 text-gray-400"></i>Historique
+                </button>
+            </div>
+        </div>
+
+        {# Stepper / Progress Bar #}
+        <div class="mb-10">
+            <div class="flex justify-between w-full max-w-3xl mx-auto relative">
+                {# Connecting Line #}
+                <div class="absolute top-4 left-0 w-full h-0.5 bg-gray-200 dark:bg-gray-800 -z-10"></div>
+                
+                {# Step 1: Business Case #}
+                <a href="{{ path('admin_project_charter_step1', {'id': projet.id}) }}" class="flex flex-col items-center relative group cursor-pointer">
+                    <div class="w-8 h-8 flex items-center justify-center rounded-full bg-green-500 text-white font-bold text-sm z-10 ring-4 ring-gray-50 dark:ring-gray-900 transition-transform transform group-hover:scale-110">
+                        <i class="fas fa-check"></i>
+                    </div>
+                    <div class="mt-2 text-xs font-medium text-green-600 dark:text-green-400 uppercase tracking-wide">Business Case</div>
+                </a>
+
+                {# Step 2: Scope #}
+                <a href="{{ path('admin_project_charter_step2', {'id': projet.id}) }}" class="flex flex-col items-center relative group cursor-pointer">
+                    <div class="w-8 h-8 flex items-center justify-center rounded-full bg-green-500 text-white font-bold text-sm z-10 ring-4 ring-gray-50 dark:ring-gray-900 transition-transform transform group-hover:scale-110">
+                        <i class="fas fa-check"></i>
+                    </div>
+                    <div class="mt-2 text-xs font-medium text-green-600 dark:text-green-400 uppercase tracking-wide">Périmètre</div>
+                </a>
+
+                {# Step 3: Resources #}
+                <div class="flex flex-col items-center relative group">
+                    <div class="w-8 h-8 flex items-center justify-center rounded-full bg-blue-600 text-white font-bold text-sm z-10 ring-4 ring-gray-50 dark:ring-gray-900 transition-transform transform group-hover:scale-110">
+                        3
+                    </div>
+                    <div class="mt-2 text-xs font-bold text-blue-600 dark:text-blue-400 uppercase tracking-wide">Ressources</div>
+                </div>
+
+                {# Step 4: Decision #}
+                <div class="flex flex-col items-center relative group">
+                    <div class="w-8 h-8 flex items-center justify-center rounded-full bg-white dark:bg-gray-800 text-gray-400 border border-gray-300 dark:border-gray-600 font-bold text-sm z-10 ring-4 ring-gray-50 dark:ring-gray-900 transition-all">
+                        4
+                    </div>
+                    <div class="mt-2 text-xs font-medium text-gray-500 uppercase tracking-wide">Décision</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+            {# Colonne Gauche : Détails Projet (Sticky) #}
+            <div class="lg:col-span-4 sticky top-24 space-y-6">
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+                    <div class="px-6 py-4 border-b border-gray-100 dark:border-gray-700 bg-gray-50/50 dark:bg-gray-800">
+                        <h3 class="text-sm font-bold text-gray-900 dark:text-white uppercase tracking-wider">
+                            Détails de la Demande
+                        </h3>
+                    </div>
+                    
+                    <div class="p-6 space-y-6">
+                        <div>
+                            <label class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2 block">Description</label>
+                            <p class="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">{{ projet.description }}</p>
+                        </div>
+                        
+                        <div class="border-t border-gray-100 dark:border-gray-700"></div>
+
+                        <div>
+                            <label class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3 block">Fonctionnalités Clés</label>
+                            <ul class="space-y-2">
+                                {% for feature in projet.fonctionnalites %}
+                                    <li class="flex items-start text-sm text-gray-700 dark:text-gray-300">
+                                        <i class="fas fa-check-circle text-green-500 mt-0.5 mr-2.5 text-xs"></i>
+                                        <span>{{ feature }}</span>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                {# Quick Stats / Info #}
+                <div class="bg-blue-50 dark:bg-blue-900/10 rounded-lg p-4 border border-blue-100 dark:border-blue-800/30">
+                    <div class="flex gap-3">
+                        <i class="fas fa-info-circle text-blue-600 dark:text-blue-400 mt-0.5"></i>
+                        <div>
+                            <h4 class="text-sm font-bold text-blue-900 dark:text-blue-100">Conseil Pro</h4>
+                            <p class="text-xs text-blue-700 dark:text-blue-300 mt-1 leading-relaxed">Une estimation budgétaire réaliste et une équipe bien définie sont cruciales pour la validation finale.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {# Colonne Droite : Formulaire Resource Planning #}
+            <div class="lg:col-span-8">
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+                    <div class="px-8 py-6 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
+                        <h2 class="text-lg font-bold text-gray-900 dark:text-white flex items-center">
+                            <i class="fas fa-users-cog text-blue-600 mr-3"></i>
+                            Planification des Ressources
+                        </h2>
+                        <span class="text-xs font-medium text-gray-500 dark:text-gray-400">Étape 3 sur 4</span>
+                    </div>
+
+                    <div class="p-8">
+                        {{ form_start(form) }}
+                            <div class="space-y-8">
+                                {# Team Members #}
+                                <div>
+                                    {{ form_label(form.teamMembers, null, {'label_attr': {'class': 'block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2'}}) }}
+                                    {{ form_widget(form.teamMembers, {'attr': {'class': 'w-full px-4 py-3 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors text-gray-900 dark:text-white placeholder-gray-400 text-sm', 'rows': '5'}}) }}
+                                    {{ form_errors(form.teamMembers) }}
+                                    <p class="text-xs text-gray-500 mt-2">Listez les rôles clés et les membres pressentis.</p>
+                                </div>
+
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                    {# Budget #}
+                                    <div class="bg-gray-50 dark:bg-gray-900/30 p-5 rounded-lg border border-gray-200 dark:border-gray-700">
+                                        {{ form_label(form.budgetEstimate, null, {'label_attr': {'class': 'block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2'}}) }}
+                                        <div class="relative">
+                                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                                <span class="text-gray-500 sm:text-sm">€</span>
+                                            </div>
+                                            {{ form_widget(form.budgetEstimate, {'attr': {'class': 'w-full pl-8 px-4 py-3 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors text-gray-900 dark:text-white placeholder-gray-400 text-sm'}}) }}
+                                        </div>
+                                        {{ form_errors(form.budgetEstimate) }}
+                                    </div>
+                                    
+                                    {# Timeline #}
+                                    <div>
+                                        {{ form_label(form.timelineEstimate, null, {'label_attr': {'class': 'block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2'}}) }}
+                                        {{ form_widget(form.timelineEstimate, {'attr': {'class': 'w-full px-4 py-3 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors text-gray-900 dark:text-white placeholder-gray-400 text-sm', 'rows': '4'}}) }}
+                                        {{ form_errors(form.timelineEstimate) }}
+                                    </div>
+                                </div>
+
+                                {# Risks #}
+                                <div>
+                                    {{ form_label(form.resourceRisks, null, {'label_attr': {'class': 'block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2'}}) }}
+                                    {{ form_widget(form.resourceRisks, {'attr': {'class': 'w-full px-4 py-3 bg-white dark:bg-gray-900 border border-red-200 dark:border-red-900/50 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors text-gray-900 dark:text-white placeholder-gray-400 text-sm', 'rows': '3'}}) }}
+                                    {{ form_errors(form.resourceRisks) }}
+                                </div>
+                            </div>
+
+                            {# Action Bar #}
+                            <div class="mt-10 flex items-center justify-between pt-6 border-t border-gray-200 dark:border-gray-700">
+                                <button type="submit" class="px-5 py-2.5 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors text-sm font-medium">
+                                    Enregistrer Brouillon
+                                </button>
+
+                                <button type="submit" name="validate" value="1" class="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg shadow-sm transition-colors text-sm font-bold flex items-center" onclick="return confirm('Êtes-vous sûr de vouloir valider les ressources et passer à la décision finale ?');">
+                                    Valider & Continuer <i class="fas fa-arrow-right ml-2"></i>
+                                </button>
+                            </div>
+                        {{ form_end(form) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

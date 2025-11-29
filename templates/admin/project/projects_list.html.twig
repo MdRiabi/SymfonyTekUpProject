@@ -1,0 +1,169 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Projets Configurés{% endblock %}
+
+{% block body %}
+<div class="container mx-auto px-4 py-8">
+    {# Header #}
+    <div class="bg-white rounded-lg shadow-sm p-6 mb-6 border border-gray-100">
+        <div class="flex justify-between items-center">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-800 mb-2">
+                    <i class="fas fa-folder-open text-indigo-600 mr-2"></i>
+                    Projets Configurés
+                </h1>
+                <p class="text-gray-600">Gérez tous vos projets en cours et terminés</p>
+            </div>
+            <a href="{{ path('admin_dashboard') }}" class="text-gray-500 hover:text-gray-700">
+                <i class="fas fa-arrow-left mr-2"></i>Retour au tableau de bord
+            </a>
+        </div>
+    </div>
+
+    {# Statistics Cards #}
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+        <div class="bg-white rounded-lg shadow-sm border border-gray-100 p-6">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-gray-600 text-sm mb-1">Total Projets</p>
+                    <p class="text-3xl font-bold text-gray-800">{{ stats.total }}</p>
+                </div>
+                <div class="w-12 h-12 rounded-full bg-indigo-100 flex items-center justify-center">
+                    <i class="fas fa-folder text-indigo-600 text-xl"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-lg shadow-sm border border-gray-100 p-6">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-gray-600 text-sm mb-1">Projets Actifs</p>
+                    <p class="text-3xl font-bold text-green-600">{{ stats.active }}</p>
+                </div>
+                <div class="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center">
+                    <i class="fas fa-circle text-green-600 text-xl"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-lg shadow-sm border border-gray-100 p-6">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-gray-600 text-sm mb-1">Projets Terminés</p>
+                    <p class="text-3xl font-bold text-blue-600">{{ stats.completed }}</p>
+                </div>
+                <div class="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center">
+                    <i class="fas fa-check-circle text-blue-600 text-xl"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {# Filters #}
+    <div class="bg-white rounded-lg shadow-sm border border-gray-100 p-4 mb-6">
+        <div class="flex gap-3">
+            <a href="{{ path('admin_projects_list') }}" 
+               class="px-4 py-2 rounded-lg transition-colors {{ filter == 'all' ? 'bg-indigo-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200' }}">
+                <i class="fas fa-list mr-2"></i>Tous ({{ stats.total }})
+            </a>
+            <a href="{{ path('admin_projects_active') }}" 
+               class="px-4 py-2 rounded-lg transition-colors {{ filter == 'active' ? 'bg-green-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200' }}">
+                <i class="fas fa-circle mr-2"></i>Actifs ({{ stats.active }})
+            </a>
+            <a href="{{ path('admin_projects_completed') }}" 
+               class="px-4 py-2 rounded-lg transition-colors {{ filter == 'completed' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200' }}">
+                <i class="fas fa-check-circle mr-2"></i>Terminés ({{ stats.completed }})
+            </a>
+        </div>
+    </div>
+
+    {# Projects Table #}
+    <div class="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden">
+        {% if projects|length > 0 %}
+            <table class="w-full">
+                <thead class="bg-gray-50 border-b border-gray-200">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Projet</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Client</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Statut</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tâches</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Dernière MAJ</th>
+                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200">
+                    {% for projet in projects %}
+                        <tr class="hover:bg-gray-50 transition-colors">
+                            <td class="px-6 py-4">
+                                <div class="flex items-center">
+                                    <div class="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center mr-3">
+                                        <i class="fas fa-folder text-indigo-600"></i>
+                                    </div>
+                                    <div>
+                                        <div class="font-semibold text-gray-800">{{ projet.nom }}</div>
+                                        <div class="text-sm text-gray-500">{{ projet.phases|length }} phase(s)</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4">
+                                <div class="text-gray-800">{{ projet.client.nom }} {{ projet.client.prenom }}</div>
+                                <div class="text-sm text-gray-500">{{ projet.client.email }}</div>
+                            </td>
+                            <td class="px-6 py-4">
+                                {% if projet.statut == 'CONFIGURE' or projet.statut == 'ACTIF' %}
+                                    <span class="px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                        <i class="fas fa-circle mr-1"></i>Actif
+                                    </span>
+                                {% elseif projet.statut == 'TERMINE' %}
+                                    <span class="px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                        <i class="fas fa-check-circle mr-1"></i>Terminé
+                                    </span>
+                                {% else %}
+                                    <span class="px-3 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                                        {{ projet.statut }}
+                                    </span>
+                                {% endif %}
+                            </td>
+                            <td class="px-6 py-4">
+                                {% set totalTasks = projet.taches|length %}
+                                {% set completedTasks = 0 %}
+                                {% for tache in projet.taches %}
+                                    {% if tache.statut == 'TERMINE' %}
+                                        {% set completedTasks = completedTasks + 1 %}
+                                    {% endif %}
+                                {% endfor %}
+                                <div class="text-sm text-gray-800 mb-1">{{ completedTasks }}/{{ totalTasks }} tâches</div>
+                                <div class="w-full bg-gray-200 rounded-full h-2">
+                                    {% set progress = totalTasks > 0 ? (completedTasks / totalTasks * 100)|round : 0 %}
+                                    <div class="bg-green-600 h-2 rounded-full" style="width: {{ progress }}%"></div>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 text-sm text-gray-600">
+                                {{ projet.dateModification ? projet.dateModification|date('d/m/Y H:i') : 'N/A' }}
+                            </td>
+                            <td class="px-6 py-4 text-right">
+                                <div class="flex justify-end gap-2">
+                                    <a href="{{ path('admin_project_dashboard_360', {'id': projet.id}) }}" 
+                                       class="px-3 py-1 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors text-sm">
+                                        <i class="fas fa-eye mr-1"></i>Voir
+                                    </a>
+                                    <a href="{{ path('admin_project_configuration_dashboard', {'id': projet.id}) }}" 
+                                       class="px-3 py-1 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors text-sm">
+                                        <i class="fas fa-cog mr-1"></i>Config
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <div class="p-12 text-center">
+                <i class="fas fa-folder-open text-gray-300 text-6xl mb-4"></i>
+                <p class="text-gray-500 text-lg">Aucun projet configuré pour le moment</p>
+                <p class="text-gray-400 text-sm mt-2">Les projets apparaîtront ici après finalisation de leur configuration</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
