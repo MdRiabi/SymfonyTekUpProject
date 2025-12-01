@@ -1,0 +1,196 @@
+{% extends 'team_member/base_team.html.twig' %}
+
+{% block title %}Mon Dashboard{% endblock %}
+
+{% block body %}
+<div class="container mx-auto px-4 py-8">
+    
+    {# Welcome Header #}
+    <div class="mb-8">
+        <h1 class="text-3xl font-bold text-gray-800 dark:text-white mb-2">
+            👋 Bonjour, {{ user.prenom }} !
+        </h1>
+        <p class="text-gray-600 dark:text-gray-300">Voici un aperçu de votre activité</p>
+    </div>
+
+    {# KPIs Grid #}
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        {# KPI 1: Total Tâches #}
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700 p-6">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-gray-600 dark:text-gray-400 text-sm mb-1">Mes Tâches</p>
+                    <p class="text-3xl font-bold text-indigo-600">{{ kpis.total_tasks }}</p>
+                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">tâches assignées</p>
+                </div>
+                <div class="w-12 h-12 rounded-full bg-indigo-100 dark:bg-indigo-900 flex items-center justify-center">
+                    <i class="fas fa-tasks text-indigo-600 dark:text-indigo-300 text-xl"></i>
+                </div>
+            </div>
+        </div>
+
+        {# KPI 2: En Cours #}
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700 p-6">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-gray-600 dark:text-gray-400 text-sm mb-1">En Cours</p>
+                    <p class="text-3xl font-bold text-orange-600">{{ kpis.in_progress }}</p>
+                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">tâches actives</p>
+                </div>
+                <div class="w-12 h-12 rounded-full bg-orange-100 dark:bg-orange-900 flex items-center justify-center">
+                    <i class="fas fa-spinner text-orange-600 dark:text-orange-300 text-xl"></i>
+                </div>
+            </div>
+        </div>
+
+        {# KPI 3: Terminées #}
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700 p-6">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-gray-600 dark:text-gray-400 text-sm mb-1">Terminées</p>
+                    <p class="text-3xl font-bold text-green-600">{{ kpis.completed }}</p>
+                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">cette semaine</p>
+                </div>
+                <div class="w-12 h-12 rounded-full bg-green-100 dark:bg-green-900 flex items-center justify-center">
+                    <i class="fas fa-check-circle text-green-600 dark:text-green-300 text-xl"></i>
+                </div>
+            </div>
+        </div>
+
+        {# KPI 4: Performance #}
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700 p-6">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-gray-600 dark:text-gray-400 text-sm mb-1">Performance</p>
+                    <p class="text-3xl font-bold text-blue-600">{{ kpis.completion_rate }}%</p>
+                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">taux de complétion</p>
+                </div>
+                <div class="w-12 h-12 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center">
+                    <i class="fas fa-chart-line text-blue-600 dark:text-blue-300 text-xl"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {# Urgent Tasks + Activity #}
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+        {# Tâches Urgentes (2/3) #}
+        <div class="lg:col-span-2 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700 p-6">
+            <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-4 flex items-center gap-2">
+                <i class="fas fa-exclamation-triangle text-red-600"></i>
+                Tâches Urgentes
+            </h3>
+            
+            {% if kpis.urgent_tasks|length > 0 %}
+                <div class="space-y-3">
+                    {% for task in kpis.urgent_tasks %}
+                        <div class="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
+                            <div class="flex-1">
+                                <div class="flex items-center gap-2 mb-1">
+                                    {% if task.priorite == 'URGENT' %}
+                                        <span class="px-2 py-1 bg-red-100 text-red-800 text-xs rounded-full font-medium">🔴 URGENT</span>
+                                    {% elseif task.priorite == 'ELEVE' %}
+                                        <span class="px-2 py-1 bg-orange-100 text-orange-800 text-xs rounded-full font-medium">🟡 ÉLEVÉ</span>
+                                    {% endif %}
+                                    <h4 class="font-semibold text-gray-800 dark:text-white">{{ task.nom }}</h4>
+                                </div>
+                                <p class="text-sm text-gray-600 dark:text-gray-300">
+                                    <i class="fas fa-calendar mr-1"></i>
+                                    Deadline: {{ task.deadline|date('d/m/Y') }}
+                                </p>
+                            </div>
+                            <a href="{{ path('team_task_detail', {'id': task.id}) }}" class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors text-sm">
+                                Voir
+                            </a>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="text-center py-8">
+                    <i class="fas fa-check-circle text-green-500 text-4xl mb-2"></i>
+                    <p class="text-gray-500 dark:text-gray-400">Aucune tâche urgente ! 🎉</p>
+                </div>
+            {% endif %}
+        </div>
+
+        {# Activité du Jour (1/3) #}
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700 p-6">
+            <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-4 flex items-center gap-2">
+                <i class="fas fa-clock text-blue-600"></i>
+                Aujourd'hui
+            </h3>
+            
+            <div class="space-y-4">
+                <div class="flex items-center justify-between p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                    <div>
+                        <p class="text-sm text-gray-600 dark:text-gray-300">Temps travaillé</p>
+                        <p class="text-2xl font-bold text-blue-600">
+                            {% set hours = (kpis.time_today / 3600)|round(0, 'floor') %}
+                            {% set minutes = ((kpis.time_today % 3600) / 60)|round %}
+                            {{ hours }}h{{ minutes|number_format(0, '', '') }}
+                        </p>
+                    </div>
+                    <i class="fas fa-stopwatch text-blue-600 text-2xl"></i>
+                </div>
+
+                <div class="flex items-center justify-between p-3 bg-green-50 dark:bg-green-900/20 rounded-lg">
+                    <div>
+                        <p class="text-sm text-gray-600 dark:text-gray-300">Tâches terminées</p>
+                        <p class="text-2xl font-bold text-green-600">{{ kpis.completed }}</p>
+                    </div>
+                    <i class="fas fa-check text-green-600 text-2xl"></i>
+                </div>
+
+                <div class="flex items-center justify-between p-3 bg-orange-50 dark:bg-orange-900/20 rounded-lg">
+                    <div>
+                        <p class="text-sm text-gray-600 dark:text-gray-300">En cours</p>
+                        <p class="text-2xl font-bold text-orange-600">{{ kpis.in_progress }}</p>
+                    </div>
+                    <i class="fas fa-tasks text-orange-600 text-2xl"></i>
+                </div>
+            </div>
+
+            <a href="{{ path('team_tasks') }}" class="mt-4 block w-full text-center px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors">
+                Voir toutes mes tâches
+            </a>
+        </div>
+    </div>
+
+    {# Mes Projets #}
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700 p-6">
+        <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-4 flex items-center gap-2">
+            <i class="fas fa-folder-open text-purple-600"></i>
+            Mes Projets ({{ projects|length }})
+        </h3>
+        
+        {% if projects|length > 0 %}
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {% for project in projects %}
+                    <div class="p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                        <h4 class="font-semibold text-gray-800 dark:text-white mb-2">{{ project.projet.nom }}</h4>
+                        <p class="text-sm text-gray-600 dark:text-gray-300 mb-3">
+                            {{ project.tasks_count }} tâche{{ project.tasks_count > 1 ? 's' : '' }} | 
+                            {{ project.completed_count }} terminée{{ project.completed_count > 1 ? 's' : '' }}
+                        </p>
+                        <div class="mb-2">
+                            <div class="flex items-center justify-between text-sm mb-1">
+                                <span class="text-gray-600 dark:text-gray-300">Progression</span>
+                                <span class="font-medium text-gray-800 dark:text-white">{{ project.progression }}%</span>
+                            </div>
+                            <div class="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2">
+                                <div class="bg-indigo-600 h-2 rounded-full transition-all duration-500" style="width: {{ project.progression }}%"></div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="text-center py-8">
+                <i class="fas fa-folder-open text-gray-300 text-4xl mb-2"></i>
+                <p class="text-gray-500 dark:text-gray-400">Aucun projet assigné pour le moment</p>
+            </div>
+        {% endif %}
+    </div>
+
+</div>
+{% endblock %}

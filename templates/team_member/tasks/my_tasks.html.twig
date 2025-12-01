@@ -1,0 +1,154 @@
+{% extends 'team_member/base_team.html.twig' %}
+
+{% block title %}Mes Tâches{% endblock %}
+
+{% block body %}
+<div class="container mx-auto px-4 py-8">
+    
+    {# Header #}
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 mb-6 border border-gray-100 dark:border-gray-700">
+        <div class="flex justify-between items-center">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-800 dark:text-white mb-2">
+                    <i class="fas fa-tasks text-indigo-600 mr-2"></i>
+                    Mes Tâches
+                </h1>
+                <p class="text-gray-600 dark:text-gray-300">Gérez vos tâches assignées</p>
+            </div>
+            <a href="{{ path('team_dashboard') }}" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
+                <i class="fas fa-arrow-left mr-2"></i>Retour au dashboard
+            </a>
+        </div>
+    </div>
+
+    {# Filtres #}
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700 p-4 mb-6">
+        <form method="GET" action="{{ path('team_tasks') }}" class="flex flex-wrap gap-4">
+            {# Filtre Statut #}
+            <div>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Statut</label>
+                <select name="statut" class="px-4 py-2 border dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    <option value="all" {{ filters.statut == 'all' ? 'selected' : '' }}>Toutes</option>
+                    <option value="A_FAIRE" {{ filters.statut == 'A_FAIRE' ? 'selected' : '' }}>À faire</option>
+                    <option value="EN_COURS" {{ filters.statut == 'EN_COURS' ? 'selected' : '' }}>En cours</option>
+                    <option value="TERMINE" {{ filters.statut == 'TERMINE' ? 'selected' : '' }}>Terminées</option>
+                </select>
+            </div>
+
+            {# Filtre Priorité #}
+            <div>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Priorité</label>
+                <select name="priorite" class="px-4 py-2 border dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    <option value="all" {{ filters.priorite == 'all' ? 'selected' : '' }}>Toutes</option>
+                    <option value="URGENT" {{ filters.priorite == 'URGENT' ? 'selected' : '' }}>Urgent</option>
+                    <option value="ELEVE" {{ filters.priorite == 'ELEVE' ? 'selected' : '' }}>Élevé</option>
+                    <option value="MOYEN" {{ filters.priorite == 'MOYEN' ? 'selected' : '' }}>Moyen</option>
+                    <option value="FAIBLE" {{ filters.priorite == 'FAIBLE' ? 'selected' : '' }}>Faible</option>
+                </select>
+            </div>
+
+            {# Tri #}
+            <div>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Trier par</label>
+                <select name="orderBy" class="px-4 py-2 border dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    <option value="deadline" {{ filters.orderBy == 'deadline' ? 'selected' : '' }}>Deadline</option>
+                    <option value="priorite" {{ filters.orderBy == 'priorite' ? 'selected' : '' }}>Priorité</option>
+                    <option value="nom" {{ filters.orderBy == 'nom' ? 'selected' : '' }}>Nom</option>
+                </select>
+            </div>
+
+            <div class="flex items-end">
+                <button type="submit" class="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors">
+                    <i class="fas fa-filter mr-2"></i>Filtrer
+                </button>
+            </div>
+        </form>
+    </div>
+
+    {# Liste des Tâches #}
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
+        {% if tasks|length > 0 %}
+            <div class="divide-y divide-gray-200 dark:divide-gray-700">
+                {% for task in tasks %}
+                    <div class="p-6 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
+                        <div class="flex items-start justify-between">
+                            <div class="flex-1">
+                                {# Priorité + Nom #}
+                                <div class="flex items-center gap-3 mb-2">
+                                    {% if task.priorite == 'URGENT' %}
+                                        <span class="px-3 py-1 bg-red-100 text-red-800 text-xs rounded-full font-medium">🔴 URGENT</span>
+                                    {% elseif task.priorite == 'ELEVE' %}
+                                        <span class="px-3 py-1 bg-orange-100 text-orange-800 text-xs rounded-full font-medium">🟡 ÉLEVÉ</span>
+                                    {% elseif task.priorite == 'MOYEN' %}
+                                        <span class="px-3 py-1 bg-yellow-100 text-yellow-800 text-xs rounded-full font-medium">⚪ MOYEN</span>
+                                    {% else %}
+                                        <span class="px-3 py-1 bg-gray-100 text-gray-800 text-xs rounded-full font-medium">⚫ FAIBLE</span>
+                                    {% endif %}
+                                    
+                                    <h3 class="text-lg font-semibold text-gray-800 dark:text-white">{{ task.nom }}</h3>
+                                </div>
+
+                                {# Projet + Deadline #}
+                                <div class="flex items-center gap-4 text-sm text-gray-600 dark:text-gray-300 mb-3">
+                                    {% if task.phase and task.phase.projet %}
+                                        <span>
+                                            <i class="fas fa-folder text-indigo-600 mr-1"></i>
+                                            {{ task.phase.projet.nom }}
+                                        </span>
+                                    {% endif %}
+                                    {% if task.deadline %}
+                                        <span>
+                                            <i class="fas fa-calendar text-orange-600 mr-1"></i>
+                                            {{ task.deadline|date('d/m/Y') }}
+                                        </span>
+                                    {% endif %}
+                                </div>
+
+                                {# Statut #}
+                                <div class="flex items-center gap-4">
+                                    {% if task.statut == 'TERMINE' %}
+                                        <span class="px-3 py-1 bg-green-100 text-green-800 text-xs rounded-full font-medium">
+                                            <i class="fas fa-check-circle mr-1"></i>Terminée
+                                        </span>
+                                    {% elseif task.statut == 'EN_COURS' %}
+                                        <span class="px-3 py-1 bg-blue-100 text-blue-800 text-xs rounded-full font-medium">
+                                            <i class="fas fa-spinner mr-1"></i>En cours
+                                        </span>
+                                    {% else %}
+                                        <span class="px-3 py-1 bg-gray-100 text-gray-800 text-xs rounded-full font-medium">
+                                            <i class="fas fa-circle mr-1"></i>À faire
+                                        </span>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            {# Actions #}
+                            <div class="flex gap-2 ml-4">
+                                <a href="{{ path('team_task_detail', {'id': task.id}) }}" 
+                     style="background: #4B0082;
+                    color: white;
+                    padding: 12px 24px;
+                    border-radius: 8px;
+                    font-weight: 600;
+                    font-size: 18px;
+                    border: 3px solid ;
+                    cursor: pointer;
+                    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);">
+                                    <i class="fas fa-eye mr-1"></i>Détails
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="p-12 text-center">
+                <i class="fas fa-tasks text-gray-300 text-6xl mb-4"></i>
+                <p class="text-gray-500 dark:text-gray-400 text-lg">Aucune tâche trouvée</p>
+                <p class="text-gray-400 text-sm mt-2">Essayez de modifier les filtres</p>
+            </div>
+        {% endif %}
+    </div>
+
+</div>
+{% endblock %}

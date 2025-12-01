@@ -56,6 +56,14 @@ class Tache
     #[ORM\Column(type: 'integer', options: ['default' => 0])]
     private int $progress = 0;
 
+    #[ORM\Column]
+    private ?\DateTimeImmutable $dateCreation = null;
+
+    public function __construct()
+    {
+        $this->dateCreation = new \DateTimeImmutable();
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -201,6 +209,17 @@ class Tache
     public function setProgress(int $progress): self
     {
         $this->progress = $progress;
+        return $this;
+    }
+
+    public function getDateCreation(): ?\DateTimeImmutable
+    {
+        return $this->dateCreation;
+    }
+
+    public function setDateCreation(\DateTimeImmutable $dateCreation): self
+    {
+        $this->dateCreation = $dateCreation;
         return $this;
     }
 }
