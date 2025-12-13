@@ -227,6 +227,201 @@
 
         </div>
     </div>
+
+    {# ========================================= #}
+    {# WORK LOG NOTES SECTION                   #}
+    {# ========================================= #}
+    <div class="mt-8 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700 p-6">
+        <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-4 flex items-center gap-2">
+            <i class="fas fa-clipboard-list text-indigo-600"></i>
+            Notes de Travail ({{ notes|length }})
+        </h3>
+
+        {# Form to add new note #}
+        <div class="mb-6 p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
+            <form method="POST" action="{{ path('team_task_add_note', {id: task.id}) }}">
+                {{ form_start(noteForm, {'attr': {'class': 'space-y-4'}}) }}
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        Ajouter une note de travail
+                    </label>
+                    <input id="note-content" type="hidden" name="task_note[contenu]">
+                    <trix-editor input="note-content" class="trix-content bg-white dark:bg-gray-700 dark:text-white rounded-lg border border-gray-300 dark:border-gray-600"></trix-editor>
+                </div>
+
+                <button type="submit" class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors">
+                    <i class="fas fa-save mr-2"></i>Enregistrer la note
+                </button>
+                
+                {{ form_end(noteForm) }}
+            </form>
+        </div>
+
+        {# Display existing notes #}
+        {% if notes|length > 0 %}
+            <div class="space-y-4">
+                {% for note in notes %}
+                    <div class="p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg border-l-4 border-indigo-600">
+                        <div class="flex items-start justify-between mb-2">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-full bg-indigo-100 dark:bg-indigo-900 flex items-center justify-center text-indigo-600 dark:text-indigo-300 font-semibold">
+                                    {{ note.auteur.prenom|slice(0, 1) }}{{ note.auteur.nom|slice(0, 1) }}
+                                </div>
+                                <div>
+                                    <p class="font-medium text-gray-800 dark:text-white">{{ note.auteur.prenom }} {{ note.auteur.nom }}</p>
+                                    <p class="text-xs text-gray-500 dark:text-gray-400">
+                                        {{ note.createdAt|date('d/m/Y à H:i') }}
+                                        {% if note.isEdited %}
+                                            <span class="text-gray-400">(modifié)</span>
+                                        {% endif %}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="prose dark:prose-invert max-w-none mt-3 text-gray-700 dark:text-gray-300">
+                            {{ note.contenu|raw }}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="text-center py-8 text-gray-500 dark:text-gray-400">
+                <i class="fas fa-clipboard text-3xl mb-2 opacity-50"></i>
+                <p>Aucune note de travail pour le moment</p>
+            </div>
+        {% endif %}
+    </div>
+
+    {# ========================================= #}
+    {# ATTACHMENTS SECTION                      #}
+    {# ========================================= #}
+    <div class="mt-8 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700 p-6">
+        <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-4 flex items-center gap-2">
+            <i class="fas fa-paperclip text-green-600"></i>
+            Pièces Jointes ({{ attachments|length }})
+        </h3>
+
+        {# Form to upload attachment #}
+        <div class="mb-6 p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
+            <form method="POST" action="{{ path('team_task_upload_attachment', {id: task.id}) }}" enctype="multipart/form-data">
+                {{ form_start(attachmentForm, {'attr': {'class': 'space-y-4'}}) }}
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        Télécharger un fichier
+                    </label>
+                    {{ form_widget(attachmentForm.file, {'attr': {'class': 'block w-full text-sm text-gray-900 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-lg cursor-pointer bg-white dark:bg-gray-700 focus:outline-none'}}) }}
+                    <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                        Max 10 MB. Formats acceptés: Images, PDF, Documents Office, Archives
+                    </p>
+                </div>
+
+                <button type="submit" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
+                    <i class="fas fa-upload mr-2"></i>Télécharger
+                </button>
+                
+                {{ form_end(attachmentForm) }}
+            </form>
+        </div>
+
+        {# Display attachments #}
+        {% if attachments|length > 0 %}
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {% for attachment in attachments %}
+                    <div class="p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg border border-gray-200 dark:border-gray-600 hover:shadow-md transition-shadow">
+                        <div class="flex items-start justify-between mb-2">
+                            <div class="flex items-center gap-2 flex-1 min-w-0">
+                                <i class="fas {{ attachment.mimeType starts with 'image/' ? 'fa-file-image text-blue-600' : (attachment.mimeType == 'application/pdf' ? 'fa-file-pdf text-red-600' : 'fa-file text-gray-600') }} text-2xl"></i>
+                                <div class="flex-1 min-w-0">
+                                    <p class="font-medium text-gray-800 dark:text-white truncate text-sm">{{ attachment.filename }}</p>
+                                    <p class="text-xs text-gray-500 dark:text-gray-400">{{ attachment.filesizeFormatted }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        {% if attachment.mimeType starts with 'image/' %}
+                            <div class="mt-2 mb-3">
+                                <img src="/uploads/tasks/{{ attachment.filepath }}" alt="{{ attachment.filename }}" class="w-full h-32 object-cover rounded">
+                            </div>
+                        {% endif %}
+
+                        <div class="flex items-center justify-between mt-3 pt-3 border-t border-gray-200 dark:border-gray-600">
+                            <p class="text-xs text-gray-500 dark:text-gray-400">
+                                {{ attachment.uploadedBy.prenom }} {{ attachment.uploadedBy.nom|slice(0, 1) }}.
+                            </p>
+                            <div class="flex gap-2">
+                                <a href="/uploads/tasks/{{ attachment.filepath }}" download class="text-blue-600 hover:text-blue-700 text-sm">
+                                    <i class="fas fa-download"></i>
+                                </a>
+                                <form method="POST" action="{{ path('team_task_delete_attachment', {taskId: task.id, attachmentId: attachment.id}) }}" class="inline" onsubmit="return confirm('Supprimer ce fichier ?')">
+                                    <button type="submit" class="text-red-600 hover:text-red-700 text-sm">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="text-center py-8 text-gray-500 dark:text-gray-400">
+                <i class="fas fa-file text-3xl mb-2 opacity-50"></i>
+                <p>Aucune pièce jointe pour le moment</p>
+            </div>
+        {% endif %}
+    </div>
+
+    {# ========================================= #}
+    {# COMMENTS SECTION                         #}
+    {# ========================================= #}
+    <div class="mt-8 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700 p-6">
+        <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-4 flex items-center gap-2">
+            <i class="fas fa-comments text-purple-600"></i>
+            Commentaires ({{ comments|length }})
+        </h3>
+
+        {# Form to add comment #}
+        <div class="mb-6">
+            <form method="POST" action="{{ path('team_task_add_comment', {id: task.id}) }}">
+                {{ form_start(commentForm, {'attr': {'class': 'space-y-4'}}) }}
+                
+                {{ form_widget(commentForm.contenu, {'attr': {'class': 'w-full px-4 py-3 border dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500', 'rows': 3}}) }}
+
+                <button type="submit" class="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors">
+                    <i class="fas fa-paper-plane mr-2"></i>Envoyer
+                </button>
+                
+                {{ form_end(commentForm) }}
+            </form>
+        </div>
+
+        {# Display comments #}
+        {% if comments|length > 0 %}
+            <div class="space-y-4">
+                {% for comment in comments %}
+                    <div class="flex gap-3">
+                        <div class="w-10 h-10 rounded-full bg-purple-100 dark:bg-purple-900 flex items-center justify-center text-purple-600 dark:text-purple-300 font-semibold flex-shrink-0">
+                            {{ comment.auteur.prenom|slice(0, 1) }}{{ comment.auteur.nom|slice(0, 1) }}
+                        </div>
+                        <div class="flex-1 bg-gray-50 dark:bg-gray-700/50 rounded-lg p-3">
+                            <div class="flex items-center justify-between mb-1">
+                                <p class="font-medium text-gray-800 dark:text-white text-sm">{{ comment.auteur.prenom }} {{ comment.auteur.nom }}</p>
+                                <p class="text-xs text-gray-500 dark:text-gray-400">{{ comment.createdAt|date('d/m/Y H:i') }}</p>
+                            </div>
+                            <p class="text-gray-700 dark:text-gray-300 text-sm whitespace-pre-line">{{ comment.contenu }}</p>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="text-center py-8 text-gray-500 dark:text-gray-400">
+                <i class="fas fa-comment text-3xl mb-2 opacity-50"></i>
+                <p>Aucun commentaire pour le moment</p>
+            </div>
+        {% endif %}
+    </div>
+
 </div>
 
 <script>
