@@ -28,7 +28,12 @@ class ProjectService
     public function getActiveProjectsCount(): int
     {
         return $this->projetRepository->count([
-            'statut' => [Projet::STATUT_CONFIGURE, Projet::STATUT_ACTIF]
+            'statut' => [
+                Projet::STATUT_EN_CONFIGURATION,
+                Projet::STATUT_CONFIGURE,
+                Projet::STATUT_ACTIF,
+                Projet::STATUT_EN_COURS
+            ]
         ]);
     }
 
@@ -76,8 +81,10 @@ class ProjectService
     public function getActiveProjects(): array
     {
         return $this->getProjectsByStatus([
+            Projet::STATUT_EN_CONFIGURATION,
             Projet::STATUT_CONFIGURE,
-            Projet::STATUT_ACTIF
+            Projet::STATUT_ACTIF,
+            Projet::STATUT_EN_COURS
         ]);
     }
 
