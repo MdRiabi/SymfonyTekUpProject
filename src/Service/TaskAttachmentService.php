@@ -51,22 +51,26 @@ class TaskAttachmentService
             throw new \Exception('Type de fichier non autorisé');
         }
 
+        // IMPORTANT: Capture file metadata BEFORE moving the file
+        $originalFilename = $file->getClientOriginalName();
+        $fileSize = $file->getSize();
+        $mimeType = $file->getMimeType();
+        
         // Generate unique filename
-        $originalFilename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
-        $safeFilename = transliterator_transliterate('Any-Latin; Latin-ASCII; [^A-Za-z0-9_] remove; Lower()', $originalFilename);
+        $safeFilename = $this->sanitizeFilename(pathinfo($originalFilename, PATHINFO_FILENAME));
         $newFilename = $safeFilename . '-' . uniqid() . '.' . $file->guessExtension();
 
         // Move file to upload directory
         $file->move($this->uploadDirectory, $newFilename);
 
-        // Create attachment record
+        // Create attachment record with captured metadata
         $attachment = new TaskAttachment();
         $attachment->setTache($task);
         $attachment->setUploadedBy($user);
-        $attachment->setFilename($file->getClientOriginalName());
+        $attachment->setFilename($originalFilename);
         $attachment->setFilepath($newFilename);
-        $attachment->setFilesize($file->getSize());
-        $attachment->setMimeType($file->getMimeType());
+        $attachment->setFilesize($fileSize);
+        $attachment->setMimeType($mimeType);
 
         $this->em->persist($attachment);
         $this->em->flush();
@@ -155,5 +159,38 @@ class TaskAttachmentService
         }
 
         return round($size, 2) . ' ' . $units[$unitIndex];
+    }
+
+    /**
+     * Sanitize filename by removing special characters and accents
+     */
+    private function sanitizeFilename(string $filename): string
+    {
+        // Replace accented characters
+        $unwanted_array = [
+            'Š'=>'S', 'š'=>'s', 'Ž'=>'Z', 'ž'=>'z', 'À'=>'A', 'Á'=>'A', 'Â'=>'A', 'Ã'=>'A', 'Ä'=>'A', 'Å'=>'A',
+            'Æ'=>'A', 'Ç'=>'C', 'È'=>'E', 'É'=>'E', 'Ê'=>'E', 'Ë'=>'E', 'Ì'=>'I', 'Í'=>'I', 'Î'=>'I', 'Ï'=>'I',
+            'Ñ'=>'N', 'Ò'=>'O', 'Ó'=>'O', 'Ô'=>'O', 'Õ'=>'O', 'Ö'=>'O', 'Ø'=>'O', 'Ù'=>'U', 'Ú'=>'U', 'Û'=>'U',
+            'Ü'=>'U', 'Ý'=>'Y', 'Þ'=>'B', 'ß'=>'Ss', 'à'=>'a', 'á'=>'a', 'â'=>'a', 'ã'=>'a', 'ä'=>'a', 'å'=>'a',
+            'æ'=>'a', 'ç'=>'c', 'è'=>'e', 'é'=>'e', 'ê'=>'e', 'ë'=>'e', 'ì'=>'i', 'í'=>'i', 'î'=>'i', 'ï'=>'i',
+            'ð'=>'o', 'ñ'=>'n', 'ò'=>'o', 'ó'=>'o', 'ô'=>'o', 'õ'=>'o', 'ö'=>'o', 'ø'=>'o', 'ù'=>'u', 'ú'=>'u',
+            'û'=>'u', 'ý'=>'y', 'þ'=>'b', 'ÿ'=>'y'
+        ];
+        $filename = strtr($filename, $unwanted_array);
+        
+        // Remove any remaining special characters, keep only alphanumeric, dash, and underscore
+        $filename = preg_replace('/[^A-Za-z0-9_\-]/', '_', $filename);
+        
+        // Convert to lowercase
+        $filename = strtolower($filename);
+        
+        // Remove multiple underscores
+        $filename = preg_replace('/_+/', '_', $filename);
+        
+        // Trim underscores from start and end
+        $filename = trim($filename, '_');
+        
+        // If filename is empty after sanitization, use a default
+        return $filename ?: 'file';
     }
 }
